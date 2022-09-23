@@ -35,7 +35,8 @@ public class FishingRodController : MonoBehaviour
     {
         if (m_fishingRod.activeInHierarchy && !m_fishingUI.activeInHierarchy)
         {
-            Vector3 fwd = m_playerHead.TransformDirection(new Vector3(1, 5f, -1));
+            Vector3 fwd = m_playerHead.TransformDirection(new Vector3(1, 5f, 1.5f));
+            Debug.DrawRay(m_playerHead.position, fwd, Color.green);
             if (Physics.Raycast(m_playerHead.position, fwd, out objectHit, 40))
             {
                 if (objectHit.transform.gameObject.name == "Water_plane")
@@ -47,6 +48,11 @@ public class FishingRodController : MonoBehaviour
                     m_fishBtn.SetActive(false);
                 }
             }
+        }
+        else
+        {
+            if(m_fishBtn.activeInHierarchy)
+                m_fishBtn.SetActive(false);
         }
 
         if (m_fishingRod.activeInHierarchy && m_isFishing)

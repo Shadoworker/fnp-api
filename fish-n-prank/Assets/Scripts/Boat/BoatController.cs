@@ -76,4 +76,5 @@ public class BoatController : MonoBehaviour
         //Camera.transform.LookAt(transform.position + transform.forward * 6f + transform.up * 2f);
         //Camera.transform.position = Vector3.SmoothDamp(Camera.transform.position, transform.position + transform.forward * -8f + transform.up * 2f, ref CamVel, 0.05f);
     }
+
 }

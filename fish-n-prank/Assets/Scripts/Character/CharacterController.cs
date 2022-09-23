@@ -7,10 +7,6 @@ public class CharacterController : MonoBehaviour
     private enum ControlMode
     {
         /// <summary>
-        /// Up moves the character forward, left and right turn the character gradually and down moves the character backwards
-        /// </summary>
-        Tank,
-        /// <summary>
         /// Character freely moves in the chosen direction from the perspective of the camera
         /// </summary>
         Direct
@@ -21,6 +17,7 @@ public class CharacterController : MonoBehaviour
     [SerializeField] private float m_moveSpeed = 2;
     [SerializeField] private float m_turnSpeed = 200;
     [SerializeField] private float m_jumpForce = 4;
+    [SerializeField] private float m_diveForce = 4;
 
     [SerializeField] private Animator m_animator = null;
     [SerializeField] private Rigidbody m_rigidBody = null;
@@ -34,15 +31,12 @@ public class CharacterController : MonoBehaviour
     private float m_currentHRot = 0;
 
     private readonly float m_interpolation = 10;
-    private readonly float m_walkScale = 0.33f;
-    private readonly float m_backwardsWalkScale = 0.16f;
-    private readonly float m_backwardRunScale = 0.66f;
 
     private bool m_wasGrounded;
     private Vector3 m_currentDirection = Vector3.zero;
 
     private float m_jumpTimeStamp = 0;
-    private float m_minJumpInterval = 0.25f;
+    private float m_minJumpInterval = 1.3f;
     private bool m_jumpInput = false;
 
     private bool m_isGrounded;
@@ -58,6 +52,7 @@ public class CharacterController : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         ContactPoint[] contactPoints = collision.contacts;
+
         for (int i = 0; i < contactPoints.Length; i++)
         {
             if (Vector3.Dot(contactPoints[i].normal, Vector3.up) > 0.5f)
@@ -128,10 +123,6 @@ public class CharacterController : MonoBehaviour
                 DirectUpdate();
                 break;
 
-            case ControlMode.Tank:
-                TankUpdate();
-                break;
-
             default:
                 Debug.LogError("Unsupported state");
                 break;
@@ -141,34 +132,6 @@ public class CharacterController : MonoBehaviour
         m_jumpInput = false;
     }
 
-    private void TankUpdate()
-    {
-        float v = Input.GetAxis("Vertical") != 0 ? Input.GetAxis("Vertical") :
-            m_joystick.m_vertical != 0? m_joystick.m_vertical : 0;
-        float h = Input.GetAxis("Horizontal") != 0 ? Input.GetAxis("Horizontal") :
-            m_joystick.m_horizontal != 0 ? m_joystick.m_horizontal : 0;
-
-        bool walk = Input.GetKey(KeyCode.LeftShift);
-
-        if (v < 0)
-        {
-            if (!m_running) { v *= m_backwardsWalkScale; }
-            else { v *= m_backwardRunScale; }
-        }
-        else if (!m_running)
-        {
-            v *= m_walkScale;
-        }
-
-        m_currentV = Mathf.Lerp(m_currentV, v, Time.deltaTime * m_interpolation);
-        m_currentH = Mathf.Lerp(m_currentH, h, Time.deltaTime * m_interpolation);
-        transform.position += transform.forward * m_currentV * m_moveSpeed * Time.deltaTime;
-        //transform.Rotate(0, m_currentH * m_turnSpeed * Time.deltaTime, 0);
-
-        m_animator.SetFloat("MoveSpeed", m_currentV);
-
-        JumpingAndLanding();
-    }
 
     private void DirectUpdate()
     {
@@ -178,13 +141,6 @@ public class CharacterController : MonoBehaviour
             m_joystick.m_horizontal != 0 ? m_joystick.m_horizontal : 0;
 
         Transform camera = Camera.main.transform;
-
-        if (!m_running)
-        {
-            v *= m_walkScale;
-            h *= m_walkScale;
-        }
-
         m_currentV = Mathf.Lerp(m_currentV, v, Time.deltaTime * m_interpolation);
         m_currentH = Mathf.Lerp(m_currentH, h, Time.deltaTime * m_interpolation);
         m_currentVRot = Mathf.Lerp(m_currentV, v, Time.deltaTime);
@@ -197,7 +153,7 @@ public class CharacterController : MonoBehaviour
         direction.y = 0;
         direction = direction.normalized * directionLength;
         Vector3 directionRot = directionR.normalized * directionLength;
-        if (direction != Vector3.zero)
+        if (direction != Vector3.zero && (v != 0 || h != 0))
         {
             m_currentDirection = Vector3.Slerp(m_currentDirection, direction, Time.deltaTime);
 
@@ -206,7 +162,8 @@ public class CharacterController : MonoBehaviour
 
             m_animator.SetFloat("MoveSpeed", direction.magnitude);
         }
-
+        else
+            m_animator.SetFloat("MoveSpeed", 0);
         JumpingAndLanding();
     }
 
@@ -218,10 +175,13 @@ public class CharacterController : MonoBehaviour
     {
         bool jumpCooldownOver = (Time.time - m_jumpTimeStamp) >= m_minJumpInterval;
 
-        if (jumpCooldownOver && m_isGrounded && m_jumpInput)
+        if (jumpCooldownOver && m_jumpInput)
         {
             m_jumpTimeStamp = Time.time;
-            m_rigidBody.AddForce(Vector3.up * m_jumpForce, ForceMode.Impulse);
+            if(!GetComponent<BuoyancyObject>().IsUnderwater())
+                m_rigidBody.AddForce(Vector3.up * m_jumpForce, ForceMode.Impulse);
+            else
+                m_rigidBody.AddForce(Vector3.up * m_diveForce, ForceMode.Impulse);
         }
 
         if (!m_wasGrounded && m_isGrounded)
@@ -229,7 +189,7 @@ public class CharacterController : MonoBehaviour
             m_animator.SetTrigger("Land");
         }
 
-        if (!m_isGrounded && m_wasGrounded)
+        if (m_jumpInput)
         {
             m_animator.SetTrigger("Jump");
         }

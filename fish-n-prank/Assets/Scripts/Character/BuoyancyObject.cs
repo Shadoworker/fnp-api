@@ -34,15 +34,24 @@ public class BuoyancyObject : MonoBehaviour
                 if (!m_underWater)
                 {
                     m_underWater = true;
+                    if(gameObject.tag == "Player")
+                        GetComponent<Animator>().SetBool("Swim", true);
                     SwitchState(true);
                 }
             }
             if (m_underWater && m_floatersUnderWater == 0)
             {
+                if (gameObject.tag == "Player")
+                    GetComponent<Animator>().SetBool("Swim", false);
                 m_underWater = false;
                 SwitchState(false);
             }
         }
+    }
+
+    public bool IsUnderwater()
+    {
+        return m_underWater;
     }
 
     void SwitchState(bool _isUnderWater)
