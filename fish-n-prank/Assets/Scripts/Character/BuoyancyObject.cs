@@ -13,7 +13,7 @@ public class BuoyancyObject : MonoBehaviour
     public float m_floatingPower = 15f;
     Rigidbody m_rigidBody;
     public float m_waterHeight;
-    bool m_underWater;
+    public bool m_underWater;
     int m_floatersUnderWater;
 
     private void Start()

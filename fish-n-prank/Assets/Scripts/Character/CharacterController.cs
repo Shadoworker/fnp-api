@@ -15,38 +15,39 @@ public class CharacterController : MonoBehaviour
 
     [SerializeField] private bool m_running;
     [SerializeField] private float m_moveSpeed = 2;
-    [SerializeField] private float m_turnSpeed = 200;
+    [SerializeField] private float m_maxSpeed = 2;
     [SerializeField] private float m_jumpForce = 4;
     [SerializeField] private float m_diveForce = 4;
-
+    
     [SerializeField] private Animator m_animator = null;
     [SerializeField] private Rigidbody m_rigidBody = null;
-    [SerializeField] private FixedJoystick m_joystick = null;
+    [SerializeField] private VariableJoystick m_joystick = null;
 
     [SerializeField] private ControlMode m_controlMode = ControlMode.Direct;
-
-    private float m_currentV = 0;
-    private float m_currentH = 0;
-    private float m_currentVRot = 0;
-    private float m_currentHRot = 0;
-
-    private readonly float m_interpolation = 10;
-
     private bool m_wasGrounded;
-    private Vector3 m_currentDirection = Vector3.zero;
-
     private float m_jumpTimeStamp = 0;
     private float m_minJumpInterval = 1.3f;
     private bool m_jumpInput = false;
-
     private bool m_isGrounded;
-
     private List<Collider> m_collisions = new List<Collider>();
-
+    Vector3 m_movement;
+    public bool m_tempIsShiba;
+    //New input system
+    public float m_drag = 0.5f;
+    public float m_terminalRotationSpeed = 25.0f;
+    public Vector3 m_moveVector { set; get; }
+    private Transform m_camTransform;
     private void Awake()
     {
         if (!m_animator) { gameObject.GetComponent<Animator>(); }
-        if (!m_rigidBody) { gameObject.GetComponent<Animator>(); }
+        if (!m_rigidBody) { gameObject.GetComponent<Rigidbody>(); }
+    }
+
+    private void Start()
+    {
+        m_rigidBody.maxAngularVelocity = m_terminalRotationSpeed;
+        m_rigidBody.drag = m_drag;
+        m_camTransform = Camera.main.transform;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -111,12 +112,6 @@ public class CharacterController : MonoBehaviour
         {
             m_jumpInput = true;
         }
-    }
-
-    private void FixedUpdate()
-    {
-        m_animator.SetBool("Grounded", m_isGrounded);
-
         switch (m_controlMode)
         {
             case ControlMode.Direct:
@@ -127,6 +122,12 @@ public class CharacterController : MonoBehaviour
                 Debug.LogError("Unsupported state");
                 break;
         }
+    }
+
+    private void FixedUpdate()
+    {
+        m_animator.SetBool("Grounded", m_isGrounded);
+
 
         m_wasGrounded = m_isGrounded;
         m_jumpInput = false;
@@ -135,35 +136,21 @@ public class CharacterController : MonoBehaviour
 
     private void DirectUpdate()
     {
-        float v = Input.GetAxis("Vertical") != 0 && Input.GetAxis("Vertical") > 0 ? Input.GetAxis("Vertical") :
-            m_joystick.m_vertical != 0 && m_joystick.m_vertical > 0? m_joystick.m_vertical : 0;
-        float h = Input.GetAxis("Horizontal") != 0 ? Input.GetAxis("Horizontal") :
-            m_joystick.m_horizontal != 0 ? m_joystick.m_horizontal : 0;
-
-        Transform camera = Camera.main.transform;
-        m_currentV = Mathf.Lerp(m_currentV, v, Time.deltaTime * m_interpolation);
-        m_currentH = Mathf.Lerp(m_currentH, h, Time.deltaTime * m_interpolation);
-        m_currentVRot = Mathf.Lerp(m_currentV, v, Time.deltaTime);
-        m_currentHRot = Mathf.Lerp(m_currentH, h, Time.deltaTime);
-
-        Vector3 direction = camera.forward * m_currentV + camera.right * m_currentH;
-        Vector3 directionR = camera.forward * m_currentVRot + camera.right * m_currentHRot;
-
-        float directionLength = direction.magnitude;
-        direction.y = 0;
-        direction = direction.normalized * directionLength;
-        Vector3 directionRot = directionR.normalized * directionLength;
-        if (direction != Vector3.zero && (v != 0 || h != 0))
+        m_movement = new Vector3(-m_joystick.m_horizontal, 0, -m_joystick.m_vertical);
+        if (m_joystick.m_vertical != 0 || m_joystick.m_horizontal != 0)
         {
-            m_currentDirection = Vector3.Slerp(m_currentDirection, direction, Time.deltaTime);
-
-            transform.rotation = Quaternion.LookRotation(Vector3.Slerp(m_currentDirection, directionRot, Time.deltaTime * 1f));
-            transform.position += m_currentDirection * m_moveSpeed * Time.deltaTime;
-
-            m_animator.SetFloat("MoveSpeed", direction.magnitude);
+            m_camTransform.GetComponent<CameraFollow>().SetCurrentXValue(m_joystick.m_horizontal);
+            m_moveVector = PoolInput(); //get the original input
+            m_moveVector = RotateWithView();//rotate the player using our move vector
+            Move();
+            transform.rotation = Quaternion.LookRotation(m_moveVector);
+            m_animator.SetFloat("MoveSpeed", m_movement.magnitude);
         }
         else
+        {
+            m_rigidBody.velocity = Vector3.zero;
             m_animator.SetFloat("MoveSpeed", 0);
+        }
         JumpingAndLanding();
     }
 
@@ -206,6 +193,37 @@ public class CharacterController : MonoBehaviour
         {
             m_running = false;
             _runningIcon.GetComponent<Image>().color = Color.white;
+        }
+    }
+
+    public void Move()
+    {
+        m_rigidBody.AddForce(m_moveVector * m_moveSpeed);
+        m_rigidBody.velocity = Vector3.ClampMagnitude(m_rigidBody.velocity, m_maxSpeed);
+    }
+
+    public Vector3 PoolInput()
+    {
+        Vector3 dir = Vector3.zero;
+        dir.x = -m_joystick.m_horizontal;
+        dir.z = -m_joystick.m_vertical;
+        if (dir.magnitude > 1)
+            dir.Normalize();
+        return dir;
+    }
+
+    private Vector3 RotateWithView()
+    {
+        if (m_camTransform != null)
+        {
+            Vector3 dir = m_camTransform.TransformDirection(m_moveVector);
+            dir.Set(-dir.x, 0, -dir.z);
+            return dir.normalized * m_moveVector.magnitude;
+        }
+        else
+        {
+            m_camTransform = Camera.main.transform;
+            return m_moveVector;
         }
     }
 }

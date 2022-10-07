@@ -155,7 +155,7 @@ Material:
     - _OutlinePixelSizeType: 2
     - _OutlineTextureLOD: 5
     - _OutlineTextureType: 1
-    - _OutlineWidth: 4
+    - _OutlineWidth: 2
     - _Parallax: 0.02
     - _QueueOffset: 0
     - _RampBands: 4

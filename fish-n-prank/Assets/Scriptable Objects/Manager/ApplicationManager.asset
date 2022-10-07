@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b63af33455677214e86f6ac78f716471, type: 3}
+  m_Name: ApplicationManager
+  m_EditorClassIdentifier: 
+  m_onGameEventModified: {fileID: 0}
+  m_onVLeagueGameEventModified: {fileID: 0}
+  m_onTempBoostPanelOpened: {fileID: 0}
+  m_onUpgradeSystemPanelOpened: {fileID: 0}
+  m_onRealLifeSimulationStarted: {fileID: 0}
+  m_currentGameMode: 0
+  currentLvl: 0
+  m_currentTimeScale: 0
