@@ -19,7 +19,7 @@ public class BoatController : MonoBehaviour
 
     //internal Properties
     protected Vector3 CamVel;
-    [SerializeField] private FixedJoystick m_joystick = null;
+    [SerializeField] private VariableJoystick m_joystick = null;
     public Transform m_facingDirection;
 
 

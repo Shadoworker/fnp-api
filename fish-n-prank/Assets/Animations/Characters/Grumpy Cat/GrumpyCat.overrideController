@@ -1,0 +1,13 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: GrumpyCat
+  m_Controller: {fileID: 9100000, guid: 8b9a677f24793ba45bdc27a1dab7745e, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 8658672356174702833, guid: 797390729cf60c54587b21ece95ff2a9, type: 3}
+    m_OverrideClip: {fileID: 3616702771583065216, guid: c788594d8c7c132409fff39bccc1cef0, type: 3}

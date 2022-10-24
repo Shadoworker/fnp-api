@@ -5,22 +5,43 @@ using Cinemachine;
 public class PauseMenuController : MonoBehaviour
 {
     public CameraFollow m_camera;
-    public GameObject m_grumpyCatObj, m_shibaObj;
+    public GameObject m_trollmanObj, m_shibaObj, m_saltBae, m_khabyLame;
 
-    public void ActivateGrumpyCat()
+    public void ActivateTrollman()
     {
-        ActivateObj(m_grumpyCatObj, m_shibaObj);
+        DesactivateAll();
+        ActivateObj(m_trollmanObj);
     }
 
     public void ActivateShiba()
     {
-        ActivateObj(m_shibaObj, m_grumpyCatObj);
+        DesactivateAll();
+        ActivateObj(m_shibaObj);
+    }
+    public void ActivateKhaby()
+    {
+        DesactivateAll();
+        ActivateObj(m_khabyLame);
+    }
+    public void ActivateSaltBae()
+    {
+        DesactivateAll();
+        ActivateObj(m_saltBae);
     }
 
-    public void ActivateObj(GameObject _activated, GameObject _disabled)
+    public void DesactivateAll()
     {
-        _disabled.SetActive(false);
+        m_trollmanObj.SetActive(false);
+        m_shibaObj.SetActive(false);
+        m_saltBae.SetActive(false);
+        m_khabyLame.SetActive(false);
+    }
+
+    public void ActivateObj(GameObject _activated)
+    {
+        DesactivateAll();
         _activated.SetActive(true);
+        GameStateManager.CharactersManager.SetCurrentCharacter(_activated);
         m_camera.player = _activated;
     }
 }

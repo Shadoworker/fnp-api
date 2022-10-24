@@ -4,66 +4,91 @@ using UnityEngine;
 
 public class BuoyancyObject : MonoBehaviour
 {
+    public CharacterSO m_characterSO;
+    public BoatSO m_boatSO;
     public Transform[] m_floaters;
-    public float m_underWaterDrag = 3;
-    public float m_underWaterAngularDrag = 1;
 
-    public float m_airDrag = 0f;
-    public float m_airAngularDrag = 0.05f;
-    public float m_floatingPower = 15f;
     Rigidbody m_rigidBody;
-    public float m_waterHeight;
-    public bool m_underWater;
     int m_floatersUnderWater;
+
+    public float m_waterHeight;
+    public float m_floatingPower;
+    public float m_underWaterDragForce;
+    public float m_underWaterAngularDragForce;
+    public float m_airDragForce;
+    public float m_airAngularDrag;
 
     private void Start()
     {
         m_rigidBody = GetComponent<Rigidbody>();
+        if (m_boatSO != null)
+            Init(m_boatSO.m_floatingPower, m_boatSO.m_waterHeight, m_boatSO.m_underWaterDragForce, m_boatSO.m_underWaterAngularDragForce,
+                m_boatSO.m_airDragForce, m_boatSO.m_airAngularDrag);
     }
 
     private void FixedUpdate()
     {
-        m_floatersUnderWater = 0;
-        for (int i = 0; i < m_floaters.Length; i++)
+        if(m_characterSO != null || m_boatSO != null)
         {
-            float difference = m_floaters[i].position.y - m_waterHeight;
-            if (difference < 0)
+            m_floatersUnderWater = 0;
+            for (int i = 0; i < m_floaters.Length; i++)
             {
-                m_rigidBody.AddForceAtPosition(Vector3.up * m_floatingPower * Mathf.Abs(difference), m_floaters[i].position, ForceMode.Force);
-                m_floatersUnderWater += 1;
-                if (!m_underWater)
+                float difference = m_floaters[i].position.y - m_waterHeight;
+                if (difference < 0)
                 {
-                    m_underWater = true;
-                    if(gameObject.tag == "Player")
-                        GetComponent<Animator>().SetBool("Swim", true);
-                    SwitchState(true);
+                    m_rigidBody.AddForceAtPosition(Vector3.up * m_floatingPower * Mathf.Abs(difference), m_floaters[i].position, ForceMode.Force);
+                    m_floatersUnderWater += 1;
+                    if (m_characterSO != null && !m_characterSO.IsUnderWater())
+                    {
+                        m_characterSO.SetUnderWaterValue(true);
+                        if (gameObject.tag == "Player")
+                        {
+                            GetComponent<Animator>().SetBool("Swim", true);
+                        }
+                        SwitchState(true);
+                    }
+                    else if(difference > 0 && m_boatSO != null)
+                        SwitchState(true);
                 }
-            }
-            if (m_underWater && m_floatersUnderWater == 0)
-            {
-                if (gameObject.tag == "Player")
-                    GetComponent<Animator>().SetBool("Swim", false);
-                m_underWater = false;
-                SwitchState(false);
+                if (m_characterSO != null && m_characterSO.IsUnderWater() && m_floatersUnderWater == 0)
+                {
+                    if (gameObject.tag == "Player")
+                        GetComponent<Animator>().SetBool("Swim", false);
+                    m_characterSO.SetUnderWaterValue(false);
+                    SwitchState(false);
+                }
+                else if(m_boatSO != null && m_floatersUnderWater == 0)
+                    SwitchState(false);
             }
         }
     }
 
+    public void Init(float _floatingPower, float _waterHeight,float _underWaterDragForce,float _underWaterAngularDragForce, 
+        float _airDragForce, float _airAngularDrag)
+    {
+        m_floatingPower = _floatingPower;
+        m_waterHeight = _waterHeight;
+        m_underWaterAngularDragForce = _underWaterAngularDragForce;
+        m_underWaterDragForce = _underWaterDragForce;
+        m_airDragForce = _airDragForce;
+        m_airAngularDrag = _airAngularDrag;
+    }
+
     public bool IsUnderwater()
     {
-        return m_underWater;
+        return m_characterSO.IsUnderWater();
     }
 
     void SwitchState(bool _isUnderWater)
     {
         if(_isUnderWater)
         {
-            m_rigidBody.drag = m_underWaterDrag;
-            m_rigidBody.angularDrag = m_underWaterAngularDrag;
+            m_rigidBody.drag = m_underWaterDragForce;
+            m_rigidBody.angularDrag = m_underWaterAngularDragForce;
         }
         else
         {
-            m_rigidBody.drag = m_airDrag;
+            m_rigidBody.drag = m_airDragForce;
             m_rigidBody.angularDrag = m_airAngularDrag;
         }
     }

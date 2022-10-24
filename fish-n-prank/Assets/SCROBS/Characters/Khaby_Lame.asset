@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de911494d1ce0e94fb75d34876201468, type: 3}
+  m_Name: Khaby_Lame
+  m_EditorClassIdentifier: 
+  m_character: 2
+  m_movementMode: 0
+  m_runSpeed: 25
+  m_walkSpeed: 20
+  m_maxSpeed: 10
+  m_rotationSpeed: 5
+  m_playerHeadObjName: Armature/Bone.001/Bone.002/Bone.003/Bone.029/Head
+  m_specialIdleRepeatRate: 20
+  m_jumpForce: 13
+  m_minJumpInterval: 1
+  m_dragForce: 1
+  m_mass: 1.3
+  m_underWaterDragForce: 3
+  m_underWaterAngularDragForce: 1
+  m_airDragForce: 2
+  m_airAngularDrag: 0.05
+  m_floatingPower: 126
+  m_diveForce: 0
+  m_waterHeight: 3.6
+  m_fishingRodObjName: Armature/Bone.001/Bone.002/Bone.009/Bone.010/Bone.011/Bone.012/FishingRodKhabyLame

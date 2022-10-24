@@ -12,42 +12,34 @@ public class CharacterController : MonoBehaviour
         Direct
     }
 
-
-    [SerializeField] private bool m_running;
-    [SerializeField] private float m_moveSpeed = 2;
-    [SerializeField] private float m_maxSpeed = 2;
-    [SerializeField] private float m_jumpForce = 4;
-    [SerializeField] private float m_diveForce = 4;
-    
-    [SerializeField] private Animator m_animator = null;
-    [SerializeField] private Rigidbody m_rigidBody = null;
-    [SerializeField] private VariableJoystick m_joystick = null;
-
-    [SerializeField] private ControlMode m_controlMode = ControlMode.Direct;
-    private bool m_wasGrounded;
-    private float m_jumpTimeStamp = 0;
-    private float m_minJumpInterval = 1.3f;
-    private bool m_jumpInput = false;
-    private bool m_isGrounded;
+    public CharacterSO m_characterSO;
+    private float m_moveSpeed = 1;
+    private Animator m_animator = null;
+    private Rigidbody m_rigidBody = null;
+    private VariableJoystick m_joystick = null;
+    private ControlMode m_controlMode = ControlMode.Direct;
     private List<Collider> m_collisions = new List<Collider>();
     Vector3 m_movement;
-    public bool m_tempIsShiba;
-    //New input system
-    public float m_drag = 0.5f;
-    public float m_terminalRotationSpeed = 25.0f;
     public Vector3 m_moveVector { set; get; }
     private Transform m_camTransform;
-    private void Awake()
-    {
-        if (!m_animator) { gameObject.GetComponent<Animator>(); }
-        if (!m_rigidBody) { gameObject.GetComponent<Rigidbody>(); }
-    }
+    private bool m_wasGrounded;
+    private float m_jumpTimeStamp;
 
-    private void Start()
+    public void InitCharacterControllerValues()
     {
-        m_rigidBody.maxAngularVelocity = m_terminalRotationSpeed;
-        m_rigidBody.drag = m_drag;
+        gameObject.AddComponent<Rigidbody>();
+        gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
+        m_joystick = GameObject.Find("JoystickContainer").GetComponent<VariableJoystick>();
+        if (!m_animator) { m_animator = gameObject.GetComponent<Animator>(); }
+        if (!m_rigidBody) { m_rigidBody = gameObject.GetComponent<Rigidbody>(); }
+        m_rigidBody.maxAngularVelocity = m_characterSO.m_rotationSpeed;
+        m_rigidBody.drag = m_characterSO.m_dragForce;
+        m_rigidBody.mass = m_characterSO.m_mass;
         m_camTransform = Camera.main.transform;
+        m_characterSO.SetGroundedValue(true);
+        if (m_characterSO.m_character == CHARACTER.SHIBA)
+            GameStateManager.CharactersManager.SetCurrentCharacter(gameObject);
+        InvokeRepeating("PlaySpecialIdle", 1.0f, m_characterSO.m_specialIdleRepeatRate);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -56,15 +48,20 @@ public class CharacterController : MonoBehaviour
 
         for (int i = 0; i < contactPoints.Length; i++)
         {
-            if (Vector3.Dot(contactPoints[i].normal, Vector3.up) > 0.5f)
+            if (Vector3.Dot(contactPoints[i].normal, Vector3.up) > 0.01f)
             {
                 if (!m_collisions.Contains(collision.collider))
                 {
                     m_collisions.Add(collision.collider);
                 }
-                m_isGrounded = true;
+                m_characterSO.SetGroundedValue(true);
             }
         }
+    }
+
+    public void PlaySpecialIdle()
+    {
+        m_animator.SetTrigger("Idle");
     }
 
     private void OnCollisionStay(Collision collision)
@@ -73,7 +70,7 @@ public class CharacterController : MonoBehaviour
         bool validSurfaceNormal = false;
         for (int i = 0; i < contactPoints.Length; i++)
         {
-            if (Vector3.Dot(contactPoints[i].normal, Vector3.up) > 0.5f)
+            if (Vector3.Dot(contactPoints[i].normal, Vector3.up) > 0.1f)
             {
                 validSurfaceNormal = true; break;
             }
@@ -81,7 +78,8 @@ public class CharacterController : MonoBehaviour
 
         if (validSurfaceNormal)
         {
-            m_isGrounded = true;
+            m_characterSO.SetGroundedValue(true);
+            //m_characterSO.SetJumpInput(false);
             if (!m_collisions.Contains(collision.collider))
             {
                 m_collisions.Add(collision.collider);
@@ -93,7 +91,7 @@ public class CharacterController : MonoBehaviour
             {
                 m_collisions.Remove(collision.collider);
             }
-            if (m_collisions.Count == 0) { m_isGrounded = false; }
+            if (m_collisions.Count == 0) { m_characterSO.SetGroundedValue(false); }
         }
     }
 
@@ -103,80 +101,83 @@ public class CharacterController : MonoBehaviour
         {
             m_collisions.Remove(collision.collider);
         }
-        if (m_collisions.Count == 0) { m_isGrounded = false; }
-    }
-
-    private void Update()
-    {
-        if (!m_jumpInput && Input.GetKey(KeyCode.Space))
-        {
-            m_jumpInput = true;
-        }
-        switch (m_controlMode)
-        {
-            case ControlMode.Direct:
-                DirectUpdate();
-                break;
-
-            default:
-                Debug.LogError("Unsupported state");
-                break;
-        }
+        if (m_collisions.Count == 0 && m_characterSO.GetJumpInput()) { m_characterSO.SetGroundedValue(false); }
     }
 
     private void FixedUpdate()
     {
-        m_animator.SetBool("Grounded", m_isGrounded);
+        if (m_characterSO != null)
+        {
+            if (!m_characterSO.GetJumpInput() && Input.GetKey(KeyCode.Space))
+            {
+                m_characterSO.SetJumpInput(true);
+            }
+            switch (m_controlMode)
+            {
+                case ControlMode.Direct:
+                    DirectUpdate();
+                    break;
 
-
-        m_wasGrounded = m_isGrounded;
-        m_jumpInput = false;
+                default:
+                    Debug.LogError("Unsupported state");
+                    break;
+            }
+        }
+        if (m_characterSO != null)
+            m_animator.SetBool("Grounded", m_characterSO.IsGrounded());
+        m_wasGrounded = m_characterSO.IsGrounded();
     }
 
 
     private void DirectUpdate()
     {
         m_movement = new Vector3(-m_joystick.m_horizontal, 0, -m_joystick.m_vertical);
-        if (m_joystick.m_vertical != 0 || m_joystick.m_horizontal != 0)
+        if(!m_characterSO.GetJumpInput())
         {
-            m_camTransform.GetComponent<CameraFollow>().SetCurrentXValue(m_joystick.m_horizontal);
-            m_moveVector = PoolInput(); //get the original input
-            m_moveVector = RotateWithView();//rotate the player using our move vector
-            Move();
-            transform.rotation = Quaternion.LookRotation(m_moveVector);
-            m_animator.SetFloat("MoveSpeed", m_movement.magnitude);
-        }
-        else
-        {
-            m_rigidBody.velocity = Vector3.zero;
-            m_animator.SetFloat("MoveSpeed", 0);
+            if (m_joystick.m_vertical != 0 || m_joystick.m_horizontal != 0)
+            {
+                m_camTransform.GetComponent<CameraFollow>().SetCurrentXValue(m_joystick.m_horizontal * 0.2f);
+                m_moveVector = PoolInput(); //get the original input
+                m_moveVector = RotateWithView();//rotate the player using our move vector
+                Move();
+                transform.rotation = Quaternion.LookRotation(m_moveVector);
+                m_animator.SetFloat("MoveSpeed", m_movement.magnitude);
+            }
+            else
+            {
+                m_rigidBody.velocity = Vector3.zero;
+                m_animator.SetFloat("MoveSpeed", 0);
+            }
         }
         JumpingAndLanding();
     }
 
     public void SetJumpInput()
     {
-        m_jumpInput = true;
+        if (!m_characterSO.GetJumpInput())
+            m_characterSO.SetJumpInput(true);
     }
+
     public void JumpingAndLanding()
     {
-        bool jumpCooldownOver = (Time.time - m_jumpTimeStamp) >= m_minJumpInterval;
+        bool jumpCooldownOver = (Time.time - m_jumpTimeStamp) >= m_characterSO.m_minJumpInterval;
 
-        if (jumpCooldownOver && m_jumpInput)
+        if (jumpCooldownOver && m_characterSO.GetJumpInput() && m_characterSO.IsGrounded())
         {
-            m_jumpTimeStamp = Time.time;
+           m_jumpTimeStamp = Time.time;
             if(!GetComponent<BuoyancyObject>().IsUnderwater())
-                m_rigidBody.AddForce(Vector3.up * m_jumpForce, ForceMode.Impulse);
+                m_rigidBody.AddForce(Vector3.up * m_characterSO.m_jumpForce, ForceMode.Impulse);
             else
-                m_rigidBody.AddForce(Vector3.up * m_diveForce, ForceMode.Impulse);
+                m_rigidBody.AddForce(Vector3.up * m_characterSO.m_diveForce, ForceMode.Impulse);
         }
 
-        if (!m_wasGrounded && m_isGrounded)
+        if (!m_wasGrounded && m_characterSO.IsGrounded())
         {
+            m_characterSO.SetJumpInput(false);
             m_animator.SetTrigger("Land");
         }
 
-        if (m_jumpInput)
+        if (!m_characterSO.IsGrounded() && m_wasGrounded)
         {
             m_animator.SetTrigger("Jump");
         }
@@ -184,29 +185,44 @@ public class CharacterController : MonoBehaviour
 
     public void ToggleRunning(GameObject _runningIcon)
     {
-        if(!m_running)
+        if(!m_characterSO.IsRunning())
         {
-            m_running = true;
+            m_characterSO.SetRunningValue(true);
             _runningIcon.GetComponent<Image>().color = Color.black;
         }
         else
         {
-            m_running = false;
+            m_characterSO.SetRunningValue(false);
             _runningIcon.GetComponent<Image>().color = Color.white;
         }
     }
 
     public void Move()
     {
-        m_rigidBody.AddForce(m_moveVector * m_moveSpeed);
-        m_rigidBody.velocity = Vector3.ClampMagnitude(m_rigidBody.velocity, m_maxSpeed);
+
+        Vector3 dir = new Vector3(1f * Mathf.Sign(m_moveVector.x), m_moveVector.y, 1 * Mathf.Sign(m_moveVector.z));
+        m_rigidBody.AddForce(dir * m_moveSpeed);
+        m_rigidBody.velocity = Vector3.ClampMagnitude(m_rigidBody.velocity, m_characterSO.m_maxSpeed);
     }
 
     public Vector3 PoolInput()
     {
         Vector3 dir = Vector3.zero;
-        dir.x = -m_joystick.m_horizontal;
-        dir.z = -m_joystick.m_vertical;
+        if(m_characterSO.m_movementMode == MovementMode.CONSTANT)
+        {
+            if (m_movement.magnitude < 1)
+                m_moveSpeed = m_characterSO.m_walkSpeed;
+            else
+                m_moveSpeed = m_characterSO.m_runSpeed;
+            dir.x = -m_joystick.m_horizontal;
+            dir.z = -m_joystick.m_vertical;
+        }
+        else
+        {
+            m_moveSpeed = m_characterSO.m_runSpeed;
+            dir.x = -m_joystick.m_horizontal;
+            dir.z = -m_joystick.m_vertical;
+        }
         if (dir.magnitude > 1)
             dir.Normalize();
         return dir;

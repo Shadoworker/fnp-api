@@ -5,16 +5,21 @@ using UnityEngine.UI;
 
 public class FishingRodController : MonoBehaviour
 {
-    public GameObject m_fishingRod;
-    public Transform m_playerHead;
+    public CharacterSO m_characterSO;
+    private GameObject m_fishingRod;
+    private Transform m_playerHead;
     private CharacterController m_characterController;
     private BuoyancyObject m_buoyancy;
+    private Animator m_animator;
     RaycastHit objectHit;
 
-    private void Start()
+    public void InitFishingRod()
     {
+        m_playerHead = transform.Find(m_characterSO.m_playerHeadObjName);
+        m_fishingRod = transform.Find(m_characterSO.m_fishingRodObjName).gameObject;
         m_characterController = GetComponent<CharacterController>();
         m_buoyancy = GetComponent<BuoyancyObject>();
+        m_animator = GetComponent<Animator>();
     }
 
     public void Update()
@@ -44,19 +49,25 @@ public class FishingRodController : MonoBehaviour
         }
     }
 
-    public void ToggleFishingRod(GameObject _btn)
+    public Transform GetPlayerHead()
     {
+        return m_playerHead;
+    }
+    public void ToggleFishingRod()
+    {
+        Debug.Log("Toggle fishing rod");
         if(!m_fishingRod.activeInHierarchy)
         {
+            m_animator.SetTrigger("GrabRod");
             m_fishingRod.SetActive(true);
-            _btn.GetComponent<Image>().color = Color.green;
+
+            //_btn.GetComponent<Image>().color = Color.green;
         }
         else
         {
+            m_animator.SetTrigger("DropRod");
             m_fishingRod.SetActive(false);
-            _btn.GetComponent<Image>().color = Color.white;
+            //_btn.GetComponent<Image>().color = Color.white;
         }
     }
-
-
 }

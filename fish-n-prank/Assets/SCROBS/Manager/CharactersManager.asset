@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fe9dbdbea362ed439ba5319b796d7a5, type: 3}
+  m_Name: CharactersManager
+  m_EditorClassIdentifier: 
+  m_characters:
+  - {fileID: 11400000, guid: 8ad00e3d74a898048b99581e62e8b83b, type: 2}
+  m_jumpEvent: {fileID: 11400000, guid: 6703276f8dc3b3e47936435529d46091, type: 2}
+  m_toggleFishingRodEvent: {fileID: 11400000, guid: ba28f1532bca2de4393826c3022bedaf, type: 2}
+  m_waterHeight: 3.6

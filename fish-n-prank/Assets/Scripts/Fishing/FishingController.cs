@@ -17,6 +17,7 @@ public class FishingController : Singleton<FishingController>
     private const float MIN_SAFE_ZONE = 15837;
     private const float MAX_SAFE_ZONE = 73594;
     private const float INDICATOR_DEFAULT_POS = 43536;
+    private const float HEIGHT_MARGIN = 100f;
     float m_distanceTravelled;
     public TextMeshProUGUI m_numberOfCaughtFishesText;
     public GameObject m_fishingUI, m_fishBtn, m_jumpBtn;
@@ -67,7 +68,6 @@ public class FishingController : Singleton<FishingController>
 
     public void VerifiedFishingState()
     {
-        Debug.Log("Raised: " + m_isNearFishingSpot.m_previousValue);
         if(m_isNearFishingSpot.m_previousValue.Equals("true")) 
             m_fishBtn.SetActive(true);
         else
@@ -78,10 +78,11 @@ public class FishingController : Singleton<FishingController>
         m_fishingUI.SetActive(false);
         m_jumpBtn.SetActive(true);
         m_isFishing = false;
-        if(m_characterController != null)
+        if(GameStateManager.CharactersManager.GetCurrentCharacter() != null)
         {
-            m_characterController.enabled = true;
-            m_characterController = null;
+            CharacterController characterController = GameStateManager.CharactersManager.GetCurrentCharacter().GetComponent<CharacterController>();
+            characterController.enabled = true;
+            characterController.GetComponent<Animator>().SetBool("Fish", false);
         }
     }
 
@@ -89,23 +90,26 @@ public class FishingController : Singleton<FishingController>
     public void ActivateFishingGameplay()
     {
         InitRodValues();
-        m_characterController.enabled = false;
+        CharacterController characterController = GameStateManager.CharactersManager.GetCurrentCharacter().GetComponent<CharacterController>();
+
+        characterController.enabled = false;
         m_isFishing = true;
         m_fishingUI.SetActive(true);
         m_jumpBtn.SetActive(false);
         m_fishBtn.SetActive(false);
-        SetFishingUIPosBasedOnPlayerPos();
+        characterController.GetComponent<Animator>().SetBool("Fish", true);
+        //SetFishingUIPosBasedOnPlayerPos();
     }
 
     public void SetFishingUIPosBasedOnPlayerPos()
     {
-        m_fishingUI.transform.SetParent(m_characterController.transform);
-        if(m_characterController.m_tempIsShiba)
-            m_fishingUI.transform.localPosition = m_fishingUILocalPos;
-        else
-            m_fishingUI.transform.localPosition = new Vector3(m_fishingUILocalPos.x, UI_HEIGHT, m_fishingUILocalPos.z);
-        m_fishingUI.transform.LookAt(m_characterController.transform);
+        CharacterController characterController = GameStateManager.CharactersManager.GetCurrentCharacter().GetComponent<CharacterController>();
+        Transform characterHead = characterController.GetComponent<FishingRodController>().GetPlayerHead();
+        m_fishingUI.transform.SetParent(characterHead.parent);
+        m_fishingUI.transform.localPosition = new Vector3(characterHead.localRotation.x, characterHead.localPosition.y, characterHead.localPosition.z);
+        m_fishingUI.transform.LookAt(characterController.transform);
         m_fishingUI.transform.localRotation = Quaternion.Euler(0, m_fishingUI.transform.rotation.y, m_fishingUI.transform.rotation.z);
+        m_fishingUI.transform.SetParent(characterHead.transform);
     }
 }
 
