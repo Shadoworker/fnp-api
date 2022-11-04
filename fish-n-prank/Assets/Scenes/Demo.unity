@@ -2525,20 +2525,6 @@ MonoBehaviour:
   m_isNearFishingSpot: {fileID: 11400000, guid: b019311c77cf6f44c9f54d692fccff6a, type: 2}
   m_characterController: {fileID: 0}
   m_fishingUILocalPos: {x: 0.4, y: 34, z: 26}
---- !u!136 &1022401058
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2008048010}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 2.07
-  m_Height: 7.9
-  m_Direction: 1
-  m_Center: {x: 0.027576812, y: 3.72, z: 0.19426534}
 --- !u!1 &1033526829 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8164078558771037576, guid: a364b26c335850a40baa1669818951ee, type: 3}
@@ -2668,8 +2654,8 @@ Light:
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
-    m_Bias: 0.05
-    m_NormalBias: 0.4
+    m_Bias: 6.4
+    m_NormalBias: 5.99
     m_NearPlane: 0.2
     m_CullingMatrixOverride:
       e00: 1
@@ -5562,11 +5548,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: e7c1ef2fa78128f499dbc74471990ecc, type: 3}
   m_PrefabInstance: {fileID: 2008048008}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2008048010 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -5557618995955651490, guid: e7c1ef2fa78128f499dbc74471990ecc, type: 3}
-  m_PrefabInstance: {fileID: 2008048008}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2008048011 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -6949186064637536355, guid: e7c1ef2fa78128f499dbc74471990ecc, type: 3}
@@ -5697,6 +5678,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!136 &2008048020
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2008048009}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 1.3371298
+  m_Height: 6.63278
+  m_Direction: 1
+  m_Center: {x: -0.16, y: 2.8163903, z: 0}
 --- !u!1 &2042091270
 GameObject:
   m_ObjectHideFlags: 0

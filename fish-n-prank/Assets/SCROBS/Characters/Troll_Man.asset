@@ -20,14 +20,16 @@ MonoBehaviour:
   m_rotationSpeed: 5
   m_playerHeadObjName: Armature/Bone/Bone.001/Bone.002/Bone.019/Bone.020/Bone.021/Head
   m_specialIdleRepeatRate: 20
-  m_jumpForce: 6
+  m_jumpForce: 7
   m_minJumpInterval: 1
-  m_dragForce: 1
+  m_jumpInput: 0
+  m_isGrounded: 1
+  m_dragForce: 0.001
   m_mass: 1.3
   m_underWaterDragForce: 3
   m_underWaterAngularDragForce: 1
   m_airDragForce: 2
-  m_airAngularDrag: 0.05
+  m_airAngularDrag: 0.001
   m_floatingPower: 126
   m_diveForce: 0
   m_waterHeight: 3.19

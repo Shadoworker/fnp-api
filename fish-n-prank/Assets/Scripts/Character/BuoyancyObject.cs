@@ -17,6 +17,7 @@ public class BuoyancyObject : MonoBehaviour
     public float m_underWaterAngularDragForce;
     public float m_airDragForce;
     public float m_airAngularDrag;
+    private const float BACKSTROKE_SWIM_ROT = 180f;
 
     private void Start()
     {
@@ -44,6 +45,8 @@ public class BuoyancyObject : MonoBehaviour
                         if (gameObject.tag == "Player")
                         {
                             GetComponent<Animator>().SetBool("Swim", true);
+                            if (m_characterSO.m_isBackstrokeSwim)
+                                transform.GetChild(0).localEulerAngles = new Vector3(transform.GetChild(0).localEulerAngles.x, BACKSTROKE_SWIM_ROT, 0f);
                         }
                         SwitchState(true);
                     }
@@ -53,7 +56,11 @@ public class BuoyancyObject : MonoBehaviour
                 if (m_characterSO != null && m_characterSO.IsUnderWater() && m_floatersUnderWater == 0)
                 {
                     if (gameObject.tag == "Player")
+                    {
                         GetComponent<Animator>().SetBool("Swim", false);
+                        if (m_characterSO.m_isBackstrokeSwim)
+                            transform.GetChild(0).localEulerAngles = new Vector3(transform.GetChild(0).localEulerAngles.x, 0f, 0f);
+                    }
                     m_characterSO.SetUnderWaterValue(false);
                     SwitchState(false);
                 }
