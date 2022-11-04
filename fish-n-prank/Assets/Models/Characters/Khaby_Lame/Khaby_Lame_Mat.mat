@@ -10,6 +10,7 @@ Material:
   m_Name: Khaby_Lame_Mat
   m_Shader: {fileID: 4800000, guid: ef3178aabaab247448c46c904e37bf43, type: 3}
   m_ValidKeywords:
+  - TCP2_MOBILE
   - TCP2_OUTLINE_MIN_SIZE
   - TCP2_OUTLINE_TEXTURED_VERTEX
   - TCP2_RAMP_CRISP
@@ -21,7 +22,7 @@ Material:
   - TCP2_UV_NORMALS_FULL
   m_InvalidKeywords: []
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -177,7 +178,7 @@ Material:
     - _UseFresnelReflections: 0
     - _UseMatCap: 0
     - _UseMatCapMask: 0
-    - _UseMobileMode: 0
+    - _UseMobileMode: 1
     - _UseNormalMap: 0
     - _UseOcclusion: 0
     - _UseOutline: 1

@@ -11,15 +11,15 @@ public class CharacterData : MonoBehaviour
 
     private void Start()
     {
-        AddCharacterControllerScript();
         AddBuoyancyScript();
+        AddCharacterControllerScript();
         AddFishingRodController();
     }
     public void AddCharacterControllerScript()
     {
         gameObject.GetComponent<CharacterController>().m_characterSO = m_characterSO;
         gameObject.GetComponent<CharacterController>().InitCharacterControllerValues();
-        gameObject.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous;
+        gameObject.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
     }
 
     public void AddBuoyancyScript()

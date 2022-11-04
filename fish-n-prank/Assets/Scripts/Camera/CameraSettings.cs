@@ -12,4 +12,6 @@ public class CameraSettings : ScriptableObject
 
     [BoxGroup("Joystick settings")] public float m_sensivityX = 4.0f;
     [BoxGroup("Joystick settings")] public float m_sensivityY = 1.0f;
+
+    [BoxGroup("Player Follow settings")] public float m_cameraRotationSensitivity = 0.6f;
 }

@@ -21,21 +21,26 @@ public class CharacterController : MonoBehaviour
     private List<Collider> m_collisions = new List<Collider>();
     Vector3 m_movement;
     public Vector3 m_moveVector { set; get; }
-    private Transform m_camTransform;
+    private CameraFollow m_camTransform;
     private bool m_wasGrounded;
     private float m_jumpTimeStamp;
+    public float m_cameraRotationScale = 0.6f;
+    public BuoyancyObject m_buoyancyObject;
 
     public void InitCharacterControllerValues()
     {
         gameObject.AddComponent<Rigidbody>();
+        m_buoyancyObject = GetComponent<BuoyancyObject>();
         gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
+        gameObject.GetComponent<Rigidbody>().angularDrag = m_characterSO.m_airAngularDrag;
+        gameObject.GetComponent<Rigidbody>().drag = m_characterSO.m_dragForce;
         m_joystick = GameObject.Find("JoystickContainer").GetComponent<VariableJoystick>();
         if (!m_animator) { m_animator = gameObject.GetComponent<Animator>(); }
         if (!m_rigidBody) { m_rigidBody = gameObject.GetComponent<Rigidbody>(); }
         m_rigidBody.maxAngularVelocity = m_characterSO.m_rotationSpeed;
         m_rigidBody.drag = m_characterSO.m_dragForce;
         m_rigidBody.mass = m_characterSO.m_mass;
-        m_camTransform = Camera.main.transform;
+        m_camTransform = Camera.main.transform.GetComponent<CameraFollow>();
         m_characterSO.SetGroundedValue(true);
         if (m_characterSO.m_character == CHARACTER.SHIBA)
             GameStateManager.CharactersManager.SetCurrentCharacter(gameObject);
@@ -55,6 +60,7 @@ public class CharacterController : MonoBehaviour
                     m_collisions.Add(collision.collider);
                 }
                 m_characterSO.SetGroundedValue(true);
+                m_characterSO.SetJumpInput(false);
             }
         }
     }
@@ -112,17 +118,10 @@ public class CharacterController : MonoBehaviour
             {
                 m_characterSO.SetJumpInput(true);
             }
-            switch (m_controlMode)
-            {
-                case ControlMode.Direct:
-                    DirectUpdate();
-                    break;
-
-                default:
-                    Debug.LogError("Unsupported state");
-                    break;
-            }
+            if (!m_characterSO.GetJumpInput() && m_characterSO.IsGrounded())
+                DirectUpdate();
         }
+        JumpingAndLanding();
         if (m_characterSO != null)
             m_animator.SetBool("Grounded", m_characterSO.IsGrounded());
         m_wasGrounded = m_characterSO.IsGrounded();
@@ -132,48 +131,45 @@ public class CharacterController : MonoBehaviour
     private void DirectUpdate()
     {
         m_movement = new Vector3(-m_joystick.m_horizontal, 0, -m_joystick.m_vertical);
-        if(!m_characterSO.GetJumpInput())
+        if (m_joystick.m_vertical != 0 || m_joystick.m_horizontal != 0)
         {
-            if (m_joystick.m_vertical != 0 || m_joystick.m_horizontal != 0)
-            {
-                m_camTransform.GetComponent<CameraFollow>().SetCurrentXValue(m_joystick.m_horizontal * 0.2f);
-                m_moveVector = PoolInput(); //get the original input
-                m_moveVector = RotateWithView();//rotate the player using our move vector
-                Move();
-                transform.rotation = Quaternion.LookRotation(m_moveVector);
-                m_animator.SetFloat("MoveSpeed", m_movement.magnitude);
-            }
-            else
-            {
-                m_rigidBody.velocity = Vector3.zero;
-                m_animator.SetFloat("MoveSpeed", 0);
-            }
+            m_camTransform.SetCurrentXValue(m_joystick.m_horizontal * m_camTransform.m_cameraSettings.m_cameraRotationSensitivity);
+            m_moveVector = PoolInput(); //get the original input
+            m_moveVector = RotateWithView();//rotate the player using our move vector
+            Move();
+            transform.rotation = Quaternion.LookRotation(m_moveVector);
+            m_moveVector = Vector3.zero;
+            m_animator.SetFloat("MoveSpeed", m_movement.magnitude);
         }
-        JumpingAndLanding();
+        else
+        {
+            m_rigidBody.velocity = Vector3.zero;
+            m_animator.SetFloat("MoveSpeed", 0);
+        }
     }
 
     public void SetJumpInput()
     {
-        if (!m_characterSO.GetJumpInput())
-            m_characterSO.SetJumpInput(true);
+        m_characterSO.SetJumpInput(true);
     }
 
     public void JumpingAndLanding()
     {
         bool jumpCooldownOver = (Time.time - m_jumpTimeStamp) >= m_characterSO.m_minJumpInterval;
 
-        if (jumpCooldownOver && m_characterSO.GetJumpInput() && m_characterSO.IsGrounded())
+        if (jumpCooldownOver && m_characterSO.IsGrounded() && m_characterSO.GetJumpInput() && m_buoyancyObject != null)
         {
            m_jumpTimeStamp = Time.time;
-            if(!GetComponent<BuoyancyObject>().IsUnderwater())
-                m_rigidBody.AddForce(Vector3.up * m_characterSO.m_jumpForce, ForceMode.Impulse);
+            if(!m_buoyancyObject.IsUnderwater())
+                m_rigidBody.AddForce((Vector3.up + m_moveVector) * m_characterSO.m_jumpForce, ForceMode.Impulse);
             else
-                m_rigidBody.AddForce(Vector3.up * m_characterSO.m_diveForce, ForceMode.Impulse);
+                m_rigidBody.AddForce((Vector3.up + m_moveVector) * m_characterSO.m_diveForce, ForceMode.Impulse);
+            m_characterSO.SetGroundedValue(false);
         }
 
         if (!m_wasGrounded && m_characterSO.IsGrounded())
         {
-            m_characterSO.SetJumpInput(false);
+            //m_characterSO.SetJumpInput(false);
             m_animator.SetTrigger("Land");
         }
 
@@ -199,8 +195,7 @@ public class CharacterController : MonoBehaviour
 
     public void Move()
     {
-
-        Vector3 dir = new Vector3(1f * Mathf.Sign(m_moveVector.x), m_moveVector.y, 1 * Mathf.Sign(m_moveVector.z));
+        Vector3 dir = new Vector3(m_moveVector.x * GameStateManager.CharactersManager.m_xAxisSensitivity, m_moveVector.y, m_moveVector.z * GameStateManager.CharactersManager.m_zAxisSensitivity);
         m_rigidBody.AddForce(dir * m_moveSpeed);
         m_rigidBody.velocity = Vector3.ClampMagnitude(m_rigidBody.velocity, m_characterSO.m_maxSpeed);
     }
@@ -232,13 +227,13 @@ public class CharacterController : MonoBehaviour
     {
         if (m_camTransform != null)
         {
-            Vector3 dir = m_camTransform.TransformDirection(m_moveVector);
+            Vector3 dir = m_camTransform.transform.TransformDirection(m_moveVector);
             dir.Set(-dir.x, 0, -dir.z);
             return dir.normalized * m_moveVector.magnitude;
         }
         else
         {
-            m_camTransform = Camera.main.transform;
+            m_camTransform = Camera.main.transform.GetComponent<CameraFollow>();
             return m_moveVector;
         }
     }

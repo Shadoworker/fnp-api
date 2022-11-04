@@ -27,8 +27,8 @@ public class CharacterSO : ScriptableObject
 
     [BoxGroup("Jump Controller")] public float m_jumpForce;
     [BoxGroup("Jump Controller")] public float m_minJumpInterval;
-    [BoxGroup("Jump Controller")] private bool m_jumpInput;
-    [BoxGroup("Jump Controller")] private bool m_isGrounded;
+    [BoxGroup("Jump Controller")] public bool m_jumpInput;
+    [BoxGroup("Jump Controller")] public bool m_isGrounded;
 
     [BoxGroup("Physics")] public float m_dragForce;
     [BoxGroup("Physics")] public float m_mass;

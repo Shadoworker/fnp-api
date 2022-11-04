@@ -10,7 +10,8 @@ public class DriveBoatTrigger : MonoBehaviour
     private CharacterController m_character;
     public BoatController m_boat;
     public GameObject m_driveBtn;
-    public CinemachineVirtualCamera m_virtualCamera;
+    public Camera m_camera;
+    public GameObject m_virtualCamera;
     private void OnTriggerStay(Collider other)
     {
         if (other.tag == "Player" && !m_boat.enabled)
@@ -30,9 +31,8 @@ public class DriveBoatTrigger : MonoBehaviour
 
     public void SailBoat()
     {
-        m_virtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset = new Vector3(m_virtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.x,
-            m_virtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.y,
-            CAMERA_SAILING_POS);
+        m_virtualCamera.gameObject.SetActive(true);
+        m_camera.gameObject.SetActive(true);
         m_character.transform.localPosition = new Vector3(m_boat.transform.localPosition.x, m_character.transform.localPosition.y, m_character.transform.localPosition.z);
         m_character.transform.LookAt(m_boat.m_facingDirection);
         m_character.transform.SetParent(m_boat.transform);
@@ -47,9 +47,8 @@ public class DriveBoatTrigger : MonoBehaviour
     {
         if(m_character != null && !m_character.enabled)
         {
-            m_virtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset = new Vector3(m_virtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.x,
-                m_virtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.y,
-                CAMERA_PLAYER_POS);
+            m_virtualCamera.gameObject.SetActive(false);
+            m_camera.gameObject.SetActive(false);
             m_character.transform.SetParent(null);
             m_character.GetComponent<Rigidbody>().isKinematic = false;
             //m_character.GetComponent<CapsuleCollider>().enabled = true;

@@ -31,6 +31,7 @@ public class GameStateManager : SingletonScriptableObject<GameStateManager>
 
     public void Init()
     {
+        Application.targetFrameRate = 100;
     }
 
     [Button("Delete All Save Data", sp: 30)]

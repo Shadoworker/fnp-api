@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dd24d0f35c242946b2a8820e80edd8f, type: 3}
   m_Name: CameraSettings
   m_EditorClassIdentifier: 
-  m_sensivityX: 7
-  m_sensivityY: 1
+  m_sensivityX: 2
+  m_sensivityY: 2
+  m_cameraRotationSensitivity: 0.6

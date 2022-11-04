@@ -20,6 +20,9 @@ public class CharactersManager : ScriptableObject
     [BoxGroup("List of characters")] public List<CharacterSO> m_characters;
     [BoxGroup("Game Events")] public GameEvent m_jumpEvent;
     [BoxGroup("Game Events")] public GameEvent m_toggleFishingRodEvent;
+
+    [BoxGroup("Character movement")] public float m_xAxisSensitivity;
+    [BoxGroup("Character movement")] public float m_zAxisSensitivity;
     private GameObject m_currentCharacter;
     public float m_waterHeight;
 

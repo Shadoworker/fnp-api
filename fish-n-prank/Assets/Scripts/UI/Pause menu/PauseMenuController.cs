@@ -6,6 +6,7 @@ public class PauseMenuController : MonoBehaviour
 {
     public CameraFollow m_camera;
     public GameObject m_trollmanObj, m_shibaObj, m_saltBae, m_khabyLame;
+    public GameObject m_cameraBrain, m_virtualCamera;
 
     public void ActivateTrollman()
     {
@@ -35,6 +36,8 @@ public class PauseMenuController : MonoBehaviour
         m_shibaObj.SetActive(false);
         m_saltBae.SetActive(false);
         m_khabyLame.SetActive(false);
+        m_virtualCamera.SetActive(false);
+        m_cameraBrain.SetActive(false);
     }
 
     public void ActivateObj(GameObject _activated)

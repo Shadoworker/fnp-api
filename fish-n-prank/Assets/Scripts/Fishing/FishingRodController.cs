@@ -31,7 +31,7 @@ public class FishingRodController : MonoBehaviour
             Debug.DrawRay(m_playerHead.position, fwd, Color.green);
             if (Physics.Raycast(m_playerHead.position, fwd, out objectHit, 40))
             {
-                if (objectHit.transform.gameObject.name == "Water_plane")
+                if (objectHit.transform.gameObject.name == "Water")
                 {
                     FishingController.Instance.m_characterController = m_characterController;
                     FishingController.Instance.m_isNearFishingSpot.Raise("true");

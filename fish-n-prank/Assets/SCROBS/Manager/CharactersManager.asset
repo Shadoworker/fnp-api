@@ -16,4 +16,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8ad00e3d74a898048b99581e62e8b83b, type: 2}
   m_jumpEvent: {fileID: 11400000, guid: 6703276f8dc3b3e47936435529d46091, type: 2}
   m_toggleFishingRodEvent: {fileID: 11400000, guid: ba28f1532bca2de4393826c3022bedaf, type: 2}
+  m_xAxisSensitivity: 1.5
+  m_zAxisSensitivity: 1
   m_waterHeight: 3.6
