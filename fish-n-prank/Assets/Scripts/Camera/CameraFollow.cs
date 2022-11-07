@@ -25,8 +25,8 @@ public class CameraFollow : MonoBehaviour
 
     private void Update()
     {
-        m_currentX += -m_cameraJoystick.m_horizontal * m_cameraSettings.m_sensivityX;
-        m_currentY += -m_cameraJoystick.m_vertical * m_cameraSettings.m_sensivityY;
+        m_currentX += m_cameraJoystick.m_horizontal * m_cameraSettings.m_sensivityX;
+        m_currentY += m_cameraJoystick.m_vertical * m_cameraSettings.m_sensivityY;
         m_currentY = ClampAngle(m_currentY, Y_ANGLE_MIN, Y_ANGLE_MAX);
     }
 

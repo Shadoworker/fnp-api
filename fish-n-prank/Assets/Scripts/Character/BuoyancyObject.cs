@@ -42,6 +42,7 @@ public class BuoyancyObject : MonoBehaviour
                     if (m_characterSO != null && !m_characterSO.IsUnderWater())
                     {
                         m_characterSO.SetUnderWaterValue(true);
+                        m_characterSO.SetGroundedValue(true);
                         if (gameObject.tag == "Player")
                         {
                             GetComponent<Animator>().SetBool("Swim", true);

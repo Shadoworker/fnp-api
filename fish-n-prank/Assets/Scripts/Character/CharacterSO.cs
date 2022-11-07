@@ -39,7 +39,7 @@ public class CharacterSO : ScriptableObject
 
     [BoxGroup("Buoyancy")] public float m_floatingPower;
     [BoxGroup("Buoyancy")] public float m_diveForce;
-    [BoxGroup("Buoyancy")] private bool m_isUnderwater;
+    [BoxGroup("Buoyancy")] public bool m_isUnderwater;
     [BoxGroup("Buoyancy")] public float m_waterHeight;
     [BoxGroup("Buoyancy")] public bool m_isBackstrokeSwim;
 

@@ -4,20 +4,12 @@ using UnityEngine.UI;
 
 public class CharacterController : MonoBehaviour
 {
-    private enum ControlMode
-    {
-        /// <summary>
-        /// Character freely moves in the chosen direction from the perspective of the camera
-        /// </summary>
-        Direct
-    }
 
     public CharacterSO m_characterSO;
     private float m_moveSpeed = 1;
     private Animator m_animator = null;
     private Rigidbody m_rigidBody = null;
     private VariableJoystick m_joystick = null;
-    private ControlMode m_controlMode = ControlMode.Direct;
     private List<Collider> m_collisions = new List<Collider>();
     Vector3 m_movement;
     public Vector3 m_moveVector { set; get; }
@@ -85,7 +77,6 @@ public class CharacterController : MonoBehaviour
         if (validSurfaceNormal)
         {
             m_characterSO.SetGroundedValue(true);
-            //m_characterSO.SetJumpInput(false);
             if (!m_collisions.Contains(collision.collider))
             {
                 m_collisions.Add(collision.collider);
@@ -97,7 +88,7 @@ public class CharacterController : MonoBehaviour
             {
                 m_collisions.Remove(collision.collider);
             }
-            if (m_collisions.Count == 0) { m_characterSO.SetGroundedValue(false); }
+            if (m_collisions.Count == 0 && !m_characterSO.IsUnderWater()) { m_characterSO.SetGroundedValue(false); }
         }
     }
 
@@ -107,7 +98,7 @@ public class CharacterController : MonoBehaviour
         {
             m_collisions.Remove(collision.collider);
         }
-        if (m_collisions.Count == 0 && m_characterSO.GetJumpInput()) { m_characterSO.SetGroundedValue(false); }
+        if (m_collisions.Count == 0 && m_characterSO.GetJumpInput() && !m_characterSO.IsUnderWater()) { m_characterSO.SetGroundedValue(false); }
     }
 
     private void FixedUpdate()
@@ -157,7 +148,7 @@ public class CharacterController : MonoBehaviour
     {
         bool jumpCooldownOver = (Time.time - m_jumpTimeStamp) >= m_characterSO.m_minJumpInterval;
 
-        if (jumpCooldownOver && m_characterSO.IsGrounded() && m_characterSO.GetJumpInput() && m_buoyancyObject != null)
+        if (jumpCooldownOver && m_characterSO.GetJumpInput() && m_buoyancyObject != null && (m_characterSO.IsGrounded() || m_characterSO.IsUnderWater()))
         {
            m_jumpTimeStamp = Time.time;
             if(!m_buoyancyObject.IsUnderwater())
@@ -165,6 +156,7 @@ public class CharacterController : MonoBehaviour
             else
                 m_rigidBody.AddForce((Vector3.up + m_moveVector) * m_characterSO.m_diveForce, ForceMode.Impulse);
             m_characterSO.SetGroundedValue(false);
+            m_characterSO.SetJumpInput(false);
         }
 
         if (!m_wasGrounded && m_characterSO.IsGrounded())

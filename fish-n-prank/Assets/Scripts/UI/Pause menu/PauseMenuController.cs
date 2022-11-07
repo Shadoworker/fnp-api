@@ -5,9 +5,14 @@ using Cinemachine;
 public class PauseMenuController : MonoBehaviour
 {
     public CameraFollow m_camera;
-    public GameObject m_trollmanObj, m_shibaObj, m_saltBae, m_khabyLame;
+    public GameObject m_trollmanObj, m_shibaObj, m_saltBae, m_khabyLame, m_cube;
     public GameObject m_cameraBrain, m_virtualCamera;
 
+    public void ActivateCube()
+    {
+        DesactivateAll();
+        ActivateObj(m_cube);
+    }
     public void ActivateTrollman()
     {
         DesactivateAll();
