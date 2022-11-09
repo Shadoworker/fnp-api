@@ -93,6 +93,7 @@ public class BuoyancyObject : MonoBehaviour
         {
             m_rigidBody.drag = m_underWaterDragForce;
             m_rigidBody.angularDrag = m_underWaterAngularDragForce;
+            GameStateManager.CharactersManager.m_toggleFishingRodEvent.Raise();
         }
         else
         {

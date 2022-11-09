@@ -55,19 +55,15 @@ public class FishingRodController : MonoBehaviour
     }
     public void ToggleFishingRod()
     {
-        Debug.Log("Toggle fishing rod");
-        if(!m_fishingRod.activeInHierarchy)
+        if(!m_fishingRod.activeInHierarchy && !m_characterSO.IsUnderWater())
         {
             m_animator.SetTrigger("GrabRod");
             m_fishingRod.SetActive(true);
-
-            //_btn.GetComponent<Image>().color = Color.green;
         }
         else
         {
             m_animator.SetTrigger("DropRod");
             m_fishingRod.SetActive(false);
-            //_btn.GetComponent<Image>().color = Color.white;
         }
     }
 }

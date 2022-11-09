@@ -1869,6 +1869,7 @@ MonoBehaviour:
   m_characterSO: {fileID: 11400000, guid: 4d233d20369e23e489342033750eeeab, type: 2}
   m_cameraRotationScale: 0.8
   m_buoyancyObject: {fileID: 0}
+  m_triggerJump: 0
 --- !u!114 &870867026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2077,10 +2078,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_motor: {fileID: 682480878}
-  m_steerm_power: 5000
+  m_steerm_power: 7000
   m_power: 100
   m_maxSpeed: 100
   m_drag: 0.1
+  m_steerPower: 80
   m_joystick: {fileID: 1814962028}
   m_facingDirection: {fileID: 1546568629}
 --- !u!1 &949383079
@@ -2745,6 +2747,7 @@ MonoBehaviour:
   m_characterSO: {fileID: 11400000, guid: 8ad00e3d74a898048b99581e62e8b83b, type: 2}
   m_cameraRotationScale: 0.8
   m_buoyancyObject: {fileID: 0}
+  m_triggerJump: 0
 --- !u!114 &1239269673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3136,6 +3139,7 @@ MonoBehaviour:
   m_characterSO: {fileID: 11400000, guid: 9c869fc468ee0774c84b962d7422d990, type: 2}
   m_cameraRotationScale: 0.8
   m_buoyancyObject: {fileID: 0}
+  m_triggerJump: 0
 --- !u!114 &1249920933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3790,6 +3794,7 @@ MonoBehaviour:
   m_characterSO: {fileID: 11400000, guid: 8ad00e3d74a898048b99581e62e8b83b, type: 2}
   m_cameraRotationScale: 0.8
   m_buoyancyObject: {fileID: 0}
+  m_triggerJump: 0
 --- !u!114 &1435754254
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5440,6 +5445,7 @@ MonoBehaviour:
   m_characterSO: {fileID: 11400000, guid: a2141a0639b3da0469356ab87ec9f64e, type: 2}
   m_cameraRotationScale: 0.8
   m_buoyancyObject: {fileID: 0}
+  m_triggerJump: 0
 --- !u!114 &2008048016
 MonoBehaviour:
   m_ObjectHideFlags: 0

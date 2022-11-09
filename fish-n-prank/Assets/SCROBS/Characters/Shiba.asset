@@ -32,7 +32,7 @@ MonoBehaviour:
   m_airAngularDrag: 10
   m_floatingPower: 126
   m_diveForce: 10
-  m_isUnderwater: 1
+  m_isUnderwater: 0
   m_waterHeight: 3.6
   m_isBackstrokeSwim: 0
   m_fishingRodObjName: Shiba/B_Hips/B_Torso/B_Shoulder_r/B_Arm_r/B_Forearm_r/B_Hand_r/FishingRodShiba

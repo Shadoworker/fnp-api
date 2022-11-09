@@ -41,6 +41,7 @@ public class PauseMenuController : MonoBehaviour
         m_shibaObj.SetActive(false);
         m_saltBae.SetActive(false);
         m_khabyLame.SetActive(false);
+        m_cube.SetActive(false);
         m_virtualCamera.SetActive(false);
         m_cameraBrain.SetActive(false);
     }

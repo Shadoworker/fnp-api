@@ -18,6 +18,7 @@ public class CharacterController : MonoBehaviour
     private float m_jumpTimeStamp;
     public float m_cameraRotationScale = 0.6f;
     public BuoyancyObject m_buoyancyObject;
+    public bool m_triggerJump;
 
     public void InitCharacterControllerValues()
     {
@@ -52,6 +53,7 @@ public class CharacterController : MonoBehaviour
                     m_collisions.Add(collision.collider);
                 }
                 m_characterSO.SetGroundedValue(true);
+                m_triggerJump = false;
                 m_characterSO.SetJumpInput(false);
             }
         }
@@ -105,7 +107,7 @@ public class CharacterController : MonoBehaviour
     {
         if (m_characterSO != null)
         {
-            if (!m_characterSO.GetJumpInput() && Input.GetKey(KeyCode.Space))
+            if (!m_characterSO.GetJumpInput() && (Input.GetKey(KeyCode.Space) || m_triggerJump))
             {
                 m_characterSO.SetJumpInput(true);
             }
@@ -141,13 +143,12 @@ public class CharacterController : MonoBehaviour
 
     public void SetJumpInput()
     {
-        m_characterSO.SetJumpInput(true);
+        m_triggerJump = true;
     }
 
     public void JumpingAndLanding()
     {
         bool jumpCooldownOver = (Time.time - m_jumpTimeStamp) >= m_characterSO.m_minJumpInterval;
-
         if (jumpCooldownOver && m_characterSO.GetJumpInput() && m_buoyancyObject != null && (m_characterSO.IsGrounded() || m_characterSO.IsUnderWater()))
         {
            m_jumpTimeStamp = Time.time;
