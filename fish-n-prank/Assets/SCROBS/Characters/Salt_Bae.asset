@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Salt_Bae
   m_EditorClassIdentifier: 
   m_character: 3
-  m_movementMode: 0
-  m_runSpeed: 25
-  m_walkSpeed: 20
+  m_movementMode: 1
+  m_runSpeed: 9
+  m_walkSpeed: 7
   m_maxSpeed: 10
-  m_rotationSpeed: 5
+  m_rotationSpeed: 0.33
   m_playerHeadObjName: Armature/Bone/Bone.001/Bone.002/Bone.015/Bone.016/Head
   m_specialIdleRepeatRate: 20
   m_jumpForce: 7
@@ -25,14 +25,15 @@ MonoBehaviour:
   m_jumpInput: 0
   m_isGrounded: 1
   m_dragForce: 0
-  m_mass: 1.3
+  m_mass: 1.2
   m_underWaterDragForce: 3
   m_underWaterAngularDragForce: 1
   m_airDragForce: 0
-  m_airAngularDrag: 10
+  m_airAngularDrag: 20
+  m_rayCollisionRef: 0.3
   m_floatingPower: 126
   m_diveForce: 10
-  m_isUnderwater: 0
-  m_waterHeight: 3
+  m_isUnderwater: 1
+  m_waterHeight: 2.9
   m_isBackstrokeSwim: 0
   m_fishingRodObjName: Armature/Bone/Bone.001/Bone.002/Bone.006/Bone.007/Bone.008/Bone.031/FishingRodSaltBae

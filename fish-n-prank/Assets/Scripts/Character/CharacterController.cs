@@ -4,10 +4,9 @@ using UnityEngine.UI;
 
 public class CharacterController : MonoBehaviour
 {
-
     public CharacterSO m_characterSO;
     private float m_moveSpeed = 1;
-    private Animator m_animator = null;
+    public Animator m_animator = null;
     private Rigidbody m_rigidBody = null;
     private VariableJoystick m_joystick = null;
     private List<Collider> m_collisions = new List<Collider>();
@@ -19,6 +18,8 @@ public class CharacterController : MonoBehaviour
     public float m_cameraRotationScale = 0.6f;
     public BuoyancyObject m_buoyancyObject;
     public bool m_triggerJump;
+    private const float SOLID_SURFACE_COLLISION_REF = 0.001f;
+    RaycastHit m_objectHit;
 
     public void InitCharacterControllerValues()
     {
@@ -46,7 +47,7 @@ public class CharacterController : MonoBehaviour
 
         for (int i = 0; i < contactPoints.Length; i++)
         {
-            if (Vector3.Dot(contactPoints[i].normal, Vector3.up) > 0.01f)
+            if (Vector3.Dot(contactPoints[i].normal, Vector3.up) > SOLID_SURFACE_COLLISION_REF && m_characterSO.GetJumpInput())
             {
                 if (!m_collisions.Contains(collision.collider))
                 {
@@ -57,6 +58,11 @@ public class CharacterController : MonoBehaviour
                 m_characterSO.SetJumpInput(false);
             }
         }
+    }
+
+    public float GetYDistanceBetweenColliders(float _y1, float _y2)
+    {
+        return Mathf.Abs(_y1 - _y2);
     }
 
     public void PlaySpecialIdle()
@@ -70,7 +76,7 @@ public class CharacterController : MonoBehaviour
         bool validSurfaceNormal = false;
         for (int i = 0; i < contactPoints.Length; i++)
         {
-            if (Vector3.Dot(contactPoints[i].normal, Vector3.up) > 0.1f)
+            if (Vector3.Dot(contactPoints[i].normal, Vector3.up) > SOLID_SURFACE_COLLISION_REF)
             {
                 validSurfaceNormal = true; break;
             }
@@ -90,7 +96,7 @@ public class CharacterController : MonoBehaviour
             {
                 m_collisions.Remove(collision.collider);
             }
-            if (m_collisions.Count == 0 && !m_characterSO.IsUnderWater()) { m_characterSO.SetGroundedValue(false); }
+            if (m_collisions.Count == 0 && !m_characterSO.IsUnderWater() && !Physics.Raycast(transform.position, Vector3.down, out m_objectHit, m_characterSO.m_rayCollisionRef)) { m_characterSO.SetGroundedValue(false);}
         }
     }
 
@@ -100,7 +106,7 @@ public class CharacterController : MonoBehaviour
         {
             m_collisions.Remove(collision.collider);
         }
-        if (m_collisions.Count == 0 && m_characterSO.GetJumpInput() && !m_characterSO.IsUnderWater()) { m_characterSO.SetGroundedValue(false); }
+        if (m_collisions.Count == 0 && !m_characterSO.IsUnderWater() && !Physics.Raycast(transform.position, Vector3.down, out m_objectHit, m_characterSO.m_rayCollisionRef)) { m_characterSO.SetGroundedValue(false);}
     }
 
     private void FixedUpdate()
@@ -111,10 +117,10 @@ public class CharacterController : MonoBehaviour
             {
                 m_characterSO.SetJumpInput(true);
             }
-            if (!m_characterSO.GetJumpInput() && m_characterSO.IsGrounded())
-                DirectUpdate();
+            DirectUpdate();
         }
         JumpingAndLanding();
+        m_moveVector = Vector3.zero;
         if (m_characterSO != null)
             m_animator.SetBool("Grounded", m_characterSO.IsGrounded());
         m_wasGrounded = m_characterSO.IsGrounded();
@@ -123,18 +129,20 @@ public class CharacterController : MonoBehaviour
 
     private void DirectUpdate()
     {
-        m_movement = new Vector3(-m_joystick.m_horizontal, 0, -m_joystick.m_vertical);
         if (m_joystick.m_vertical != 0 || m_joystick.m_horizontal != 0)
         {
+            m_movement = new Vector3(-m_joystick.m_horizontal, 0, -m_joystick.m_vertical);
             m_camTransform.SetCurrentXValue(m_joystick.m_horizontal * m_camTransform.m_cameraSettings.m_cameraRotationSensitivity);
             m_moveVector = PoolInput(); //get the original input
             m_moveVector = RotateWithView();//rotate the player using our move vector
-            Move();
-            transform.rotation = Quaternion.LookRotation(m_moveVector);
-            m_moveVector = Vector3.zero;
-            m_animator.SetFloat("MoveSpeed", m_movement.magnitude);
+            if (!m_characterSO.GetJumpInput() && m_characterSO.IsGrounded())    // verified if the character is not jumping 
+            {
+                Move();
+                transform.rotation = Quaternion.LookRotation(m_moveVector);
+                m_animator.SetFloat("MoveSpeed", m_movement.magnitude);
+            }
         }
-        else
+        else if (!m_characterSO.GetJumpInput() && m_characterSO.IsGrounded())
         {
             m_rigidBody.velocity = Vector3.zero;
             m_animator.SetFloat("MoveSpeed", 0);
@@ -153,16 +161,15 @@ public class CharacterController : MonoBehaviour
         {
            m_jumpTimeStamp = Time.time;
             if(!m_buoyancyObject.IsUnderwater())
-                m_rigidBody.AddForce((Vector3.up + m_moveVector) * m_characterSO.m_jumpForce, ForceMode.Impulse);
+                m_rigidBody.AddForce(((Vector3.up * m_characterSO.m_jumpForce) + m_moveVector), ForceMode.Impulse);
             else
-                m_rigidBody.AddForce((Vector3.up + m_moveVector) * m_characterSO.m_diveForce, ForceMode.Impulse);
+                m_rigidBody.AddForce(((Vector3.up * m_characterSO.m_jumpForce) + m_moveVector), ForceMode.Impulse);
             m_characterSO.SetGroundedValue(false);
             m_characterSO.SetJumpInput(false);
         }
 
         if (!m_wasGrounded && m_characterSO.IsGrounded())
         {
-            //m_characterSO.SetJumpInput(false);
             m_animator.SetTrigger("Land");
         }
 
@@ -188,8 +195,8 @@ public class CharacterController : MonoBehaviour
 
     public void Move()
     {
-        Vector3 dir = new Vector3(m_moveVector.x * GameStateManager.CharactersManager.m_xAxisSensitivity, m_moveVector.y, m_moveVector.z * GameStateManager.CharactersManager.m_zAxisSensitivity);
-        m_rigidBody.AddForce(dir * m_moveSpeed);
+        Vector3 dir = new Vector3(m_moveVector.x * m_moveSpeed, m_rigidBody.velocity.y, m_moveVector.z * m_moveSpeed);
+        m_rigidBody.velocity = dir;
         m_rigidBody.velocity = Vector3.ClampMagnitude(m_rigidBody.velocity, m_characterSO.m_maxSpeed);
     }
 

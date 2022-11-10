@@ -9,6 +9,8 @@ public class BuoyancyObject : MonoBehaviour
     public Transform[] m_floaters;
 
     Rigidbody m_rigidBody;
+    public FishingRodController m_fishingRodController;
+    public Animator m_animator;
     int m_floatersUnderWater;
 
     public float m_waterHeight;
@@ -21,6 +23,8 @@ public class BuoyancyObject : MonoBehaviour
 
     private void Start()
     {
+        m_fishingRodController = GetComponent<FishingRodController>();
+        m_animator = GetComponent<Animator>();
         m_rigidBody = GetComponent<Rigidbody>();
         if (m_boatSO != null)
             Init(m_boatSO.m_floatingPower, m_boatSO.m_waterHeight, m_boatSO.m_underWaterDragForce, m_boatSO.m_underWaterAngularDragForce,
@@ -45,7 +49,7 @@ public class BuoyancyObject : MonoBehaviour
                         m_characterSO.SetGroundedValue(true);
                         if (gameObject.tag == "Player")
                         {
-                            GetComponent<Animator>().SetBool("Swim", true);
+                            m_animator.SetBool("Swim", true);
                             if (m_characterSO.m_isBackstrokeSwim)
                                 transform.GetChild(0).localEulerAngles = new Vector3(transform.GetChild(0).localEulerAngles.x, BACKSTROKE_SWIM_ROT, 0f);
                         }
@@ -58,7 +62,7 @@ public class BuoyancyObject : MonoBehaviour
                 {
                     if (gameObject.tag == "Player")
                     {
-                        GetComponent<Animator>().SetBool("Swim", false);
+                        m_animator.SetBool("Swim", false);
                         if (m_characterSO.m_isBackstrokeSwim)
                             transform.GetChild(0).localEulerAngles = new Vector3(transform.GetChild(0).localEulerAngles.x, 0f, 0f);
                     }
@@ -93,12 +97,26 @@ public class BuoyancyObject : MonoBehaviour
         {
             m_rigidBody.drag = m_underWaterDragForce;
             m_rigidBody.angularDrag = m_underWaterAngularDragForce;
-            GameStateManager.CharactersManager.m_toggleFishingRodEvent.Raise();
+            m_fishingRodController.DeactivateFishingRod();
         }
         else
         {
             m_rigidBody.drag = m_airDragForce;
             m_rigidBody.angularDrag = m_airAngularDrag;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.tag == "Water" && m_characterSO != null && m_characterSO.GetJumpInput())
+        {
+            //float delay = 0.1f;
+            //Timer.Register(delay, () =>
+            //{
+            //});
+
+            m_characterSO.SetGroundedValue(true);
+            m_animator.SetBool("Swim", true);
         }
     }
 }

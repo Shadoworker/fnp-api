@@ -13,23 +13,24 @@ MonoBehaviour:
   m_Name: Shiba
   m_EditorClassIdentifier: 
   m_character: 0
-  m_movementMode: 0
-  m_runSpeed: 25
-  m_walkSpeed: 10
+  m_movementMode: 1
+  m_runSpeed: 9
+  m_walkSpeed: 0.3
   m_maxSpeed: 10
-  m_rotationSpeed: 2
+  m_rotationSpeed: 0.33
   m_playerHeadObjName: Shiba/B_Hips/B_Torso/B_Neck/B_Head
   m_specialIdleRepeatRate: 20
-  m_jumpForce: 6
+  m_jumpForce: 8
   m_minJumpInterval: 1
   m_jumpInput: 0
-  m_isGrounded: 1
+  m_isGrounded: 0
   m_dragForce: 0
-  m_mass: 1
+  m_mass: 1.2
   m_underWaterDragForce: 3
   m_underWaterAngularDragForce: 1
   m_airDragForce: 0
-  m_airAngularDrag: 10
+  m_airAngularDrag: 20
+  m_rayCollisionRef: 0.3
   m_floatingPower: 126
   m_diveForce: 10
   m_isUnderwater: 0

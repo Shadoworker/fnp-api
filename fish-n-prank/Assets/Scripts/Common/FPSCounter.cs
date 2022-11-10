@@ -22,7 +22,6 @@ public class FPSCounter : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
         UpdateUISize();
     }
 

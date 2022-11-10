@@ -35,7 +35,6 @@ public class CameraFollow : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(m_currentY, m_currentX, 0);
         transform.position = player.transform.position + (rotation * m_dir);
         transform.LookAt(player.transform.position + m_offset);
-        //CheckCameraOcclusionAndCollision();
     }
 
     public void SetCurrentXValue(float _value)

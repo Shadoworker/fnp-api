@@ -28,7 +28,7 @@ public class FishingRodController : MonoBehaviour
             && !m_buoyancy.IsUnderwater())
         {
             Vector3 fwd = m_playerHead.TransformDirection(new Vector3(1, 5f, 1.5f));
-            Debug.DrawRay(m_playerHead.position, fwd, Color.green);
+            Debug.DrawRay(m_playerHead.position, fwd, Color.red);
             if (Physics.Raycast(m_playerHead.position, fwd, out objectHit, 40))
             {
                 if (objectHit.transform.gameObject.name == "Water")
@@ -65,5 +65,10 @@ public class FishingRodController : MonoBehaviour
             m_animator.SetTrigger("DropRod");
             m_fishingRod.SetActive(false);
         }
+    }
+
+    public void DeactivateFishingRod()
+    {
+        m_fishingRod.SetActive(false);
     }
 }

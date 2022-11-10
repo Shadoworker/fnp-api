@@ -36,6 +36,7 @@ public class CharacterSO : ScriptableObject
     [BoxGroup("Physics")] public float m_underWaterAngularDragForce;
     [BoxGroup("Physics")] public float m_airDragForce;
     [BoxGroup("Physics")] public float m_airAngularDrag;
+    [BoxGroup("Physics")] public float m_rayCollisionRef = 0.3f;
 
     [BoxGroup("Buoyancy")] public float m_floatingPower;
     [BoxGroup("Buoyancy")] public float m_diveForce;

@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de911494d1ce0e94fb75d34876201468, type: 3}
+  m_Name: Cube
+  m_EditorClassIdentifier: 
+  m_character: 0
+  m_movementMode: 1
+  m_runSpeed: 8
+  m_walkSpeed: 0.3
+  m_maxSpeed: 10
+  m_rotationSpeed: 0.33
+  m_playerHeadObjName: Shiba/B_Hips/B_Torso/B_Neck/B_Head
+  m_specialIdleRepeatRate: 20
+  m_jumpForce: 8
+  m_minJumpInterval: 1
+  m_jumpInput: 0
+  m_isGrounded: 1
+  m_dragForce: 0
+  m_mass: 1.2
+  m_underWaterDragForce: 3
+  m_underWaterAngularDragForce: 1
+  m_airDragForce: 0
+  m_airAngularDrag: 20
+  m_rayCollisionRef: 0.3
+  m_floatingPower: 126
+  m_diveForce: 10
+  m_isUnderwater: 1
+  m_waterHeight: 3.6
+  m_isBackstrokeSwim: 0
+  m_fishingRodObjName: Shiba/B_Hips/B_Torso/B_Shoulder_r/B_Arm_r/B_Forearm_r/B_Hand_r/FishingRodShiba

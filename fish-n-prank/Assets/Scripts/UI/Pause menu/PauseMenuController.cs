@@ -5,7 +5,7 @@ using Cinemachine;
 public class PauseMenuController : MonoBehaviour
 {
     public CameraFollow m_camera;
-    public GameObject m_trollmanObj, m_shibaObj, m_saltBae, m_khabyLame, m_cube;
+    public GameObject m_trollmanObj, m_shibaObj, m_saltBae, m_khabyLame, m_cube, m_grumpyCat;
     public GameObject m_cameraBrain, m_virtualCamera;
 
     public void ActivateCube()
@@ -34,6 +34,11 @@ public class PauseMenuController : MonoBehaviour
         DesactivateAll();
         ActivateObj(m_saltBae);
     }
+    public void ActivateGrumpyCat()
+    {
+        DesactivateAll();
+        ActivateObj(m_grumpyCat);
+    }
 
     public void DesactivateAll()
     {
@@ -44,6 +49,7 @@ public class PauseMenuController : MonoBehaviour
         m_cube.SetActive(false);
         m_virtualCamera.SetActive(false);
         m_cameraBrain.SetActive(false);
+        m_grumpyCat.SetActive(false);
     }
 
     public void ActivateObj(GameObject _activated)

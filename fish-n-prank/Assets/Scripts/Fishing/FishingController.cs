@@ -82,7 +82,7 @@ public class FishingController : Singleton<FishingController>
         {
             CharacterController characterController = GameStateManager.CharactersManager.GetCurrentCharacter().GetComponent<CharacterController>();
             characterController.enabled = true;
-            characterController.GetComponent<Animator>().SetBool("Fish", false);
+            characterController.m_animator.SetBool("Fish", false);
         }
     }
 
@@ -91,13 +91,12 @@ public class FishingController : Singleton<FishingController>
     {
         InitRodValues();
         CharacterController characterController = GameStateManager.CharactersManager.GetCurrentCharacter().GetComponent<CharacterController>();
-
         characterController.enabled = false;
         m_isFishing = true;
         m_fishingUI.SetActive(true);
         m_jumpBtn.SetActive(false);
         m_fishBtn.SetActive(false);
-        characterController.GetComponent<Animator>().SetBool("Fish", true);
+        characterController.m_animator.SetBool("Fish", true);
         //SetFishingUIPosBasedOnPlayerPos();
     }
 
