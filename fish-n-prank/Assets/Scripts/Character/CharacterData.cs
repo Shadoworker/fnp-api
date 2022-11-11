@@ -8,6 +8,9 @@ using UnityEngine.Events;
 public class CharacterData : MonoBehaviour
 {
     public CharacterSO m_characterSO;
+    public CharacterController m_characterController;
+    public BuoyancyObject m_buoyancyController;
+    public FishingRodController m_fishingRodController;
 
     private void Start()
     {
@@ -17,6 +20,7 @@ public class CharacterData : MonoBehaviour
     }
     public void AddCharacterControllerScript()
     {
+        m_characterController = GetComponent<CharacterController>();
         gameObject.GetComponent<CharacterController>().m_characterSO = m_characterSO;
         gameObject.GetComponent<CharacterController>().InitCharacterControllerValues();
         gameObject.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
@@ -25,6 +29,7 @@ public class CharacterData : MonoBehaviour
     public void AddBuoyancyScript()
     {
         gameObject.AddComponent<BuoyancyObject>();
+        m_buoyancyController = GetComponent<BuoyancyObject>();
         gameObject.GetComponent<BuoyancyObject>().m_characterSO = m_characterSO;
         gameObject.GetComponent<BuoyancyObject>().m_floaters = new Transform[1];
         gameObject.GetComponent<BuoyancyObject>().m_floaters[0] = transform;
@@ -34,6 +39,7 @@ public class CharacterData : MonoBehaviour
 
     public void AddFishingRodController()
     {
+        m_fishingRodController = GetComponent<FishingRodController>();
         gameObject.GetComponent<FishingRodController>().m_characterSO = m_characterSO;
         gameObject.GetComponent<FishingRodController>().InitFishingRod();
     }

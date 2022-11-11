@@ -20,20 +20,21 @@ MonoBehaviour:
   m_rotationSpeed: 0.33
   m_playerHeadObjName: Armature/Bone.001/Bone.002/Bone.003/Bone.029/Head
   m_specialIdleRepeatRate: 20
-  m_jumpForce: 8
+  m_jumpForce: 15
+  m_underwaterJumpForce: 22
   m_minJumpInterval: 1
   m_jumpInput: 0
   m_isGrounded: 1
-  m_dragForce: 0
-  m_mass: 1.2
+  m_dragForce: 0.2
+  m_mass: 2.2
   m_underWaterDragForce: 3
   m_underWaterAngularDragForce: 1
   m_airDragForce: 0
-  m_airAngularDrag: 20
-  m_rayCollisionRef: 0.1
+  m_airAngularDrag: 5
+  m_rayCollisionRef: 0.2
   m_floatingPower: 126
   m_diveForce: 10
-  m_isUnderwater: 0
+  m_isUnderwater: 1
   m_waterHeight: 3.3
   m_isBackstrokeSwim: 1
   m_fishingRodObjName: Armature/Bone.001/Bone.002/Bone.009/Bone.010/Bone.011/Bone.012/FishingRodKhabyLame

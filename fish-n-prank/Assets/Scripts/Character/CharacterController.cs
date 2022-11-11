@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class CharacterController : MonoBehaviour
 {
     public CharacterSO m_characterSO;
+    public CharacterData m_characterData;
     private float m_moveSpeed = 1;
     public Animator m_animator = null;
     private Rigidbody m_rigidBody = null;
@@ -16,7 +17,6 @@ public class CharacterController : MonoBehaviour
     private bool m_wasGrounded;
     private float m_jumpTimeStamp;
     public float m_cameraRotationScale = 0.6f;
-    public BuoyancyObject m_buoyancyObject;
     public bool m_triggerJump;
     private const float SOLID_SURFACE_COLLISION_REF = 0.001f;
     RaycastHit m_objectHit;
@@ -24,7 +24,7 @@ public class CharacterController : MonoBehaviour
     public void InitCharacterControllerValues()
     {
         gameObject.AddComponent<Rigidbody>();
-        m_buoyancyObject = GetComponent<BuoyancyObject>();
+        m_characterData = GetComponent<CharacterData>();
         gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
         gameObject.GetComponent<Rigidbody>().angularDrag = m_characterSO.m_airAngularDrag;
         gameObject.GetComponent<Rigidbody>().drag = m_characterSO.m_dragForce;
@@ -43,21 +43,9 @@ public class CharacterController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        ContactPoint[] contactPoints = collision.contacts;
-
-        for (int i = 0; i < contactPoints.Length; i++)
-        {
-            if (Vector3.Dot(contactPoints[i].normal, Vector3.up) > SOLID_SURFACE_COLLISION_REF && m_characterSO.GetJumpInput())
-            {
-                if (!m_collisions.Contains(collision.collider))
-                {
-                    m_collisions.Add(collision.collider);
-                }
-                m_characterSO.SetGroundedValue(true);
-                m_triggerJump = false;
-                m_characterSO.SetJumpInput(false);
-            }
-        }
+        m_characterSO.SetGroundedValue(true);
+        m_triggerJump = false;
+        m_characterSO.SetJumpInput(false);
     }
 
     public float GetYDistanceBetweenColliders(float _y1, float _y2)
@@ -135,10 +123,10 @@ public class CharacterController : MonoBehaviour
             m_camTransform.SetCurrentXValue(m_joystick.m_horizontal * m_camTransform.m_cameraSettings.m_cameraRotationSensitivity);
             m_moveVector = PoolInput(); //get the original input
             m_moveVector = RotateWithView();//rotate the player using our move vector
+            Move();
+            transform.rotation = Quaternion.LookRotation(m_moveVector);
             if (!m_characterSO.GetJumpInput() && m_characterSO.IsGrounded())    // verified if the character is not jumping 
             {
-                Move();
-                transform.rotation = Quaternion.LookRotation(m_moveVector);
                 m_animator.SetFloat("MoveSpeed", m_movement.magnitude);
             }
         }
@@ -157,13 +145,13 @@ public class CharacterController : MonoBehaviour
     public void JumpingAndLanding()
     {
         bool jumpCooldownOver = (Time.time - m_jumpTimeStamp) >= m_characterSO.m_minJumpInterval;
-        if (jumpCooldownOver && m_characterSO.GetJumpInput() && m_buoyancyObject != null && (m_characterSO.IsGrounded() || m_characterSO.IsUnderWater()))
+        if (jumpCooldownOver && m_characterSO.GetJumpInput() && m_characterData.m_buoyancyController != null && (m_characterSO.IsGrounded() || m_characterSO.IsUnderWater()))
         {
            m_jumpTimeStamp = Time.time;
-            if(!m_buoyancyObject.IsUnderwater())
+            if(!m_characterData.m_buoyancyController.IsUnderwater())
                 m_rigidBody.AddForce(((Vector3.up * m_characterSO.m_jumpForce) + m_moveVector), ForceMode.Impulse);
             else
-                m_rigidBody.AddForce(((Vector3.up * m_characterSO.m_jumpForce) + m_moveVector), ForceMode.Impulse);
+                m_rigidBody.AddForce(((Vector3.up * m_characterSO.m_underwaterJumpForce) + m_moveVector), ForceMode.Impulse);
             m_characterSO.SetGroundedValue(false);
             m_characterSO.SetJumpInput(false);
         }
@@ -195,8 +183,8 @@ public class CharacterController : MonoBehaviour
 
     public void Move()
     {
-        Vector3 dir = new Vector3(m_moveVector.x * m_moveSpeed, m_rigidBody.velocity.y, m_moveVector.z * m_moveSpeed);
-        m_rigidBody.velocity = dir;
+        //Vector3 dir = new Vector3(m_moveVector.x * m_moveSpeed, m_rigidBody.velocity.y, m_moveVector.z * m_moveSpeed);
+        m_rigidBody.velocity = new Vector3(m_moveVector.x * m_moveSpeed, m_rigidBody.velocity.y, m_moveVector.z * m_moveSpeed);
         m_rigidBody.velocity = Vector3.ClampMagnitude(m_rigidBody.velocity, m_characterSO.m_maxSpeed);
     }
 

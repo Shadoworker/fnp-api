@@ -5,11 +5,11 @@ using UnityEngine;
 public class BuoyancyObject : MonoBehaviour
 {
     public CharacterSO m_characterSO;
+    public CharacterData m_characterData;
     public BoatSO m_boatSO;
     public Transform[] m_floaters;
 
     Rigidbody m_rigidBody;
-    public FishingRodController m_fishingRodController;
     public Animator m_animator;
     int m_floatersUnderWater;
 
@@ -23,12 +23,16 @@ public class BuoyancyObject : MonoBehaviour
 
     private void Start()
     {
-        m_fishingRodController = GetComponent<FishingRodController>();
         m_animator = GetComponent<Animator>();
         m_rigidBody = GetComponent<Rigidbody>();
-        if (m_boatSO != null)
+        if (m_boatSO != null)   
+        {
             Init(m_boatSO.m_floatingPower, m_boatSO.m_waterHeight, m_boatSO.m_underWaterDragForce, m_boatSO.m_underWaterAngularDragForce,
                 m_boatSO.m_airDragForce, m_boatSO.m_airAngularDrag);
+        }else
+        {
+            m_characterData = GetComponent<CharacterData>();
+        }
     }
 
     private void FixedUpdate()
@@ -97,7 +101,8 @@ public class BuoyancyObject : MonoBehaviour
         {
             m_rigidBody.drag = m_underWaterDragForce;
             m_rigidBody.angularDrag = m_underWaterAngularDragForce;
-            m_fishingRodController.DeactivateFishingRod();
+            if(m_characterData != null)
+                m_characterData.m_fishingRodController.DeactivateFishingRod();
         }
         else
         {
@@ -108,15 +113,22 @@ public class BuoyancyObject : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Water" && m_characterSO != null && m_characterSO.GetJumpInput())
+         if (other.gameObject.tag == "Water" && m_characterSO != null && m_characterSO.GetJumpInput())
         {
-            //float delay = 0.1f;
-            //Timer.Register(delay, () =>
-            //{
-            //});
-
-            m_characterSO.SetGroundedValue(true);
             m_animator.SetBool("Swim", true);
+            m_characterSO.SetGroundedValue(true);
+            Debug.Log("Enter");
+            m_characterData.m_characterController.m_triggerJump = false;
         }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Water" && m_characterSO != null)
+        {
+            m_characterSO.SetGroundedValue(false);
+            m_animator.SetBool("Swim", false);
+        }
+
     }
 }

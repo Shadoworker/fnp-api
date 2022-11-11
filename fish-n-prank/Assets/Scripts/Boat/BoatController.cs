@@ -45,11 +45,12 @@ public class BoatController : MonoBehaviour
 
         //compute vectors
         var forward = Vector3.Scale(new Vector3(1, 0, 1), transform.forward);
-        var targetVel = Vector3.zero;
 
         //forward poewr
         if (Input.GetAxis("Vertical") > 0 || m_joystick.m_vertical > 0)
             PhysicsHelper.ApplyForceToReachVelocity(m_rigidbody, forward * m_maxSpeed, m_power);
+        if (Input.GetAxis("Vertical") < 0 || m_joystick.m_vertical < 0)
+            PhysicsHelper.ApplyForceToReachVelocity(m_rigidbody, forward * -m_maxSpeed, m_power);
 
         //m_motor Animation // Particle system
         m_motor.SetPositionAndRotation(m_motor.position, transform.rotation * StartRotation * Quaternion.Euler(0, m_steerPower * steer, 0));
@@ -67,5 +68,4 @@ public class BoatController : MonoBehaviour
         //move in direction
         m_rigidbody.velocity = Quaternion.AngleAxis(Vector3.SignedAngle(m_rigidbody.velocity, (movingForward ? 1f : 0f) * transform.forward, Vector3.up) * m_drag, Vector3.up) * m_rigidbody.velocity;
     }
-
 }
