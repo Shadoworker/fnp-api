@@ -38,7 +38,7 @@ public class BoatController : MonoBehaviour
         //steer direction [-1,0,1]
         if (Input.GetAxis("Horizontal") != 0 || m_joystick.m_horizontal != 0)
             steer -= m_joystick.m_horizontal;
-
+        GameStateManager.CameraManager.m_cameraFollow.SetCurrentXValue(m_joystick.m_horizontal * GameStateManager.CameraManager.m_boatSensivityX);
 
         //Rotational Force
         m_rigidbody.AddForceAtPosition(steer * transform.right * m_steerm_power / 100f, m_motor.position);

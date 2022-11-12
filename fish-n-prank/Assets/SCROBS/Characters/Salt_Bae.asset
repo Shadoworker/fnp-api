@@ -20,8 +20,8 @@ MonoBehaviour:
   m_rotationSpeed: 0.33
   m_playerHeadObjName: Armature/Bone/Bone.001/Bone.002/Bone.015/Bone.016/Head
   m_specialIdleRepeatRate: 20
-  m_jumpForce: 15
-  m_underwaterJumpForce: 22
+  m_jumpForce: 17
+  m_underwaterJumpForce: 23
   m_minJumpInterval: 1
   m_jumpInput: 0
   m_isGrounded: 1
@@ -34,7 +34,7 @@ MonoBehaviour:
   m_rayCollisionRef: 0.1
   m_floatingPower: 126
   m_diveForce: 10
-  m_isUnderwater: 1
+  m_isUnderwater: 0
   m_waterHeight: 2.9
   m_isBackstrokeSwim: 0
   m_fishingRodObjName: Armature/Bone/Bone.001/Bone.002/Bone.006/Bone.007/Bone.008/Bone.031/FishingRodSaltBae

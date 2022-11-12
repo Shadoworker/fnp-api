@@ -20,8 +20,8 @@ MonoBehaviour:
   m_rotationSpeed: 0.33
   m_playerHeadObjName: Armature/Bone/Head
   m_specialIdleRepeatRate: 20
-  m_jumpForce: 14
-  m_underwaterJumpForce: 22
+  m_jumpForce: 17
+  m_underwaterJumpForce: 23
   m_minJumpInterval: 1
   m_jumpInput: 0
   m_isGrounded: 1

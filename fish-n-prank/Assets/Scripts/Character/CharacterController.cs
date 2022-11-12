@@ -13,7 +13,6 @@ public class CharacterController : MonoBehaviour
     private List<Collider> m_collisions = new List<Collider>();
     Vector3 m_movement;
     public Vector3 m_moveVector { set; get; }
-    private CameraFollow m_camTransform;
     private bool m_wasGrounded;
     private float m_jumpTimeStamp;
     public float m_cameraRotationScale = 0.6f;
@@ -34,7 +33,6 @@ public class CharacterController : MonoBehaviour
         m_rigidBody.maxAngularVelocity = m_characterSO.m_rotationSpeed;
         m_rigidBody.drag = m_characterSO.m_dragForce;
         m_rigidBody.mass = m_characterSO.m_mass;
-        m_camTransform = Camera.main.transform.GetComponent<CameraFollow>();
         m_characterSO.SetGroundedValue(true);
         if (m_characterSO.m_character == CHARACTER.SHIBA)
             GameStateManager.CharactersManager.SetCurrentCharacter(gameObject);
@@ -120,13 +118,13 @@ public class CharacterController : MonoBehaviour
         if (m_joystick.m_vertical != 0 || m_joystick.m_horizontal != 0)
         {
             m_movement = new Vector3(-m_joystick.m_horizontal, 0, -m_joystick.m_vertical);
-            m_camTransform.SetCurrentXValue(m_joystick.m_horizontal * m_camTransform.m_cameraSettings.m_cameraRotationSensitivity);
+            GameStateManager.CameraManager.m_cameraFollow.SetCurrentXValue(m_joystick.m_horizontal * GameStateManager.CameraManager.m_cameraRotationSensitivity);
             m_moveVector = PoolInput(); //get the original input
             m_moveVector = RotateWithView();//rotate the player using our move vector
-            Move();
-            transform.rotation = Quaternion.LookRotation(m_moveVector);
-            if (!m_characterSO.GetJumpInput() && m_characterSO.IsGrounded())    // verified if the character is not jumping 
+            if (!IsJumpCoolDownOver() || m_characterSO.IsGrounded())    // verified if the character is not jumping 
             {
+                Move();
+                transform.rotation = Quaternion.LookRotation(m_moveVector);
                 m_animator.SetFloat("MoveSpeed", m_movement.magnitude);
             }
         }
@@ -144,8 +142,7 @@ public class CharacterController : MonoBehaviour
 
     public void JumpingAndLanding()
     {
-        bool jumpCooldownOver = (Time.time - m_jumpTimeStamp) >= m_characterSO.m_minJumpInterval;
-        if (jumpCooldownOver && m_characterSO.GetJumpInput() && m_characterData.m_buoyancyController != null && (m_characterSO.IsGrounded() || m_characterSO.IsUnderWater()))
+        if (IsJumpCoolDownOver() && m_characterSO.GetJumpInput() && m_characterData.m_buoyancyController != null && (m_characterSO.IsGrounded() || m_characterSO.IsUnderWater()))
         {
            m_jumpTimeStamp = Time.time;
             if(!m_characterData.m_buoyancyController.IsUnderwater())
@@ -167,6 +164,11 @@ public class CharacterController : MonoBehaviour
         }
     }
 
+    public bool IsJumpCoolDownOver()
+    {
+        return (Time.time - m_jumpTimeStamp) >= m_characterSO.m_minJumpInterval; ;
+    }
+
     public void ToggleRunning(GameObject _runningIcon)
     {
         if(!m_characterSO.IsRunning())
@@ -185,7 +187,7 @@ public class CharacterController : MonoBehaviour
     {
         //Vector3 dir = new Vector3(m_moveVector.x * m_moveSpeed, m_rigidBody.velocity.y, m_moveVector.z * m_moveSpeed);
         m_rigidBody.velocity = new Vector3(m_moveVector.x * m_moveSpeed, m_rigidBody.velocity.y, m_moveVector.z * m_moveSpeed);
-        m_rigidBody.velocity = Vector3.ClampMagnitude(m_rigidBody.velocity, m_characterSO.m_maxSpeed);
+        //m_rigidBody.velocity = Vector3.ClampMagnitude(m_rigidBody.velocity, m_characterSO.m_maxSpeed);
     }
 
     public Vector3 PoolInput()
@@ -213,15 +215,15 @@ public class CharacterController : MonoBehaviour
 
     private Vector3 RotateWithView()
     {
-        if (m_camTransform != null)
+        if (GameStateManager.CameraManager.m_cameraFollow != null)
         {
-            Vector3 dir = m_camTransform.transform.TransformDirection(m_moveVector);
+            Vector3 dir = GameStateManager.CameraManager.m_cameraFollow.transform.TransformDirection(m_moveVector);
             dir.Set(-dir.x, 0, -dir.z);
             return dir.normalized * m_moveVector.magnitude;
         }
         else
         {
-            m_camTransform = Camera.main.transform.GetComponent<CameraFollow>();
+            GameStateManager.CameraManager.m_cameraFollow = Camera.main.transform.GetComponent<CameraFollow>();
             return m_moveVector;
         }
     }

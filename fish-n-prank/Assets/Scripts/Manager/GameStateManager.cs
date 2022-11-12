@@ -20,9 +20,16 @@ public class GameStateManager : SingletonScriptableObject<GameStateManager>
     [SerializeField] private ApplicationManager m_applicationManager;
 
     [SerializeField] private CharactersManager m_charactersManager;
+
+    [SerializeField] private CameraManager m_cameraManager;
+
     public static CharactersManager CharactersManager
     {
         get { return Instance.m_charactersManager; }
+    }
+    public static CameraManager CameraManager
+    {
+        get { return Instance.m_cameraManager; }
     }
     public static ApplicationManager ApplicationManager
     {

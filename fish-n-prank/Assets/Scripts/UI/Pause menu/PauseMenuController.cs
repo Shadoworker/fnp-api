@@ -4,9 +4,7 @@ using UnityEngine;
 using Cinemachine;
 public class PauseMenuController : MonoBehaviour
 {
-    public CameraFollow m_camera;
     public GameObject m_trollmanObj, m_shibaObj, m_saltBae, m_khabyLame, m_cube, m_grumpyCat;
-    public GameObject m_cameraBrain, m_virtualCamera;
 
     public void ActivateCube()
     {
@@ -47,8 +45,6 @@ public class PauseMenuController : MonoBehaviour
         m_saltBae.SetActive(false);
         m_khabyLame.SetActive(false);
         m_cube.SetActive(false);
-        m_virtualCamera.SetActive(false);
-        m_cameraBrain.SetActive(false);
         m_grumpyCat.SetActive(false);
     }
 
@@ -57,6 +53,6 @@ public class PauseMenuController : MonoBehaviour
         DesactivateAll();
         _activated.SetActive(true);
         GameStateManager.CharactersManager.SetCurrentCharacter(_activated);
-        m_camera.player = _activated;
+        GameStateManager.CameraManager.SetTarget(_activated);
     }
 }

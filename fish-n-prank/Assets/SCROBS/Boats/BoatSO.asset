@@ -16,6 +16,6 @@ MonoBehaviour:
   m_waterHeight: 5.2
   m_mass: 10
   m_underWaterDragForce: 0.5
-  m_underWaterAngularDragForce: 0.5
+  m_underWaterAngularDragForce: 3
   m_airDragForce: 0.5
-  m_airAngularDrag: 1
+  m_airAngularDrag: 3
