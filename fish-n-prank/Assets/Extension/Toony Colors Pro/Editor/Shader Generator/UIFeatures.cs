@@ -1,5 +1,5 @@
 // Toony Colors Pro 2
-// (c) 2014-2021 Jean Moreno
+// (c) 2014-2022 Jean Moreno
 
 using System;
 using System.Collections.Generic;
@@ -359,8 +359,9 @@ namespace ToonyColorsPro
 						case "subh": feature = new UIFeature_SubHeader(kvpList); break;
 						case "header": feature = new UIFeature_Header(kvpList); break;
 						case "warning": feature = new UIFeature_Warning(kvpList); break;
-						case "sngl": feature = new UIFeature_Single(kvpList); break;
-						case "gpu_inst_opt": feature = new UIFeature_Single(kvpList); break;
+						case "sngl": feature = new UIFeature_Single(kvpList, false); break;
+						case "nsngl": feature = new UIFeature_Single(kvpList, true); break;
+						case "gpu_inst_opt": feature = new UIFeature_Single(kvpList, false); break;
 						case "mult": feature = new UIFeature_Multiple(kvpList); break;
 						case "mult_flags": feature = new UIFeature_MultFlags(kvpList); break;
 						case "keyword": feature = new UIFeature_Keyword(kvpList); break;
@@ -403,10 +404,14 @@ namespace ToonyColorsPro
 
 		internal class UIFeature_Single : UIFeature
 		{
+			readonly bool negative;
 			string keyword;
 			string[] toggles;    //features forced to be toggled when this feature is enabled
 
-			internal UIFeature_Single(List<KeyValuePair<string, string>> list) : base(list) { }
+			internal UIFeature_Single(List<KeyValuePair<string, string>> list, bool negative) : base(list)
+			{
+				this.negative = negative;
+			}
 
 			protected override void ProcessProperty(string key, string value)
 			{
@@ -422,7 +427,18 @@ namespace ToonyColorsPro
 			{
 				var feature = Highlighted(config);
 				EditorGUI.BeginChangeCheck();
-				feature = EditorGUI.Toggle(position, feature);
+				if (negative)
+				{
+					bool check = EditorGUI.Toggle(position, !feature);
+					if (GUI.changed)
+					{
+						feature = !check;
+					}
+				}
+				else
+				{
+					feature = EditorGUI.Toggle(position, feature);
+				}
 				if (labelClicked)
 				{
 					feature = !feature;
@@ -434,8 +450,10 @@ namespace ToonyColorsPro
 
 					if(toggles != null)
 					{
-						foreach(var t in toggles)
+						foreach (var t in toggles)
+						{
 							config.ToggleFeature(t, feature);
+						}
 					}
 				}
 			}
@@ -982,7 +1000,7 @@ namespace ToonyColorsPro
 
 		internal class UIFeature_Flag : UIFeature
 		{
-			bool negative;
+			readonly bool negative;
 			string keyword;
 			string block = "pragma_surface_shader";
 			string[] toggles;    //features forced to be toggled when this flag is enabled

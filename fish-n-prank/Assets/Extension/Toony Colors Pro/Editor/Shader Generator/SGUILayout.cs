@@ -1,5 +1,5 @@
 ﻿// Toony Colors Pro 2
-// (c) 2014-2021 Jean Moreno
+// (c) 2014-2022 Jean Moreno
 
 using System;
 using System.Collections.Generic;
@@ -26,6 +26,7 @@ namespace ToonyColorsPro
 				public const string worldPosUVLabel = "World Position";
 				public const string triplanarUVLabel = "Triplanar";
 				public const string shaderPropertyUVLabel = "Other Shader Property";
+				public const string customMaterialPropertyUVLabel = "Custom Material Property";
 
 				public static readonly string[] DefaultTextureValues =
 				{
@@ -44,7 +45,8 @@ namespace ToonyColorsPro
 					screenSpaceUVLabel,
 					worldPosUVLabel,
 					triplanarUVLabel,
-					shaderPropertyUVLabel
+					shaderPropertyUVLabel,
+					customMaterialPropertyUVLabel
 				};
 
 				public static readonly string[] UvChannelOptionsVertex =
@@ -55,7 +57,8 @@ namespace ToonyColorsPro
 					"texcoord3",
 					worldPosUVLabel,
 					triplanarUVLabel,
-					shaderPropertyUVLabel
+					shaderPropertyUVLabel,
+					customMaterialPropertyUVLabel
 				};
 
 				public static string[] LockedUvChannelOptions =
@@ -106,7 +109,7 @@ namespace ToonyColorsPro
 					}
 				}
 
-				internal static Color OrangeColor { get { return EditorGUIUtility.isProSkin ? new Color32(250, 130, 0, 255) : new Color32(220, 100, 0, 255); } }
+				internal static Color OrangeColor { get { return EditorGUIUtility.isProSkin ? new Color32(250, 130, 0, 255) : new Color32(200, 100, 20, 255); } }
 
 				static GUIStyle _OrangeBoldLabel;
 				internal static GUIStyle OrangeBoldLabel
@@ -379,7 +382,6 @@ namespace ToonyColorsPro
 					{
 						if (_ShurikenValueMonospace == null)
 						{
-							
 							_ShurikenValueMonospace = new GUIStyle(ShurikenValue);
 							var robotoMonospace = AssetDatabase.LoadAssetAtPath<Font>(AssetDatabase.GUIDToAssetPath("64bf6567ab0269a47bfa164e4156cc4f"));
 							if (robotoMonospace != null)
@@ -400,7 +402,8 @@ namespace ToonyColorsPro
 						{
 							_ShurikenPopup = new GUIStyle("ShurikenPopup")
 							{
-								fontSize = shurikenFontSize
+								fontSize = shurikenFontSize,
+								clipping = TextClipping.Clip
 							};
 						}
 						return _ShurikenPopup;
@@ -509,6 +512,78 @@ namespace ToonyColorsPro
 							_ShurikenMiniButtonFlexible.fixedWidth = 0;
 						}
 						return _ShurikenMiniButtonFlexible;
+					}
+				}
+
+#if UNITY_2019_3_OR_NEWER
+				const int MINI_BUTTON_FONT_SIZE = 10;
+#endif
+				
+				static GUIStyle _MiniButtonLeft;
+				internal static GUIStyle MiniButtonLeft
+				{
+					get
+					{
+#if !UNITY_2019_3_OR_NEWER
+						return EditorStyles.miniButtonLeft;
+#else
+						if (_MiniButtonLeft == null)
+						{
+							_MiniButtonLeft = new GUIStyle(EditorStyles.miniButtonLeft){ fontSize = MINI_BUTTON_FONT_SIZE };
+						}
+						return _MiniButtonLeft;
+#endif
+					}
+				}
+				static GUIStyle _MiniButtonMid;
+				internal static GUIStyle MiniButtonMid
+				{
+					get
+					{
+#if !UNITY_2019_3_OR_NEWER
+						return EditorStyles.miniButtonMid;
+#else
+
+						if (_MiniButtonMid == null)
+						{
+							_MiniButtonMid = new GUIStyle(EditorStyles.miniButtonMid){ fontSize = MINI_BUTTON_FONT_SIZE };
+						}
+						return _MiniButtonMid;
+#endif
+					}
+				}
+
+				static GUIStyle _MiniButtonRight;
+				internal static GUIStyle MiniButtonRight
+				{
+					get
+					{
+#if !UNITY_2019_3_OR_NEWER
+						return EditorStyles.miniButtonRight;
+#else
+						if (_MiniButtonRight == null)
+						{
+							_MiniButtonRight = new GUIStyle(EditorStyles.miniButtonRight){ fontSize = MINI_BUTTON_FONT_SIZE };
+						}
+						return _MiniButtonRight;
+#endif
+					}
+				}
+				
+				static GUIStyle _MiniButton;
+				internal static GUIStyle MiniButton
+				{
+					get
+					{
+#if !UNITY_2019_3_OR_NEWER
+						return EditorStyles.miniButton;
+#else
+						if (_MiniButton == null)
+						{
+							_MiniButton = new GUIStyle(EditorStyles.miniButton){ fontSize = MINI_BUTTON_FONT_SIZE };
+						}
+						return _MiniButton;
+#endif
 					}
 				}
 			}
@@ -821,7 +896,12 @@ namespace ToonyColorsPro
 
 			public static bool ButtonPopup(string label)
 			{
-				return GUILayout.Button(label, Styles.ShurikenPopup, GUILayout.MinWidth(248), GUILayout.MinHeight(Styles.shurikenLineHeight));
+				return ButtonPopup(TCP2_GUI.TempContent(label));
+			}
+			
+			public static bool ButtonPopup(GUIContent content)
+			{
+				return GUILayout.Button(content, Styles.ShurikenPopup, GUILayout.MinWidth(248), GUILayout.MinHeight(Styles.shurikenLineHeight));
 			}
 			public static int IntField(int value)
 			{

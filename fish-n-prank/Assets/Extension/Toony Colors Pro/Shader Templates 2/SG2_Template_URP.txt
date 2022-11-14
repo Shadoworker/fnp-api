@@ -1,5 +1,5 @@
 // Toony Colors Pro+Mobile 2
-// (c) 2014-2021 Jean Moreno
+// (c) 2014-2022 Jean Moreno
 
 #NAME=Default (Universal Pipeline)
 #ID=TEMPLATE_URP
@@ -16,6 +16,7 @@ Triplanar Sampling
 HSV
 Screen Space UV
 Hash Functions
+Dithering
 
 # lighting:
 Ramp Shading LWRP
@@ -33,6 +34,7 @@ Normal Mapping
 Texture Blending
 Triplanar
 Vertex Displacement
+Terrain
 
 # stylization:
 NdotL Stylization
@@ -76,7 +78,7 @@ sngl	lbl="Emission"					kw=EMISSION		help="featuresreference/lighting/emission"	
 [[MODULE:FEATURES:Subsurface Scattering]]
 ---
 subh	lbl="Reflections"		help="featuresreference/lighting/reflections"
-sngl	lbl="Reflection Probes"			kw=GLOSSY_REFLECTIONS																	tt="Enable reflection probes or skybox reflection support"
+sngl	lbl="Reflection Probes"			kw=GLOSSY_REFLECTIONS																					tt="Enable reflection probes or skybox reflection support"
 [[MODULE:FEATURES:Reflection]]
 sngl	lbl="Make Reflections Optional"	kw=REFLECTION_SHADER_FEATURE		needsOr=REFLECTION_CUBEMAP,GLOSSY_REFLECTIONS,PLANAR_REFLECTION		tt="Will make reflections optional in the material inspector, using a shader keyword"
 ---
@@ -90,7 +92,6 @@ sngl	lbl="Single Indirect Color"		kw=AMBIENT_VIEW_DIR		tt="Use the view directio
 sngl	lbl="Make Ambient Optional"		kw=AMBIENT_SHADER_FEATURE	tt="Will make ambient/indirect diffuse lighting optional in the material inspector, using a shader keyword"
 ---
 dd_end
-
 dd_start	lbl="SURFACE"
 ---
 [[MODULE:FEATURES:Vertex Displacement]]
@@ -109,9 +110,14 @@ dd_start	lbl="STYLIZATION"
 [[MODULE:FEATURES:Sketch]]
 [[MODULE:FEATURES:Outline]]
 dd_end
+dd_start	lbl="TERRAIN"
+---
+[[MODULE:FEATURES:Terrain]]
+dd_end
 dd_start	lbl="SPECIAL EFFECTS"
 ---
 sngl	lbl="Custom Time"				kw=CUSTOM_TIME		help="featuresreference/specialeffects/customtime"		tt="Use a custom time variable controlled by scripts for all timed-related features (this will disable Editor animation preview).  The custom time variable is a float4 named '_CustomTime'.  By default, the Y component should reflect the actual time, and other components are multiples of that value:  x: time * 0.05  y: time  z: time * 2  w: time * 3"
+sngl	lbl="Local"		indent			kw=CUSTOM_TIME_LOCAL	needs=CUSTOM_TIME		help="featuresreference/specialeffects/customtime"		tt="Define the custom time value locally to the material, instead of globally.  Use Shader.SetGlobalVector if global, else material.SetVector if local."
 ---
 sngl	lbl="Silhouette Pass"			kw=PASS_SILHOUETTE		help="featuresreference/specialeffects/silhouettepass"		tt="Adds a silhouette pass, to show the object when it is behind obstacles"
 sngl	lbl="URP Renderer Feature"		kw=SILHOUETTE_URP_FEATURE		needs=PASS_SILHOUETTE	indent		tt="Set the silhouette pass to be used as a Renderer Feature (see documentation)"
@@ -137,9 +143,11 @@ space	space=4			needs=CUSTOM_BLENDING
 #sngl	lbl="Depth pre-pass"		kw=DEPTH_PREPASS		tt="Adds a depth only shader pass, to prevent parts of the mesh from being visible through itself."
 #NOTE: not working currently, the additional pass seems to always be drawn after the UniversalForward one, never before, so we can't draw to the depth buffer beforehand.
 ---
-sngl	lbl="Alpha Testing (Cutout)"		kw=ALPHA_TESTING		help="featuresreference/transparency/blending/alphatesting"
+sngl	lbl="Alpha Testing (Cutout)"	kw=ALPHA_TESTING			help="featuresreference/transparency/blending/alphatesting"
 sngl	lbl="Alpha to Coverage"			kw=ALPHA_TO_COVERAGE		needs=ALPHA_TESTING							indent		tt="Enables Alpha to Coverage, which allows MSAA anti-aliasing to be used with alpha testing"
 sngl	lbl="Disable alpha sharpening"	kw=ALPHA_TO_COVERAGE_RAW	needs=ALPHA_TESTING,ALPHA_TO_COVERAGE		indent=2	tt="Disables screen-space alpha sharpening, which is used to get proper anti-aliasing with Alpha to Coverage"
+sngl	lbl="Transparency Dithering"	kw=ALPHA_TESTING_DITHERING	needs=ALPHA_TESTING							indent		tt="Enables dithering for alpha testing, i.e. making the transparency transition pixel by pixel in screen space"
+mult	lbl="Dithering Pattern"			kw=Procedural 4x4 Pixels|,Procedural 8x8 Pixels|ALPHA_DITHER_8x8,Lookup Texture|ALPHA_DITHER_TEXTURE	indent=2	needs=ALPHA_TESTING,ALPHA_TESTING_DITHERING	tt="The dithering pattern to use, either calculated with maths or using a lookup texture."
 dd_end
 dd_start	lbl="SHADER STATES"
 ---
@@ -163,9 +171,13 @@ dd_start	lbl="OPTIONS"
 sngl		lbl="Disable Shadow Receiving"			kw=DISABLE_SHADOW_RECEIVING
 sngl		lbl="Disable Shadow Casting"			kw=DISABLE_SHADOW_CASTING
 sngl		lbl="Disable Additional Lights"			kw=DISABLE_ADDITIONAL_LIGHTS
+sngl		lbl="Enable Decals (URP 12+)"			kw=ENABLE_DECALS		toggles=ENABLE_DEPTH_NORMALS_PASS
+sngl		lbl="Enable Light Cookies (URP 12+)"	kw=ENABLE_COOKIES
 sngl		lbl="Enable SSAO"						kw=SSAO
 sngl		lbl="Enable Fog"						kw=FOG
 sngl		lbl="Enable Lightmaps"					kw=ENABLE_LIGHTMAP
+sngl		lbl="Enable LOD Dither Crossfade"		kw=ENABLE_DITHER_LOD
+mult		lbl="Dithering Pattern"					kw=4x4 Pixels|,8x8 Pixels|DITHER_LOD_8x8	indent	tt="The size of the dithering pattern to use, 8x8 looks more progressive than 4x4."
 sngl		lbl="Disable Dynamic Batching"			kw=DISABLE_BATCHING				tt="Disable dynamic batching support for this shader"
 sngl		lbl="Enable Depth Normals Pass"			kw=ENABLE_DEPTH_NORMALS_PASS
 sngl		lbl="Enable Meta Pass"					kw=ENABLE_META_PASS				tt="Enable meta pass: it is needed to be able to bake lighting but can prevent SRP Batcher compatibility."
@@ -192,7 +204,7 @@ dd_end
 #PROPERTIES_NEW
 header		Main Properties
 /// IF !CUSTOM_ALBEDO
-color_rgba	Albedo				fragment, imp(texture, label = "Albedo", variable = "_BaseMap", default = white, tiling_offset = true, global = true)
+color_rgba	Albedo				fragment, imp(texture, label = "Albedo", variable = "_BaseMap", drawer = "[MainTexture]", default = white, tiling_offset = true, global = true)
 ///
 [[MODULE:PROPERTIES_NEW:AlbedoHSV]]
 color_rgba	Main Color			fragment, imp(color, label = "Color", variable = "_BaseColor", default = (1,1,1,1)), help = "An adjustable color multiplied with the final albedo color.  Set it to a white color constant if you don't plan on using it, to improve the shader performance."
@@ -200,7 +212,13 @@ color_rgba	Main Color			fragment, imp(color, label = "Color", variable = "_BaseC
 float		Alpha				fragment, imp(shader_property_ref, reference = Albedo, swizzle = A), imp(shader_property_ref, reference = Main Color, swizzle = A), help = "The output alpha value, generally only needed when using alpha blending transparency or alpha testing (cutout)",
 ///
 /// IF ALPHA_TESTING
+	/// IF ALPHA_TESTING_DITHERING
+		/// IF ALPHA_DITHER_TEXTURE
+float		Dithering Texture	fragment, imp(texture, label = "Alpha Dithering", variable = "_DitherTex", default = gray, uv_screenspace = true, scale_texel = true)
+		///
+	/// ELSE
 float		Cutoff				fragment, imp(range, label = "Alpha Cutoff", default = 0.5, min = 0, max = 1), help = "The threshold value at which point pixels are discarded when using alpha testing (cutout)"
+	///
 ///
 float		Ambient Intensity	lighting, imp(constant, label = "Ambient Intensity", default = 1)
 
@@ -233,6 +251,7 @@ float3		Max Light Intensity				lighting, imp(constant, default = (1.0, 1.0, 1.0)
 [[MODULE:PROPERTIES_NEW:Reflection]]
 [[MODULE:PROPERTIES_NEW:MatCap]]
 [[MODULE:PROPERTIES_NEW:Custom Ambient]]
+[[MODULE:PROPERTIES_NEW:Terrain]]
 [[MODULE:PROPERTIES_NEW:Vertex Displacement]]
 [[MODULE:PROPERTIES_NEW:Normal Mapping]]
 [[MODULE:PROPERTIES_NEW:Triplanar]]
@@ -309,11 +328,19 @@ float3			Additional Lights Direction		lighting, label = "Additional Lights Direc
 color			Main Light Color				lighting, label = "Main Light Color", imp(hook, label = "lightColor", toggles = HOOK_MAIN_LIGHT_COLOR), help = "The color of the main directional light."
 color			Additional Lights Color			lighting, label = "Additional Lights Color", imp(hook, label = "lightColor", toggles = HOOK_OTHER_LIGHTS_COLOR), help = "The color of additional lights."
 color			Shading Ramp					lighting, label = "Shading Ramp", imp(hook, label = "ramp", toggles = HOOK_RAMP), help = "The colored ramp calculated, depending on the ramp settings, with the highlight and shadow colors."
-color			Main Light Attenuation			lighting, label = "Main Light Attenuation", imp(hook, label = "atten", toggles = HOOK_MAIN_LIGHT_ATTEN), help = "The attenuation of the main directional light (shadow map)."
-color			Additional Lights Attenuation	lighting, label = "Additional Lights Attenuation", imp(hook, label = "atten", toggles = HOOK_OTHER_LIGHTS_ATTEN), help = "The attenuation of additional lights (shadow map and distance attenuation)."
+float			Main Light Attenuation			lighting, label = "Main Light Shadows Attenuation", imp(hook, label = "atten", toggles = HOOK_MAIN_LIGHT_ATTEN), help = "The attenuation of the main directional light (shadow map)."
+float			Additional Lights Shadows		lighting, label = "Additional Lights Shadows Attenuation", imp(hook, label = "light.shadowAttenuation", toggles = HOOK_OTHER_LIGHTS_SHADOWMAP), help = "The shadow map part of the additional lights attenuation."
+float			Additional Lights Distance		lighting, label = "Additional Lights Distance Attenuation", imp(hook, label = "light.distanceAttenuation", toggles = HOOK_OTHER_LIGHTS_DIST), help = "The distance part of the additional lights attenuation."
+float			Additional Lights Attenuation	lighting, label = "Additional Lights Combined Attenuation", imp(hook, label = "atten", toggles = HOOK_OTHER_LIGHTS_ATTEN), help = "The attenuation of additional lights (shadow map and distance attenuation)."
 color			Final Albedo			fragment, imp(hook, label = "albedo.rgb", toggles = HOOK_FINAL_ALBEDO), help = "The final albedo used by the shader before lighting."
 color			Final Ambient			fragment, imp(hook, label = "indirectDiffuse.rgb", toggles = HOOK_FINAL_AMBIENT), help = "The final ambient color used by the shader, with any modifiers applied (e.g. Occlusion)"
 color			Final Color				fragment, imp(hook, label = "color.rgb", toggles = HOOK_FINAL_COLOR), help = "The final color returned by the shader, after having processed all lighting and effects."
+/// IF TERRAIN_SHADER
+color_rgba		Terrain Splat Control	fragment, imp(hook, label = "terrain_splat_control.rgba", toggles = HOOK_SPLAT_CONTROL), help = "The terrain's internal splat control texture, before it is used to sample each layer."
+///
+/// IF TERRAIN_SHADER && TERRAIN_SHADER_8_LAYERS
+color_rgba		Terrain Splat Control 1	fragment, imp(hook, label = "terrain_splat_control.rgba", toggles = HOOK_SPLAT_CONTROL_1), help = "The terrain's internal splat control 1 texture, before it is used to sample each layer."
+///
 header		Misc
 /// IF USE_NDV_MIN_MAX_VERT
 	float			NDV Min Vert		fragment, imp(range, label = "NDV Min (Vertex)", default = 0.5, min = 0, max = 2)
@@ -336,6 +363,10 @@ feature_on		URP
 # features
 /// IF GLOSSY_REFLECTIONS || AMBIENT_VIEW_DIR
 	feature_on		USE_VIEW_DIRECTION_FRAGMENT
+///
+
+/// IF ENABLE_DITHER_LOD || (ALPHA_TESTING && ALPHA_TESTING_DITHERING && !ALPHA_DITHER_TEXTURE)
+	feature_on		USE_DITHERING_FUNCTION
 ///
 
 /// IF USE_NDV_VERTEX
@@ -384,14 +415,55 @@ feature_on		URP
 	///
 ///
 
+# terrain
+/// IF TERRAIN_SHADER
+	feature_on		CUSTOM_ALBEDO
+	flag_on			addshadow
+
+	flag_on:pragma_gpu_instancing		assumeuniformscaling
+	flag_on:pragma_gpu_instancing		nomatrices
+	flag_on:pragma_gpu_instancing		nolightprobe
+	flag_on:pragma_gpu_instancing		nolightmap
+	flag_on:pragma_gpu_instancing		forwardadd
+
+	/// IF TERRAIN_ADDPASS
+	flag_off	alpha:blend
+	flag_off	alpha:premul
+	flag_on		decal:add
+	flag_on		nometa
+	///
+///
+
 [[MODULE:KEYWORDS]]
 
 #END
 
 #================================================================
 
+/// IF TERRAIN_SHADER && TERRAIN_ADDPASS
+// Terrain AddPass shader:
+// This shader is used if your terrain uses more than 4 texture layers.
+// It will draw the additional texture layers additively, by groups of 4 layers.
+
+Shader "Hidden/@%SHADER_NAME%@-AddPass"
+/// ELIF TERRAIN_SHADER && TERRAIN_BASEPASS
+// Terrain BasePass shader:
+// This shader is used when the terrain is viewed from the "Base Distance" setting.
+// It uses low resolution generated textures from the "BaseGen" shader to draw the terrain entirely,
+// thus preventing to perform the full splat map blending code to increase performances.
+
+Shader "Hidden/@%SHADER_NAME%@-BasePass"
+/// ELIF TERRAIN_SHADER && TERRAIN_BASEGEN
+// Terrain BaseGen shader:
+// This shader is used to generate full blended terrain maps at a low resolution, that will show if the camera is at the "Base Distance" setting of the terrain.
+// This is a LOD-like system that prevents doing the full splat maps blending when the terrain is viewed from far away, and instead sample those generated maps only once.
+
+Shader "Hidden/@%SHADER_NAME%@-BaseGen"
+/// ELSE
 Shader "@%SHADER_NAME%@"
+///
 {
+/// IF (TERRAIN_SHADER && TERRAIN_BASEGEN && TERRAIN_BASEGEN_SAME_SHADER) || !TERRAIN_BASEGEN
 	Properties
 	{
 /// IF AUTO_TRANSPARENT_BLENDING
@@ -415,7 +487,13 @@ Shader "@%SHADER_NAME%@"
 ///
 		[[MODULE:PROPERTIES_BLOCK:AlbedoHSV]]
 /// IF ALPHA_TESTING
+	/// IF ALPHA_TESTING_DITHERING
+		/// IF ALPHA_DITHER_TEXTURE
+		[[PROP:Dithering Texture]]
+		///
+	/// ELSE
 		[[PROP:Cutoff]]
+	///
 ///
 /// IF OCCLUSION
 		[[PROP:Occlusion]]
@@ -423,6 +501,7 @@ Shader "@%SHADER_NAME%@"
 		[TCP2Separator]
 
 		[[MODULE:PROPERTIES_BLOCK:Ramp Shading LWRP]]
+		[[MODULE:PROPERTIES_BLOCK:Terrain]]
 		[[MODULE:PROPERTIES_BLOCK:Specular]]
 /// IF EMISSION
 
@@ -525,8 +604,8 @@ Shader "@%SHADER_NAME%@"
 
 		[[MODULE:PROPERTIES_BLOCK:CurvedWorld]]
 
-/// IF CUSTOM_TIME
-		_CustomTime ("Custom Time", Float) = 0.0
+/// IF CUSTOM_TIME && CUSTOM_TIME_LOCAL
+		_CustomTime ("Custom Time", Vector) = (0.05, 1, 2, 3)
 ///
 		[[INJECTION_POINT:Properties/End]]
 
@@ -534,7 +613,7 @@ Shader "@%SHADER_NAME%@"
 		[ToggleOff(_RECEIVE_SHADOWS_OFF)] _ReceiveShadowsOff ("Receive Shadows", Float) = 1
 
 ///
-		//Avoid compile error if the properties are ending with a drawer
+		// Avoid compile error if the properties are ending with a drawer
 		[HideInInspector] __dummy__ ("unused", Float) = 0
 	}
 
@@ -547,7 +626,15 @@ Shader "@%SHADER_NAME%@"
 ///
 			"RenderPipeline" = "UniversalPipeline"
 # Queues are ordered from highest to lowest in terms of priority
-/// IF QUEUE_TRANSPARENT
+/// IF TERRAIN_SHADER
+			"RenderType" = "Opaque"
+	/// IF TERRAIN_ADDPASS
+			"Queue"="Geometry-99"
+			"IgnoreProjector"="True"
+	/// ELSE
+			"Queue"="Geometry-100"
+	///
+/// ELIF QUEUE_TRANSPARENT
 			"RenderType"="Transparent"
 			"Queue"="Transparent"
 			"IgnoreProjectors"="True"
@@ -556,9 +643,15 @@ Shader "@%SHADER_NAME%@"
 			"Queue"="AlphaTest"
 /// ELIF PASS_SILHOUETTE
 			"RenderType"="@%RENDER_TYPE%@"
-			"Queue"="Geometry+10" //Make sure that the objects are rendered later to avoid sorting issues with the transparent silhouette
+			"Queue"="Geometry+10" // Make sure that the objects are rendered later to avoid sorting issues with the transparent silhouette
 /// ELSE
 			"RenderType"="@%RENDER_TYPE%@"
+///
+/// IF TERRAIN_SHADER
+			"TerrainCompatible"="True"
+	/// IF TERRAIN_SHADER_8_LAYERS
+			"SplatCount"="8"
+	///
 ///
 			[[INJECTION_POINT:SubShader/Tags]]
 		}
@@ -574,10 +667,40 @@ Shader "@%SHADER_NAME%@"
 		#if UNITY_VERSION >= 202020
 			#define URP_10_OR_NEWER
 		#endif
+		#if UNITY_VERSION >= 202120
+			#define URP_12_OR_NEWER
+		#endif
+
+/// IF UNITY_2019_4
+		// Texture/Sampler abstraction
+		#define TCP2_TEX2D_WITH_SAMPLER(tex)						TEXTURE2D(tex); SAMPLER(sampler##tex)
+		#define TCP2_TEX2D_NO_SAMPLER(tex)							TEXTURE2D(tex)
+		#define TCP2_TEX2D_SAMPLE(tex, samplertex, coord)			SAMPLE_TEXTURE2D(tex, sampler##samplertex, coord)
+		#define TCP2_TEX2D_SAMPLE_LOD(tex, samplertex, coord, lod)	SAMPLE_TEXTURE2D_LOD(tex, sampler##samplertex, coord, lod)
+///
 
 		#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 		#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+/// IF ENABLE_DECALS
+		#if defined(URP_12_OR_NEWER)
+			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DBuffer.hlsl"
+		#endif
+///
 		[[MODULE:VARIABLES:Depth Texture]]
+
+/// IF TERRAIN_SHADER
+
+		// Terrain
+	/// IF BUMP
+		#define TERRAIN_INSTANCED_PERPIXEL_NORMAL
+	///
+	/// IF TERRAIN_ADDPASS
+		#define TERRAIN_SPLAT_ADDPASS
+	///
+	/// IF TERRAIN_BASEPASS
+		#define TERRAIN_BASE_PASS
+	///
+///
 
 /// IF CUSTOM_TIME
 
@@ -605,7 +728,33 @@ Shader "@%SHADER_NAME%@"
 
 		[[MODULE:FUNCTIONS]]
 
+/// IF ENABLE_DECALS
+		#if defined(_DBUFFER)
+			// Derived from 'ApplyDecal' in URP's DBuffer.hlsl, directly fetch the decal data so that we can blend it accordingly
+			DecalSurfaceData GetDecals(float4 positionCS)
+			{
+				FETCH_DBUFFER(DBuffer, _DBufferTexture, int2(positionCS.xy));
+
+				DecalSurfaceData decalSurfaceData = (DecalSurfaceData)0;
+				DECODE_FROM_DBUFFER(DBuffer, decalSurfaceData);
+
+				#if !defined(_DBUFFER_MRT3)
+					decalSurfaceData.MAOSAlpha = 0;
+				#endif
+
+				return decalSurfaceData;
+			}
+		#endif
+///
+
 		[[INJECTION_POINT:Functions]]
+
+	#if_not_empty
+		// Curved World 2020
+	#start_not_empty_block
+		[[MODULE:SHADER_FEATURES_BLOCK:CurvedWorld]]
+	#end_not_empty_block
+	#end_not_empty
 
 		ENDHLSL
 
@@ -618,6 +767,10 @@ Shader "@%SHADER_NAME%@"
 /// IF FOG
 		#pragma multi_compile_fog
 ///
+/// IF ENABLE_DITHER_LOD
+		#pragma multi_compile _ LOD_FADE_CROSSFADE
+///
+
 		[[INJECTION_POINT:Outline Pass/Pragma]]
 
 		struct appdata_outline
@@ -633,12 +786,14 @@ Shader "@%SHADER_NAME%@"
 			float4 vertexColor : COLOR;
 		#endif
 	///
-	/// IF !USE_TANGENT_VERT && !USE_TANGENT_FRAGMENT && !VERTEXMOTION_NORMAL && !CURVED_WORLD_NORMAL
+	/// IF !TERRAIN_SHADER
+		/// IF !USE_TANGENT_VERT && !USE_TANGENT_FRAGMENT && !VERTEXMOTION_NORMAL && !CURVED_WORLD_NORMAL
 		#if TCP2_TANGENT_AS_NORMALS
-	///
+		///
 			float4 tangent : TANGENT;
-	/// IF !USE_TANGENT_VERT && !USE_TANGENT_FRAGMENT && !VERTEXMOTION_NORMAL && !CURVED_WORLD_NORMAL
+		/// IF !USE_TANGENT_VERT && !USE_TANGENT_FRAGMENT && !VERTEXMOTION_NORMAL && !CURVED_WORLD_NORMAL
 		#endif
+		///
 	///
 			[[INJECTION_POINT:Outline Pass/Attributes]]
 			UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -670,7 +825,6 @@ Shader "@%SHADER_NAME%@"
 	/// IF USE_OBJECT_NORMAL_FRAGMENT
 			float3 objNormal;
 	///
-
 			[[MODULE:INPUT:Outline]]
 #END
 			[[INJECTION_POINT:Outline Pass/Varyings]]
@@ -741,7 +895,7 @@ Shader "@%SHADER_NAME%@"
 	///
 	/// IF USE_SCREEN_POSITION_FRAGMENT || USE_SCREEN_POSITION_VERTEX
 
-			//Screen Position
+			// Screen Position
 			float4 screenPos = ComputeScreenPos(clipPos);
 		/// IF USE_SCREEN_POSITION_FRAGMENT
 			output.screenPosition = screenPos;
@@ -783,7 +937,7 @@ Shader "@%SHADER_NAME%@"
 	/// IF FOG
 			outlineColor.rgb = MixFog(outlineColor.rgb, input.[[INPUT_VALUE:fogFactor]]);
 	///
-			[[MODULE:FRAGMENT:Vertical Fog(outlineColor.rgb, positionWS)]]
+			[[MODULE:FRAGMENT:Vertical Fog(outlineColor.rgb, positionWS, input.[[INPUT_VALUE:objPos]])]]
 
 			[[INJECTION_POINT:Outline Pass/Fragment Shader/End]]
 			return outlineColor;
@@ -794,7 +948,7 @@ Shader "@%SHADER_NAME%@"
 ///
 #PASS
 /// IF PASS_SILHOUETTE
-		//Silhouette Pass
+		// Silhouette Pass
 		Pass
 		{
 			Name "Silhouette"
@@ -838,8 +992,10 @@ Shader "@%SHADER_NAME%@"
 				fixed4 vertexColor : COLOR;
 	///
 				float3 normal : NORMAL;
-	/// IF VERTEXMOTION_NORMAL || CURVED_WORLD_NORMAL
+	/// IF !TERRAIN_SHADER
+		/// IF VERTEXMOTION_NORMAL || CURVED_WORLD_NORMAL
 				float4 tangent : TANGENT;
+		///
 	///
 				[[INJECTION_POINT:Silhouette Pass/Attributes]]
 				UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -938,7 +1094,7 @@ Shader "@%SHADER_NAME%@"
 	///
 	/// IF USE_SCREEN_POSITION_FRAGMENT || USE_SCREEN_POSITION_VERTEX
 
-				//Screen Position
+				// Screen Position
 				float4 screenPos = ComputeScreenPos(clipPos);
 		/// IF USE_SCREEN_POSITION_FRAGMENT
 				output.screenPosition = screenPos;
@@ -977,7 +1133,7 @@ Shader "@%SHADER_NAME%@"
 #PASS
 /// IF DEPTH_PREPASS && ___DISABLED___
 
-		//Depth pre-pass
+		// Depth pre-pass
 		Pass
 		{
 			Name "Depth Prepass"
@@ -1000,8 +1156,10 @@ Shader "@%SHADER_NAME%@"
 				fixed4 vertexColor : COLOR;
 	///
 				float3 normal : NORMAL;
-	/// IF VERTEXMOTION_NORMAL || CURVED_WORLD_NORMAL
+	/// IF !TERRAIN_SHADER
+		/// IF VERTEXMOTION_NORMAL || CURVED_WORLD_NORMAL
 				float4 tangent : TANGENT;
+		///
 	///
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
@@ -1086,7 +1244,7 @@ Shader "@%SHADER_NAME%@"
 	///
 	/// IF USE_SCREEN_POSITION_FRAGMENT || USE_SCREEN_POSITION_VERTEX
 
-				//Screen Position
+				// Screen Position
 				float4 screenPos = ComputeScreenPos(clipPos);
 		/// IF USE_SCREEN_POSITION_FRAGMENT
 				output.screenPosition = screenPos;
@@ -1124,6 +1282,7 @@ Shader "@%SHADER_NAME%@"
 		}
 ///
 #PASS
+/// IF !(TERRAIN_BASEGEN && TERRAIN_BASEGEN_SAME_SHADER)
 		Pass
 		{
 			Name "Main"
@@ -1132,7 +1291,9 @@ Shader "@%SHADER_NAME%@"
 				"LightMode"="UniversalForward"
 				[[INJECTION_POINT:Main Pass/Tags]]
 			}
-/// IF AUTO_TRANSPARENT_BLENDING
+/// IF TERRAIN_SHADER && TERRAIN_ADDPASS
+		Blend One One
+/// ELIF AUTO_TRANSPARENT_BLENDING
 		Blend [_SrcBlend] [_DstBlend]
 		Cull [_Cull]
 		ZWrite [_ZWrite]
@@ -1214,7 +1375,7 @@ Shader "@%SHADER_NAME%@"
 /// IF DISABLE_SHADOW_RECEIVING
 			#pragma multi_compile _RECEIVE_SHADOWS_OFF
 /// ELSE
-			#pragma shader_feature _ _RECEIVE_SHADOWS_OFF
+			#pragma shader_feature_local _ _RECEIVE_SHADOWS_OFF
 ///
 
 			// -------------------------------------
@@ -1222,16 +1383,22 @@ Shader "@%SHADER_NAME%@"
 			#pragma multi_compile _ _MAIN_LIGHT_SHADOWS
 			#pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
 			#pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
-			#pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
-			#pragma multi_compile _ _SHADOWS_SOFT
+			#pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
+			#pragma multi_compile_fragment _ _SHADOWS_SOFT
 /// IF UNITY_2020_1
 			#pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
 			#pragma multi_compile _ SHADOWS_SHADOWMASK
 /// ELSE
 			#pragma multi_compile _ _MIXED_LIGHTING_SUBTRACTIVE
 ///
+/// IF ENABLE_DECALS
+			#pragma multi_compile_fragment _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
+///
+/// IF ENABLE_COOKIES
+			#pragma multi_compile_fragment _ _LIGHT_COOKIES
+///
 /// IF SSAO
-			#pragma multi_compile _ _SCREEN_SPACE_OCCLUSION
+			#pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
 ///
 
 			// -------------------------------------
@@ -1241,6 +1408,9 @@ Shader "@%SHADER_NAME%@"
 ///
 /// IF FOG
 			#pragma multi_compile_fog
+///
+/// IF ENABLE_DITHER_LOD
+			#pragma multi_compile _ LOD_FADE_CROSSFADE
 ///
 
 			//--------------------------------------
@@ -1255,17 +1425,18 @@ Shader "@%SHADER_NAME%@"
 			//--------------------------------------
 			// Toony Colors Pro 2 keywords
 	#start_not_empty_block
+			[[MODULE:SHADER_FEATURES_BLOCK:Terrain]]
 			[[MODULE:SHADER_FEATURES_BLOCK:Specular]]
 			[[MODULE:SHADER_FEATURES_BLOCK:Vertex Displacement]]
 			[[MODULE:SHADER_FEATURES_BLOCK:Rim Lighting]]
 /// IF (GLOSSY_REFLECTIONS || REFLECTION_CUBEMAP || PLANAR_REFLECTION) && REFLECTION_SHADER_FEATURE
-			#pragma shader_feature TCP2_REFLECTIONS
+			#pragma shader_feature_local_fragment TCP2_REFLECTIONS
 ///
 /// IF AMBIENT_SHADER_FEATURE
-			#pragma shader_feature TCP2_AMBIENT
+			#pragma shader_feature_local_fragment TCP2_AMBIENT
 ///
 /// IF AUTO_TRANSPARENT_BLENDING
-		#pragma shader_feature _ _ALPHAPREMULTIPLY_ON
+		#pragma shader_feature_local _ _ALPHAPREMULTIPLY_ON
 ///
 			[[MODULE:SHADER_FEATURES_BLOCK:MatCap]]
 			[[MODULE:SHADER_FEATURES_BLOCK:Subsurface Scattering]]
@@ -1279,13 +1450,23 @@ Shader "@%SHADER_NAME%@"
 	#end_not_empty_block
 	#end_not_empty
 
+#------------------------------------------------------------
+# end of IF !(TERRAIN_BASEGEN && TERRAIN_BASEGEN_SAME_SHADER)
+/// ELSE
+[[MODULE:TERRAIN_BASEGEN_SHADER_URP:Terrain]]
+
+			HLSLINCLUDE
+///
+#------------------------------------------------------------
 			// vertex input
 			struct Attributes
 			{
 				float4 vertex       : POSITION;
 				float3 normal       : NORMAL;
+/// IF (USE_TANGENT_VERT || USE_TANGENT_FRAGMENT) && !TERRAIN_SHADER
 				float4 tangent      : TANGENT;
-/// IF ENABLE_LIGHTMAP
+///
+/// IF ENABLE_LIGHTMAP && !TERRAIN_SHADER
 				float2 uvLM         : TEXCOORD1;
 ///
 /// IF USE_VERTEX_COLORS_VERT
@@ -1347,6 +1528,32 @@ Shader "@%SHADER_NAME%@"
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
+
+
+/// IF TERRAIN_SHADER && USE_TERRAIN_DATA_LIGHTING
+		// Terrain data to pass to lighting function
+		struct TerrainData
+		{
+			half4 splatControl;
+			half4 specularColor;
+			half3 mixedDiffuse;
+			half smoothness;
+			half metallic;
+	/// IF TERRAIN_USE_MASKS
+			half4 mask;
+	///
+		};
+///
+
+/// IF TERRAIN_SHADER
+		//--------------------------------------
+		// Terrain functions
+
+		[[MODULE:FUNCTIONS:Terrain]]
+///
+
+
+
 #VERTEX, INPUT = input, OUTPUT = output
 			Varyings Vertex(Attributes input)
 			{
@@ -1357,6 +1564,8 @@ Shader "@%SHADER_NAME%@"
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
 				[[INJECTION_POINT:Main Pass/Vertex Shader/Start]]
+
+				[[MODULE:VERTEX:Terrain(input.vertex, input.normal, input.texcoord0, _unused_)]]
 
 /// IF USE_WORLD_POSITION_UV_VERTEX
 				float3 worldPosUv = mul(unity_ObjectToWorld, input.vertex).xyz;
@@ -1385,7 +1594,11 @@ Shader "@%SHADER_NAME%@"
 				[[SAMPLE_CUSTOM_PROPERTIES]]
 				[[SAMPLE_SHADER_PROPERTIES]]
 /// IF ENABLE_LIGHTMAP
+	/// IF TERRAIN_SHADER
+				output.[[INPUT_VALUE:uvLM]] = input.texcoord0.xy * unity_LightmapST.xy + unity_LightmapST.zw;
+	/// ELSE
 				output.[[INPUT_VALUE:uvLM]] = input.uvLM.xy * unity_LightmapST.xy + unity_LightmapST.zw;
+	///
 ///
 
 				[[MODULE:VERTEX:VertExmotion:LWRP(input.vertex, input.normal, input.tangent)]]
@@ -1430,7 +1643,11 @@ Shader "@%SHADER_NAME%@"
 				[[MODULE:VERTEX:Depth Texture(screenPos, clipPos)]]
 				[[MODULE:VERTEX:Screen Space UV(screenPos, clipPos, output)]]
 
-/// IF USE_TANGENT_VERT || USE_TANGENT_FRAGMENT
+/// IF TERRAIN_SHADER
+#NOTE: tangent here is inverted, as is the case in URP's terrain shaders... I haven't figured out why it's needed though
+				float4 vertexTangent = -float4(cross(float3(0, 0, 1), input.normal), 1.0);
+				VertexNormalInputs vertexNormalInput = GetVertexNormalInputs(input.normal, vertexTangent);
+/// ELIF USE_TANGENT_VERT || USE_TANGENT_FRAGMENT
 				VertexNormalInputs vertexNormalInput = GetVertexNormalInputs(input.normal, input.tangent);
 /// ELSE
 				VertexNormalInputs vertexNormalInput = GetVertexNormalInputs(input.normal);
@@ -1449,7 +1666,7 @@ Shader "@%SHADER_NAME%@"
 ///
 
 				// normal
-				output.normal = NormalizeNormalPerVertex(vertexNormalInput.normalWS);
+				output.normal = normalize(vertexNormalInput.normalWS);
 /// IF USE_TANGENT_FRAGMENT
 
 				// tangent
@@ -1532,9 +1749,21 @@ Shader "@%SHADER_NAME%@"
 
 				[[FRAGMENT_TEXCOORDS]]
 
+/// IF ENABLE_DITHER_LOD
+				#if defined(LOD_FADE_CROSSFADE)
+	/// IF DITHER_LOD_8x8
+					const float dither = Dither8x8(input.positionCS.xy);
+	/// ELSE
+					const float dither = Dither4x4(input.positionCS.xy);
+	///
+					const float ditherThreshold = unity_LODFade.x - CopySign(dither, unity_LODFade.x);
+					clip(ditherThreshold);
+				#endif
+///
+
 #ENABLE_IMPL: float vFace, lbl = "Special/VFACE (Face direction)", help = "Indicates if the current face is back or front-facing. Should be used with custom Face Culling.", toggles = "USE_VFACE", custom_code_compatible = true
 				float3 positionWS = input.worldPosAndFog.xyz;
-				float3 normalWS = NormalizeNormalPerPixel(input.normal);
+				float3 normalWS = normalize(input.normal);
 /// IF USE_WORLD_NORMAL_FRAGMENT_PER_VERTEX
 				float3 normalWS_Vertex = normalWS;
 ///
@@ -1560,7 +1789,6 @@ Shader "@%SHADER_NAME%@"
 				[[MODULE:FRAGMENT:Normal Mapping:BUILD_TANGENT_MATRIX(tangentWS.xyz, bitangentWS.xyz, normalWS.xyz)]]
 				[[MODULE:FRAGMENT:Normal Mapping:PARALLAX_SRP(viewDirWS, input.[[INPUT_VALUE:texcoord0]])]]
 	/// IF WORLD_NORMAL_FROM_BUMP
-				half4 normalMap = half4(0,0,0,0);
 				[[MODULE:FRAGMENT:Normal Mapping:BUMP_SAMPLE_BEFORE(normalWS)]]
 	///
 	/// IF BUMP_SHADER_FEATURE
@@ -1572,6 +1800,8 @@ Shader "@%SHADER_NAME%@"
 				[[SAMPLE_CUSTOM_PROPERTIES]]
 				[[SAMPLE_SHADER_PROPERTIES]]
 
+				[[MODULE:FRAGMENT:Terrain:PREPASS_AND_NORMAL(normalWS, _unused_)]]
+
 /// IF USE_NDV_FRAGMENT && USE_NDV_IGNORE_NORMAL_MAP
 				half3 normalWSVertex = normalWS;
 ///
@@ -1579,13 +1809,12 @@ Shader "@%SHADER_NAME%@"
 /// IF BUMP && BUMP_SHADER_FEATURE
 				#if defined(_NORMALMAP)
 ///
-/// IF BUMP && !WORLD_NORMAL_FROM_BUMP
-				half4 normalMap = half4(0,0,0,0);
-///
 				[[MODULE:FRAGMENT:Normal Mapping:BUMP_SAMPLE()]]
-				[[MODULE:FRAGMENT:Texture Blending:BUMP(normalMap)]]
-				[[MODULE:FRAGMENT:Normal Mapping:UNPACK_BUMP_SRP(normalMap, normalTS)]]
+				[[MODULE:FRAGMENT:Texture Blending:BUMP()]]
+				[[MODULE:FRAGMENT:Normal Mapping:UNPACK_BUMP_SRP()]]
+/// IF !TERRAIN_SHADER
 				[[MODULE:FRAGMENT:Normal Mapping:APPLY_BUMP_SRP(normalWS, normalTS)]]
+///
 /// IF BUMP && BUMP_SHADER_FEATURE
 				#endif
 ///
@@ -1616,16 +1845,72 @@ Shader "@%SHADER_NAME%@"
 				half3 albedo = [[VALUE:Albedo]].rgb;
 				half alpha = [[VALUE:Alpha]];
 ///
+
+/// IF TERRAIN_SHADER
+				[[MODULE:FRAGMENT:Terrain(albedo, alpha, normalWS, _unused_)]]
+				[[MODULE:FRAGMENT:Normal Mapping:APPLY_BUMP_SRP(normalWS, normalTS)]]
+
+# Recalculate NDV to take terrain into account
+	/// IF USE_NDV_FRAGMENT && BUMP
+				// ndv with terrain normal taken into account
+		/// IF USE_NDV_IGNORE_NORMAL_MAP
+				ndv = abs(dot(viewDirWS, normalWSVertex));
+		/// ELSE
+				ndv = abs(dot(viewDirWS, normalWS));
+		///
+				ndvRaw = ndv;
+		/// IF USE_NDV_INVERT_FRAG
+				ndv = 1 - ndv;
+		///
+		/// IF USE_NDV_MIN_MAX_FRAG
+				ndv = smoothstep([[VALUE:NDV Min Frag]], [[VALUE:NDV Max Frag]], ndv);
+		///
+	///
+
+///
+
+/// IF ENABLE_DECALS
+				// URP Decals
+				#if defined(_DBUFFER)
+					#if defined(_DBUFFER_MRT2) || defined(_DBUFFER_MRT3)
+						#define HAS_DECAL_NORMALS
+					#endif
+					#if defined(_DBUFFER_MRT3)
+						#define HAS_DECAL_MAOS
+					#endif
+
+					DecalSurfaceData decals = GetDecals(input.positionCS);
+					albedo.rgb = albedo.rgb * decals.baseColor.a + decals.baseColor.rgb;
+					#if defined(HAS_DECAL_NORMALS)
+						// Always test the normal as we can have decompression artifact
+						if (decals.normalWS.w < 1.0)
+						{
+							normalWS.xyz = normalize(normalWS.xyz * decals.normalWS.w + decals.normalWS.xyz);
+						}
+					#endif
+				#endif
+///				
+
 				half3 emission = half3(0,0,0);
 				[[MODULE:FRAGMENT:Dissolve(emission)]]
 /// IF ALPHA_TESTING
-
+				// Alpha Testing
+	/// IF ALPHA_TESTING_DITHERING
+		/// IF ALPHA_DITHER_TEXTURE
+				half cutoffValue = [[VALUE:Dithering Texture]];
+		/// ELIF ALPHA_DITHER_8x8
+				half cutoffValue = Dither8x8(input.positionCS.xy);
+		/// ELSE
+				half cutoffValue = Dither4x4(input.positionCS.xy);
+		///
+	/// ELSE
+				half cutoffValue = [[VALUE:Cutoff]];
+	///
 	/// IF !ALPHA_TO_COVERAGE
-				//Alpha Testing
-				clip(alpha - [[VALUE:Cutoff]]);
+				clip(alpha - cutoffValue);
 	/// ELIF !ALPHA_TO_COVERAGE_RAW
-				//Sharpen Alpha-to-Coverage
-				alpha = (alpha - [[VALUE:Cutoff]]) / max(fwidth(alpha), 0.0001) + 0.5;
+				// Sharpen Alpha-to-Coverage
+				alpha = (alpha - cutoffValue) / max(fwidth(alpha), 0.0001) + 0.5;
 	///
 ///
 /// IF TEXTURE_BLENDING || TRIPLANAR
@@ -1655,7 +1940,7 @@ Shader "@%SHADER_NAME%@"
 
 			#if defined(URP_10_OR_NEWER)
 				#if defined(SHADOWS_SHADOWMASK) && defined(LIGHTMAP_ON)
-					half4 shadowMask = SAMPLE_SHADOWMASK(input.lightmapUV);
+					half4 shadowMask = SAMPLE_SHADOWMASK(input.[[INPUT_VALUE:uvLM]]);
 				#elif !defined (LIGHTMAP_ON)
 					half4 shadowMask = unity_ProbesOcclusion;
 				#else
@@ -1732,7 +2017,19 @@ Shader "@%SHADER_NAME%@"
 				emission += [[VALUE:Emission]];
 ///
 
-				[[MODULE:FRAGMENT:Triplanar:BUMP(normalWS)]]
+				[[MODULE:FRAGMENT:Triplanar:BUMP(normalWS, normalWS_Vertex)]]
+
+/// IF USE_NDV_FRAGMENT && USE_SURFACE_CUSTOM_NORMAL && !USE_NDV_IGNORE_NORMAL_MAP
+				// Recalculate NDV to take the triplanar normals into account:
+				half ndv = abs(dot(viewDirWS, normalWS));
+				half ndvRaw = ndv;
+	/// IF USE_NDV_INVERT_FRAG
+				ndv = 1 - ndv;
+	///
+	/// IF USE_NDV_MIN_MAX_FRAG
+				ndv = smoothstep([[VALUE:NDV Min Frag]], [[VALUE:NDV Max Frag]], ndv);
+	///
+///
 
 				[[MODULE:FRAGMENT:MatCap(albedo, emission, normalWS, input)]]
 
@@ -1834,6 +2131,12 @@ Shader "@%SHADER_NAME%@"
 					#else
 						Light light = GetAdditionalLight(lightIndex, positionWS);
 					#endif
+	/// IF HOOK_OTHER_LIGHTS_SHADOWMAP
+					light.shadowAttenuation = [[SAMPLE_VALUE_SHADER_PROPERTY:Additional Lights Shadows]];
+	///
+	/// IF HOOK_OTHER_LIGHTS_DIST
+					light.distanceAttenuation = [[SAMPLE_VALUE_SHADER_PROPERTY:Additional Lights Distance]];
+	///
 					half atten = light.shadowAttenuation * light.distanceAttenuation;
 	///
 	/// IF HOOK_OTHER_LIGHTS_ATTEN
@@ -1960,6 +2263,7 @@ Shader "@%SHADER_NAME%@"
 
 				[[MODULE:FRAGMENT:Reflection(reflections, normalWS, viewDirWS, ndvRaw, input.[[INPUT_VALUE:screenPosition]], normalTS)]]
 
+				reflections *= [[VALUE:Reflection Color]];
 				color.rgb += reflections;
 	/// IF REFLECTION_SHADER_FEATURE
 				#endif
@@ -1985,22 +2289,26 @@ Shader "@%SHADER_NAME%@"
 				float fogFactor = input.worldPosAndFog.w;
 				color = MixFog(color, fogFactor);
 ///
-				[[MODULE:FRAGMENT:Vertical Fog(color.rgb, input.worldPosAndFog.xyz)]]
+				[[MODULE:FRAGMENT:Vertical Fog(color.rgb, input.worldPosAndFog.xyz, input.[[INPUT_VALUE:objPos]])]]
 /// IF HOOK_FINAL_COLOR
 
 				color.rgb = [[SAMPLE_VALUE_SHADER_PROPERTY:Final Color]];
 ///
 
+				[[MODULE:FRAGMENT:Terrain:FINAL_COLOR(terrain_weight, terrain_weight_1, color)]]
+				
 				[[INJECTION_POINT:Main Pass/Fragment Shader/End]]
 
 				return half4(color, alpha);
 #DISABLE_IMPL_ALL
 			}
 			ENDHLSL
+/// IF !(TERRAIN_SHADER && TERRAIN_BASEGEN && TERRAIN_BASEGEN_SAME_SHADER)
 		}
+///
 
 /// IF OUTLINE
-		//Outline
+		// Outline
 		Pass
 		{
 			Name "Outline"
@@ -2032,26 +2340,33 @@ Shader "@%SHADER_NAME%@"
 	///
 
 			HLSLPROGRAM
+
 			#pragma vertex vertex_outline
 			#pragma fragment fragment_outline
+
 			#pragma target @%SHADER_TARGET%@
+
 			#pragma multi_compile _ TCP2_COLORS_AS_NORMALS TCP2_TANGENT_AS_NORMALS TCP2_UV1_AS_NORMALS TCP2_UV2_AS_NORMALS TCP2_UV3_AS_NORMALS TCP2_UV4_AS_NORMALS
 			#pragma multi_compile _ TCP2_UV_NORMALS_FULL TCP2_UV_NORMALS_ZW
 			#pragma multi_compile_instancing
 			[[GPU_INSTANCING_OPTIONS]]
+			
+	#if_not_empty
+			//--------------------------------------
+			// Toony Colors Pro 2 keywords
+	#start_not_empty_block
+			[[MODULE:SHADER_FEATURES_BLOCK:Wind]]
+			[[MODULE:SHADER_FEATURES_BLOCK:Dissolve]]
+	#end_not_empty_block
+	#end_not_empty
+
 			ENDHLSL
 		}
 ///
 #PASS
+/// IF !(TERRAIN_SHADER && TERRAIN_BASEGEN && TERRAIN_BASEGEN_SAME_SHADER)
 		// Depth & Shadow Caster Passes
 		HLSLINCLUDE
-
-	#if_not_empty
-		// Curved World 2020
-	#start_not_empty_block
-		[[MODULE:SHADER_FEATURES_BLOCK:CurvedWorld]]
-	#end_not_empty_block
-	#end_not_empty
 
 		#if defined(SHADOW_CASTER_PASS) || defined(DEPTH_ONLY_PASS)
 
@@ -2061,6 +2376,7 @@ Shader "@%SHADER_NAME%@"
 			#define fixed4 half4
 
 			float3 _LightDirection;
+			float3 _LightPosition;
 
 			struct Attributes
 			{
@@ -2125,7 +2441,7 @@ Shader "@%SHADER_NAME%@"
 				float3 normalWS = TransformObjectToWorldNormal(input.normal);
 
 /// IF UNITY_2021_1
-				#if CASTING_PUNCTUAL_LIGHT_SHADOW
+				#if _CASTING_PUNCTUAL_LIGHT_SHADOW
 					float3 lightDirectionWS = normalize(_LightPosition - positionWS);
 				#else
 					float3 lightDirectionWS = _LightDirection;
@@ -2147,7 +2463,7 @@ Shader "@%SHADER_NAME%@"
 #VERTEX, INPUT = input, OUTPUT = output
 			Varyings ShadowDepthPassVertex(Attributes input)
 			{
-				Varyings output;
+				Varyings output = (Varyings)0;
 				UNITY_SETUP_INSTANCE_ID(input);
 				#if defined(DEPTH_ONLY_PASS)
 					UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
@@ -2158,7 +2474,7 @@ Shader "@%SHADER_NAME%@"
 /// IF USE_WORLD_POSITION_UV_VERTEX
 				float3 worldPosUv = mul(unity_ObjectToWorld, input.vertex).xyz;
 ///
-/// IF USE_WORLD_NORMAL_UV_VERTEX || USE_WORLD_NORMAL_FRAGMENT
+/// IF USE_WORLD_NORMAL_UV_VERTEX || USE_WORLD_NORMAL_FRAGMENT || USE_NDV_VERTEX
 				float3 worldNormalUv = mul(unity_ObjectToWorld, float4(input.normal, 1.0)).xyz;
 ///
 /// IF UV_SINE_ANIMATION_VERTEX
@@ -2219,7 +2535,7 @@ Shader "@%SHADER_NAME%@"
 ///
 /// IF USE_SCREEN_POSITION_FRAGMENT || USE_SCREEN_POSITION_VERTEX
 
-				//Screen Space UV
+				// Screen Space UV
 				float4 screenPos = ComputeScreenPos(vertexInput.positionCS);
 	/// IF USE_SCREEN_POSITION_FRAGMENT
 				output.[[INPUT_VALUE:screenPosition]] = screenPos;
@@ -2231,7 +2547,7 @@ Shader "@%SHADER_NAME%@"
 				output.vertexColor = input.vertexColor;
 ///
 /// IF USE_WORLD_NORMAL_FRAGMENT
-				output.normal = NormalizeNormalPerVertex(worldNormalUv);
+				output.normal = normalize(worldNormalUv);
 ///
 /// IF USE_WORLD_POSITION_FRAGMENT
 				output.[[INPUT_VALUE:positionWS]] = vertexInput.positionWS;
@@ -2248,7 +2564,7 @@ Shader "@%SHADER_NAME%@"
 /// IF ENABLE_DEPTH_NORMALS_PASS
 					#if defined(DEPTH_NORMALS_PASS)
 						float3 normalWS = TransformObjectToWorldNormal(input.normal);
-						output.normalWS = NormalizeNormalPerVertex(normalWS);
+						output.normalWS = normalWS; // already normalized in TransformObjectToWorldNormal
 					#endif
 ///
 				#elif defined(SHADOW_CASTER_PASS)
@@ -2275,7 +2591,7 @@ Shader "@%SHADER_NAME%@"
 				float3 positionWS = input.[[INPUT_VALUE:positionWS]];
 ///
 /// IF USE_WORLD_NORMAL_FRAGMENT
-				float3 normalWS = NormalizeNormalPerPixel(input.normal);
+				float3 normalWS = normalize(input.normal);
 ///
 
 				[[MODULE:FRAGMENT:Screen Space UV(input.[[INPUT_VALUE:screenPosition]], input)]]
@@ -2304,19 +2620,36 @@ Shader "@%SHADER_NAME%@"
 				half3 albedo = half3(1,1,1);
 				half alpha = 1;
 /// ELSE
-				half3 albedo = [[VALUE:Albedo]].rgb;
+# we don't care about color for the depth/shadow pass
+				half3 albedo = half3(1,1,1);
 				half alpha = [[VALUE:Alpha]];
 ///
 				half3 emission = half3(0,0,0);
 				[[MODULE:FRAGMENT:Dissolve(emission)]]
 /// IF ALPHA_TESTING
-
+				// Alpha Testing
+	/// IF ALPHA_TESTING_DITHERING
+		/// IF ALPHA_DITHER_TEXTURE
+				half cutoffValue = [[VALUE:Dithering Texture]];
+		/// ELIF ALPHA_DITHER_8x8
+				half cutoffValue = Dither8x8(input.positionCS.xy);
+		/// ELSE
+				half cutoffValue = Dither4x4(input.positionCS.xy);
+		///
+	/// ELSE
+				half cutoffValue = [[VALUE:Cutoff]];
+	///
 	/// IF !ALPHA_TO_COVERAGE
-				//Alpha Testing
-				clip(alpha - [[VALUE:Cutoff]]);
+		/// IF ALPHA_TESTING_DITHERING
+				#if defined(DEPTH_ONLY_PASS)
+					clip(alpha - cutoffValue);
+				#endif
+		/// ELSE
+				clip(alpha - cutoffValue);
+		///
 	/// ELIF !ALPHA_TO_COVERAGE_RAW
-				//Sharpen Alpha-to-Coverage
-				alpha = (alpha - [[VALUE:Cutoff]]) / max(fwidth(alpha), 0.0001) + 0.5;
+				// Sharpen Alpha-to-Coverage
+				alpha = (alpha - cutoffValue) / max(fwidth(alpha), 0.0001) + 0.5;
 	///
 ///
 
@@ -2324,7 +2657,11 @@ Shader "@%SHADER_NAME%@"
 
 /// IF ENABLE_DEPTH_NORMALS_PASS
 				#if defined(DEPTH_NORMALS_PASS)
-					return float4(PackNormalOctRectEncode(TransformWorldToViewDir(input.normalWS, true)), 0.0, 0.0);
+					#if defined(URP_12_OR_NEWER)
+						return float4(input.normalWS.xyz, 0.0);
+					#else
+						return float4(PackNormalOctRectEncode(TransformWorldToViewDir(input.normalWS, true)), 0.0, 0.0);
+					#endif
 				#endif
 ///
 
@@ -2491,6 +2828,11 @@ Shader "@%SHADER_NAME%@"
 		// Used for Baking GI. This pass is stripped from build.
 		UsePass "Universal Render Pipeline/Lit/Meta"
 ///
+/// IF TERRAIN_SHADER
+
+		// Scene picking for terrain shader
+		UsePass "Hidden/Nature/Terrain/Utilities/PICKING"
+///
 
 /// IF CURVED_WORLD_2020
 		// Curved World 2020 - Scene Picking passes
@@ -2512,8 +2854,8 @@ Shader "@%SHADER_NAME%@"
 
 			#pragma target 3.0
 
-			#pragma shader_feature _ALPHATEST_ON
-			#pragma shader_feature _ALPHAPREMULTIPLY_ON
+			#pragma shader_feature_local _ALPHATEST_ON
+			#pragma shader_feature_local _ALPHAPREMULTIPLY_ON
 			#pragma multi_compile_instancing
 
 			[[MODULE:SHADER_FEATURES_BLOCK:CurvedWorld]]
@@ -2544,8 +2886,8 @@ Shader "@%SHADER_NAME%@"
 
 			#pragma target 3.0
 
-			#pragma shader_feature _ALPHATEST_ON
-			#pragma shader_feature _ALPHAPREMULTIPLY_ON
+			#pragma shader_feature_local _ALPHATEST_ON
+			#pragma shader_feature_local _ALPHAPREMULTIPLY_ON
 			#pragma multi_compile_instancing
 
 			[[MODULE:SHADER_FEATURES_BLOCK:CurvedWorld]]
@@ -2558,8 +2900,24 @@ Shader "@%SHADER_NAME%@"
 			ENDCG
 		}
 ///
+#------------------------------------------------------------
+///
+# end of IF !(TERRAIN_SHADER && TERRAIN_BASEGEN && TERRAIN_BASEGEN_SAME_SHADER)
+#------------------------------------------------------------
 	}
+
+/// IF TERRAIN_SHADER && !TERRAIN_ADDPASS && !TERRAIN_BASEPASS && !TERRAIN_BASEGEN
+	/// IF !TERRAIN_SHADER_8_LAYERS
+	Dependency "AddPassShader"    = "Hidden/@%SHADER_NAME%@-AddPass"
+	///
+	Dependency "BaseMapShader"    = "Hidden/@%SHADER_NAME%@-BasePass"
+	Dependency "BaseMapGenShader" = "Hidden/@%SHADER_NAME%@-BaseGen"
+///
 
 	FallBack "Hidden/InternalErrorShader"
 	CustomEditor "ToonyColorsPro.ShaderGenerator.MaterialInspector_SG2"
+/// ELSE
+#IF TERRAIN_BASEGEN:
+[[MODULE:TERRAIN_BASEGEN_SHADER:Terrain]]
+///
 }

@@ -26,6 +26,7 @@ namespace ToonyColorsPro
             [Serialization.SerializeAs("ctrst"), Serialization.ForceSerialization] public ShaderProperty contrastProperty;
             [Serialization.SerializeAs("use_noise")] bool useNoiseProperty;
             [Serialization.SerializeAs("noise"), Serialization.ForceSerialization] public ShaderProperty noiseProperty;
+            internal bool expanded;
 
             internal bool UseContrastProperty
             {

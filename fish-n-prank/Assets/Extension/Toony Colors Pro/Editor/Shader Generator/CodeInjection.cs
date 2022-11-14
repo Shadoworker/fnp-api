@@ -938,7 +938,7 @@ namespace ToonyColorsPro
 								EditorGUILayout.BeginHorizontal();
 								{
 									GUILayout.Space(margin + margin2 + 4);
-									GUILayout.Label(TCP2_GUI.TempContent(point.block.info), EditorStyles.miniLabel);
+									GUILayout.Label(TCP2_GUI.TempContent(point.block.info), EditorStyles.wordWrappedMiniLabel);
 									GUILayout.Space(removeButtonRect.width);
 								}
 								EditorGUILayout.EndHorizontal();

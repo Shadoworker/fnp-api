@@ -1,5 +1,5 @@
 // Toony Colors Pro+Mobile 2
-// (c) 2014-2021 Jean Moreno
+// (c) 2014-2022 Jean Moreno
 
 using System;
 using System.Collections.Generic;
@@ -98,11 +98,27 @@ namespace ToonyColorsPro
 
 					case TagType.If:
 					{
-						var cond = false;
-						var error = EvaluateExpression(ref cond, features, cachedLineParts[line]);
-
-						if (!string.IsNullOrEmpty(error))
-							return error;
+						bool cond = false;
+						
+						if (cachedLineParts[line].Length == 3)
+						{
+							// Only three parts = only one feature to check, i.e. '///' 'IF' 'FEATURE'
+							// So we can skip the full evaluate expression:
+							if (cachedLineParts[line][2][0] == '!')
+							{
+								cond = !features.Contains(cachedLineParts[line][2].Substring(1));
+							}
+							else
+							{
+								cond = features.Contains(cachedLineParts[line][2]);
+							}
+						}
+						else
+						{
+							string error = EvaluateExpression(ref cond, features, cachedLineParts[line]);
+							if (!string.IsNullOrEmpty(error))
+								return error;
+						}
 
 						depth++;
 						stack.Add(cond && ((depth <= 0) ? true : stack[depth - 1]));
@@ -118,11 +134,27 @@ namespace ToonyColorsPro
 							return null;
 						}
 
-						var cond = false;
-						var error = EvaluateExpression(ref cond, features, cachedLineParts[line]);
-
-						if (!string.IsNullOrEmpty(error))
-							return error;
+						bool cond = false;
+						
+						if (cachedLineParts[line].Length == 3)
+						{
+							// Only three parts = only one feature to check, i.e. '///' 'IF' 'FEATURE'
+							// So we can skip the full evaluate expression:
+							if (cachedLineParts[line][2][0] == '!')
+							{
+								cond = !features.Contains(cachedLineParts[line][2].Substring(1));
+							}
+							else
+							{
+								cond = features.Contains(cachedLineParts[line][2]);
+							}
+						}
+						else
+						{
+							string error = EvaluateExpression(ref cond, features, cachedLineParts[line]);
+							if (!string.IsNullOrEmpty(error))
+								return error;
+						}
 
 						stack[depth] = cond && ((depth <= 0) ? true : stack[depth - 1]);
 						done[depth] = cond;
@@ -154,11 +186,7 @@ namespace ToonyColorsPro
 					return "Invalid condition block";
 				}
 
-				var expression = "";
-				for (var n = 2; n < conditions.Length; n++)
-				{
-					expression += conditions[n];
-				}
+				var expression = string.Join("", conditions, 2, conditions.Length - 2);
 
 				var result = false;
 				try
