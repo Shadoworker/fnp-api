@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Mirror;
 
-public class CharacterController : MonoBehaviour
+public class CharacterController : NetworkBehaviour
 {
     public CharacterSO m_characterSO;
     public CharacterData m_characterData;
@@ -115,6 +116,9 @@ public class CharacterController : MonoBehaviour
 
     private void DirectUpdate()
     {
+        if (!isLocalPlayer)
+            return;
+
         if (m_joystick.m_vertical != 0 || m_joystick.m_horizontal != 0)
         {
             m_movement = new Vector3(-m_joystick.m_horizontal, 0, -m_joystick.m_vertical);
