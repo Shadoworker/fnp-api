@@ -1205,7 +1205,7 @@ GameObject:
   - component: {fileID: 6724701180610496571}
   - component: {fileID: 6724701180610496570}
   m_Layer: 0
-  m_Name: Troll_Man
+  m_Name: Character-Troll-Man
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

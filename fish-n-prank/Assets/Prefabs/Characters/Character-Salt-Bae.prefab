@@ -335,7 +335,7 @@ GameObject:
   - component: {fileID: 111560788375421772}
   - component: {fileID: 111560788375421775}
   m_Layer: 0
-  m_Name: 'Salt Bae '
+  m_Name: Character-Salt-Bae
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

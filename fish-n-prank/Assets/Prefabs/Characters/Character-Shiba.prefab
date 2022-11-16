@@ -1935,7 +1935,7 @@ GameObject:
   - component: {fileID: 2682648491355945338}
   - component: {fileID: 2682648491355945339}
   m_Layer: 0
-  m_Name: Shiba
+  m_Name: Character-Shiba
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

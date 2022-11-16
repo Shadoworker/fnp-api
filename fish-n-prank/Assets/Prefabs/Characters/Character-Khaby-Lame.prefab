@@ -1343,7 +1343,7 @@ GameObject:
   - component: {fileID: 5195278815082732899}
   - component: {fileID: 5195278815082732898}
   m_Layer: 0
-  m_Name: Khaby Lame
+  m_Name: Character-Khaby-Lame
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
