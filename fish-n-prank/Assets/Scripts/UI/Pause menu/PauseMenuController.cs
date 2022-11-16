@@ -11,6 +11,13 @@ public class PauseMenuController : MonoBehaviour
         DesactivateAll();
         ActivateObj(m_cube);
     }
+
+    public void SpawnCharacter(string _character)
+    {
+        GameStateManager.CharactersManager.DestroyCurrentPlayer();
+        GameStateManager.CharactersManager.SpawnCharacter(_character);
+    }
+
     public void ActivateTrollman()
     {
         DesactivateAll();

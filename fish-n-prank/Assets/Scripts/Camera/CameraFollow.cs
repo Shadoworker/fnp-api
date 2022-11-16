@@ -20,7 +20,6 @@ public class CameraFollow : MonoBehaviour
     {
         m_cameraDirection = transform.localPosition.normalized;
         m_cameraDistance = m_camDistanceMinMax.y;
-        GameStateManager.CameraManager.m_cameraFollow = this;
     }
 
     private void Update()
@@ -32,9 +31,12 @@ public class CameraFollow : MonoBehaviour
 
     void LateUpdate()
     {
-        Quaternion rotation = Quaternion.Euler(m_currentY, m_currentX, 0);
-        transform.position = m_target.transform.position + (rotation * m_dir);
-        transform.LookAt(m_target.transform.position + m_offset);
+        if(m_target != null)
+        {
+            Quaternion rotation = Quaternion.Euler(m_currentY, m_currentX, 0);
+            transform.position = m_target.transform.position + (rotation * m_dir);
+            transform.LookAt(m_target.transform.position + m_offset);
+        }
     }
 
     public void SetCurrentXValue(float _value)

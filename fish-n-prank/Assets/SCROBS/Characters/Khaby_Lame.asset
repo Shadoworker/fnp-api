@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de911494d1ce0e94fb75d34876201468, type: 3}
   m_Name: Khaby_Lame
   m_EditorClassIdentifier: 
-  m_character: 2
+  m_character: 3
+  m_prefab: {fileID: 4960784670472737287, guid: 71f3fa9ea0d194c44878557621085277, type: 3}
   m_movementMode: 1
   m_runSpeed: 8
   m_walkSpeed: 0.3

@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de911494d1ce0e94fb75d34876201468, type: 3}
   m_Name: Shiba
   m_EditorClassIdentifier: 
-  m_character: 0
+  m_character: 1
+  m_prefab: {fileID: 3025230682810942501, guid: 1682ce21c3211d94bab1923ad9f48351, type: 3}
   m_movementMode: 1
   m_runSpeed: 9
   m_walkSpeed: 0.3

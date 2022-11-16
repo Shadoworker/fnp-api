@@ -14,8 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_characters:
   - {fileID: 11400000, guid: 8ad00e3d74a898048b99581e62e8b83b, type: 2}
+  - {fileID: 11400000, guid: cd3d6a54277193647b56e335053759ca, type: 2}
+  - {fileID: 11400000, guid: da5c5cd5eff3e0947965033173011c41, type: 2}
+  - {fileID: 11400000, guid: 9c869fc468ee0774c84b962d7422d990, type: 2}
+  - {fileID: 11400000, guid: a2141a0639b3da0469356ab87ec9f64e, type: 2}
+  - {fileID: 11400000, guid: 8ad00e3d74a898048b99581e62e8b83b, type: 2}
+  - {fileID: 11400000, guid: 4d233d20369e23e489342033750eeeab, type: 2}
   m_jumpEvent: {fileID: 11400000, guid: 6703276f8dc3b3e47936435529d46091, type: 2}
   m_toggleFishingRodEvent: {fileID: 11400000, guid: ba28f1532bca2de4393826c3022bedaf, type: 2}
   m_xAxisSensitivity: 1.5
   m_zAxisSensitivity: 1
+  m_characterSpawnPosition: {x: -3.84, y: -1.34, z: 0}
   m_waterHeight: 3.6

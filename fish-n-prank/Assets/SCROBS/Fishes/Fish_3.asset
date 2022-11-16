@@ -9,13 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9818d172165f2341a3b5f78c236fe4e, type: 3}
-  m_Name: BoatSO
+  m_Script: {fileID: 11500000, guid: 9b2db5d7476cdaf48aaf60975025d62e, type: 3}
+  m_Name: Fish_3
   m_EditorClassIdentifier: 
-  m_floatingPower: 500
-  m_waterHeight: 5.2
-  m_mass: 10
-  m_underWaterDragForce: 0.5
-  m_underWaterAngularDragForce: 3
-  m_airDragForce: 0.5
-  m_airAngularDrag: 3
+  m_fishSpecies: Fish_3
+  m_battleDuration: 11
+  m_speed: 10000
