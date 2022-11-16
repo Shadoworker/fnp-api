@@ -5,11 +5,10 @@ using Cinemachine;
 
 public class DriveBoatTrigger : MonoBehaviour
 {
-    private const float CAMERA_SAILING_POS = -16f;
-    private const float CAMERA_PLAYER_POS = -6f;
     private CharacterController m_character;
     public BoatController m_boat;
     public GameObject m_driveBtn;
+    public Transform m_playerSeatPos;
     private void OnTriggerStay(Collider other)
     {
         if (other.tag == "Player" && !m_boat.enabled)
@@ -29,10 +28,11 @@ public class DriveBoatTrigger : MonoBehaviour
 
     public void SailBoat()
     {
-        GameStateManager.CameraManager.SetTarget(m_boat.gameObject, false);
-        m_character.transform.localPosition = new Vector3(m_boat.transform.localPosition.x, m_character.transform.localPosition.y, m_character.transform.localPosition.z);
         m_character.transform.LookAt(m_boat.m_facingDirection);
         m_character.transform.SetParent(m_boat.transform);
+        m_character.transform.localPosition = new Vector3(m_playerSeatPos.localPosition.x, m_playerSeatPos.transform.localPosition.y, m_playerSeatPos.localPosition.z);
+        m_character.transform.rotation = m_playerSeatPos.rotation;
+        GameStateManager.CameraManager.SetTarget(m_boat.gameObject, false, m_boat.transform);
         m_character.GetComponent<Rigidbody>().isKinematic = true;
         m_character.enabled = false;
         m_boat.enabled = true;

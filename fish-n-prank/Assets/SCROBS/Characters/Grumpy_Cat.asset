@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de911494d1ce0e94fb75d34876201468, type: 3}
   m_Name: Grumpy_Cat
   m_EditorClassIdentifier: 
-  m_character: 1
+  m_character: 2
+  m_prefab: {fileID: 8346861433036559578, guid: 409203985caf28542bebcd00561d1773, type: 3}
   m_movementMode: 1
   m_runSpeed: 8
   m_walkSpeed: 0.3
