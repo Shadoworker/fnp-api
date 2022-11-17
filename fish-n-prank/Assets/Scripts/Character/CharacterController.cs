@@ -23,7 +23,7 @@ public class CharacterController : MonoBehaviour
     public void InitCharacterControllerValues()
     {
         Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-        InitCapsuleCollider(transform.GetChild(0).GetComponent<CapsuleCollider>());
+        InitCapsuleCollider(m_animator.gameObject.GetComponent<CapsuleCollider>());
         InittRigidbody(rigidbody);
         m_joystick = GameObject.Find("JoystickContainer").GetComponent<VariableJoystick>();
         m_rigidBody = rigidbody;
