@@ -11,7 +11,8 @@ public class FishingRodController : MonoBehaviour
     private CharacterController m_characterController;
     private BuoyancyObject m_buoyancy;
     private Animator m_animator;
-    RaycastHit objectHit;
+
+    private bool m_initialized = false;
 
     public void InitFishingRod()
     {
@@ -20,16 +21,20 @@ public class FishingRodController : MonoBehaviour
         m_characterController = GetComponent<CharacterController>();
         m_buoyancy = GetComponent<BuoyancyObject>();
         m_animator = GetComponent<Animator>();
+
+        m_initialized = true;
     }
 
     public void Update()
     {
-        if (m_fishingRod.activeInHierarchy && !FishingController.Instance.m_isFishing 
+        if (!m_initialized) return;
+
+        if (m_fishingRod.activeInHierarchy && !FishingController.Instance.m_isFishing
             && !m_buoyancy.IsUnderwater())
         {
             Vector3 fwd = m_playerHead.TransformDirection(new Vector3(1, 5f, 1.5f));
             Debug.DrawRay(m_playerHead.position, fwd, Color.red);
-            if (Physics.Raycast(m_playerHead.position, fwd, out objectHit, 40))
+            if (Physics.Raycast(m_playerHead.position, fwd, out RaycastHit objectHit, 40))
             {
                 if (objectHit.transform.gameObject.name == "Water")
                 {

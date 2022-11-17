@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using PathCreation;
+using Mirror;
 
-public class FishingController : Singleton<FishingController>
+public class FishingController : MonoBehaviour
 {
     public PathCreator m_pathCreator;
     public Transform m_indicator;
@@ -23,9 +24,24 @@ public class FishingController : Singleton<FishingController>
     public CharacterController m_characterController;
     public Vector3 m_fishingUILocalPos;
 
+    #region Singleton
+    public static FishingController Instance { get; private set; }
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+    #endregion
+
     private void Start()
     {
-        InitRodValues();
+        // TODO: that data should come from a cloud save in the future
         m_numberOfCaughtFishesText.text = PlayerPrefs.GetInt(NUMBER_OF_CAUGHT_FISHES).ToString();
     }
 
@@ -57,14 +73,6 @@ public class FishingController : Singleton<FishingController>
     {
         m_indicator.position = m_pathCreator.path.GetPointAtDistance(m_distanceTravelled);
     }
-    public void InitRodValues()
-    {
-        FishSO fish = GameStateManager.FishesManager.GetRandomFish();
-        m_distanceTravelled = INDICATOR_DEFAULT_POS;
-        m_speed = fish.m_speed;
-        m_battleDuration = fish.m_battleDuration;
-        m_isNearFishingSpot.Raise("false");
-    }
 
     public void VerifiedFishingState()
     {
@@ -87,15 +95,38 @@ public class FishingController : Singleton<FishingController>
     }
 
 
+    /// <summary>
+    /// Initiate server request to start fishing gameplay
+    /// </summary>
     public void ActivateFishingGameplay()
     {
-        InitRodValues();
+        FnPFishingNetworkInterface.Instance.CmdStartFishing();
+    }
+
+    /// <summary>
+    /// Starts fishing gameplay locally (server validation done)
+    /// </summary>
+    public void StartFishingGameplay(FishSO _fishSO)
+    {
+        Debug.Log($"StartFishingGameplay: received fish from Server: {_fishSO.name}");
+
+        // initialize rode settings
+        m_distanceTravelled = INDICATOR_DEFAULT_POS;
+        m_speed = _fishSO.m_speed;
+        m_battleDuration = _fishSO.m_battleDuration;
+        m_isNearFishingSpot.Raise("false");
+
+        // setup character
         CharacterController characterController = GameStateManager.CharactersManager.GetCurrentCharacter().GetComponent<CharacterController>();
         characterController.enabled = false;
+        characterController.m_animator.SetBool("Fish", true);
+
+        // refresh UI
+        // TODO: extract those commands to UIManager.StartFishingGameplay()
         m_fishingUI.SetActive(true);
         m_jumpBtn.SetActive(false);
         m_fishBtn.SetActive(false);
-        characterController.m_animator.SetBool("Fish", true);
+
         m_isFishing = true;
     }
 }

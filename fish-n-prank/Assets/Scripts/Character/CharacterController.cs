@@ -36,7 +36,12 @@ public class CharacterController : NetworkBehaviour
         m_rigidBody.mass = m_characterSO.m_mass;
         m_characterSO.SetGroundedValue(true);
         if (m_characterSO.m_character == CHARACTER.SHIBA)
-            GameStateManager.CharactersManager.SetCurrentCharacter(gameObject);
+        {
+            if (isOwned)
+            {
+                GameStateManager.CharactersManager.SetCurrentCharacter(gameObject);
+            }
+        }
         InvokeRepeating("PlaySpecialIdle", 1.0f, m_characterSO.m_specialIdleRepeatRate);
     }
 
@@ -108,16 +113,22 @@ public class CharacterController : NetworkBehaviour
         }
         JumpingAndLanding();
         m_moveVector = Vector3.zero;
-        if (m_characterSO != null)
+        if (m_animator && m_characterSO != null)
             m_animator.SetBool("Grounded", m_characterSO.IsGrounded());
         m_wasGrounded = m_characterSO.IsGrounded();
     }
 
-
+    [ClientCallback]
     private void DirectUpdate()
     {
         if (!isLocalPlayer)
             return;
+
+        if (m_joystick == null)
+        {
+            Debug.LogWarning("CharacterController.DirectUpdate: Joystick not ready yet");
+            return;
+        }
 
         if (m_joystick.m_vertical != 0 || m_joystick.m_horizontal != 0)
         {
@@ -157,12 +168,12 @@ public class CharacterController : NetworkBehaviour
             m_characterSO.SetJumpInput(false);
         }
 
-        if (!m_wasGrounded && m_characterSO.IsGrounded())
+        if (m_animator && !m_wasGrounded && m_characterSO.IsGrounded())
         {
             m_animator.SetTrigger("Land");
         }
 
-        if (!m_characterSO.IsGrounded() && m_wasGrounded)
+        if (m_animator && !m_characterSO.IsGrounded() && m_wasGrounded)
         {
             m_animator.SetTrigger("Jump");
         }

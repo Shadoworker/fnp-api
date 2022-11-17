@@ -35,9 +35,10 @@ public class CharactersManager : ScriptableObject
 
     public void Init()
     {
-        m_playersContainer = GameObject.Find(CHARACTER_CONTAINER).transform;
-        m_characcterEnumValues = Enum.GetValues(typeof(CHARACTER)).Cast<CHARACTER>().ToList();
-        SpawnCharacter(CHARACTER.RANDOM.ToString());
+        // Character spawning done by Mirror
+        //m_playersContainer = GameObject.Find(CHARACTER_CONTAINER).transform;
+        //m_characcterEnumValues = Enum.GetValues(typeof(CHARACTER)).Cast<CHARACTER>().ToList();
+        //SpawnCharacter(CHARACTER.RANDOM.ToString());
     }
 
     public void SetCurrentCharacter(GameObject _character)

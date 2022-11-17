@@ -12,6 +12,9 @@ public class FnPNetworkManager : NetworkManager
 
         Debug.Log($"A new player was added! There an now {numPlayers} connected players.");
     }
+
+    
+
     #endregion
 
     #region CLIENT
