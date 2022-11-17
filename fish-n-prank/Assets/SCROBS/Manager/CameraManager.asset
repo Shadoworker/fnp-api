@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: CameraManager
   m_EditorClassIdentifier: 
   m_sensivityX: 4.25
-  m_boatSensivityX: 0.28
+  m_boatSensivityX: 0.35
   m_sensivityY: 4.25
   m_cameraRotationSensitivity: 0.6
   m_cameraFollow: {fileID: 0}
-  m_cameraXSensitivity: 0.28
+  m_cameraXSensitivity: 0.53
   m_characterCamPos: {x: 3, y: 5, z: 4}
   m_initBoatCamPos: {x: 3, y: 10, z: 11}
   m_boatCamPos: {x: 3, y: 10, z: 11}

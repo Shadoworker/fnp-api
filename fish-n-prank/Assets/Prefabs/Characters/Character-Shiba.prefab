@@ -1930,10 +1930,8 @@ GameObject:
   - component: {fileID: 2499524093661896351}
   - component: {fileID: 2682648491355945340}
   - component: {fileID: 2682648491355945335}
-  - component: {fileID: 2682648491355945336}
-  - component: {fileID: 2682648491355945337}
-  - component: {fileID: 2682648491355945338}
   - component: {fileID: 2682648491355945339}
+  - component: {fileID: 9196046519226320831}
   m_Layer: 0
   m_Name: Character-Shiba
   m_TagString: Player
@@ -2012,71 +2010,6 @@ MonoBehaviour:
   invokeCheckOnEnable: 0
   m_disableFirstEvent: 0
   realTime: 0
---- !u!114 &2682648491355945336
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3025230682810942501}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 872945d025ee5094491ca177a34e5b7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_characterSO: {fileID: 11400000, guid: 8ad00e3d74a898048b99581e62e8b83b, type: 2}
-  m_characterController: {fileID: 0}
-  m_buoyancyController: {fileID: 0}
-  m_fishingRodController: {fileID: 0}
---- !u!114 &2682648491355945337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3025230682810942501}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e839e4c12473014b9b3d3faccc0f61d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Event: {fileID: 11400000, guid: 6703276f8dc3b3e47936435529d46091, type: 2}
-  delay: 0
-  Response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2682648491355945338}
-        m_TargetAssemblyTypeName: CharacterController, Assembly-CSharp
-        m_MethodName: SetJumpInput
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  invokeCheckOnEnable: 0
-  m_disableFirstEvent: 0
-  realTime: 0
---- !u!114 &2682648491355945338
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3025230682810942501}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba158ff05cf30224f94bfdddec8e7635, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_characterSO: {fileID: 11400000, guid: 8ad00e3d74a898048b99581e62e8b83b, type: 2}
-  m_characterData: {fileID: 0}
-  m_animator: {fileID: 0}
-  m_cameraRotationScale: 0.6
-  m_triggerJump: 0
 --- !u!114 &2682648491355945339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2089,7 +2022,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa869df9c69e59440bb793ba06512732, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_characterSO: {fileID: 11400000, guid: 8ad00e3d74a898048b99581e62e8b83b, type: 2}
+  m_characterData: {fileID: 0}
+--- !u!136 &9196046519226320831
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3025230682810942501}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  m_Radius: 0.64481604
+  m_Height: 2.3838153
+  m_Direction: 1
+  m_Center: {x: -0.040151715, y: 1.0949492, z: -0.24584818}
 --- !u!1 &3103581686497880844
 GameObject:
   m_ObjectHideFlags: 0
@@ -6296,7 +6243,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6054401867373273736}
-  - component: {fileID: 2682648489793338146}
   m_Layer: 0
   m_Name: metarig
   m_TagString: Player
@@ -6320,20 +6266,6 @@ Transform:
   m_Father: {fileID: 2499524093661896351}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &2682648489793338146
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8545891687042716008}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.008292878
-  m_Height: 0.026155991
-  m_Direction: 2
-  m_Center: {x: 0.00022597313, y: -0.0017168964, z: 0.012242251}
 --- !u!1 &8904827017632306589
 GameObject:
   m_ObjectHideFlags: 0

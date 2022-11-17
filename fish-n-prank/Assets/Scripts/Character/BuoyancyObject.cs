@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class BuoyancyObject : MonoBehaviour
 {
-    public CharacterSO m_characterSO;
     public CharacterData m_characterData;
     public BoatSO m_boatSO;
     public Transform[] m_floaters;
 
     Rigidbody m_rigidBody;
-    public Animator m_animator;
     int m_floatersUnderWater;
 
     public float m_waterHeight;
@@ -23,7 +21,6 @@ public class BuoyancyObject : MonoBehaviour
 
     private void Start()
     {
-        m_animator = GetComponent<Animator>();
         m_rigidBody = GetComponent<Rigidbody>();
         if (m_boatSO != null)   
         {
@@ -37,7 +34,7 @@ public class BuoyancyObject : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(m_characterSO != null || m_boatSO != null)
+        if(m_characterData != null || m_boatSO != null)
         {
             m_floatersUnderWater = 0;
             for (int i = 0; i < m_floaters.Length; i++)
@@ -47,14 +44,14 @@ public class BuoyancyObject : MonoBehaviour
                 {
                     m_rigidBody.AddForceAtPosition(Vector3.up * m_floatingPower * Mathf.Abs(difference), m_floaters[i].position, ForceMode.Force);
                     m_floatersUnderWater += 1;
-                    if (m_characterSO != null && !m_characterSO.IsUnderWater())
+                    if (m_characterData != null && !m_characterData.m_characterSO.IsUnderWater())
                     {
-                        m_characterSO.SetUnderWaterValue(true);
-                        m_characterSO.SetGroundedValue(true);
+                        m_characterData.m_characterSO.SetUnderWaterValue(true);
+                        m_characterData.m_characterSO.SetGroundedValue(true);
                         if (gameObject.tag == "Player")
                         {
-                            m_animator.SetBool("Swim", true);
-                            if (m_characterSO.m_isBackstrokeSwim)
+                            m_characterData.m_animator.SetBool("Swim", true);
+                            if (m_characterData.m_characterSO.m_isBackstrokeSwim)
                                 transform.GetChild(0).localEulerAngles = new Vector3(transform.GetChild(0).localEulerAngles.x, BACKSTROKE_SWIM_ROT, 0f);
                         }
                         SwitchState(true);
@@ -62,15 +59,15 @@ public class BuoyancyObject : MonoBehaviour
                     else if(difference > 0 && m_boatSO != null)
                         SwitchState(true);
                 }
-                if (m_characterSO != null && m_characterSO.IsUnderWater() && m_floatersUnderWater == 0)
+                if (m_characterData != null && m_characterData.m_characterSO.IsUnderWater() && m_floatersUnderWater == 0)
                 {
                     if (gameObject.tag == "Player")
                     {
-                        m_animator.SetBool("Swim", false);
-                        if (m_characterSO.m_isBackstrokeSwim)
+                        m_characterData.m_animator.SetBool("Swim", false);
+                        if (m_characterData.m_characterSO.m_isBackstrokeSwim)
                             transform.GetChild(0).localEulerAngles = new Vector3(transform.GetChild(0).localEulerAngles.x, 0f, 0f);
                     }
-                    m_characterSO.SetUnderWaterValue(false);
+                    m_characterData.m_characterSO.SetUnderWaterValue(false);
                     SwitchState(false);
                 }
                 else if(m_boatSO != null && m_floatersUnderWater == 0)
@@ -92,7 +89,7 @@ public class BuoyancyObject : MonoBehaviour
 
     public bool IsUnderwater()
     {
-        return m_characterSO.IsUnderWater();
+        return m_characterData.m_characterSO.IsUnderWater();
     }
 
     void SwitchState(bool _isUnderWater)
@@ -113,21 +110,20 @@ public class BuoyancyObject : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-         if (other.gameObject.tag == "Water" && m_characterSO != null && m_characterSO.GetJumpInput())
+         if (other.gameObject.tag == "Water" && m_characterData != null && m_characterData.m_characterSO.GetJumpInput())
         {
-            m_animator.SetBool("Swim", true);
-            m_characterSO.SetGroundedValue(true);
-            Debug.Log("Enter");
+            m_characterData.m_animator.SetBool("Swim", true);
+            m_characterData.m_characterSO.SetGroundedValue(true);
             m_characterData.m_characterController.m_triggerJump = false;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Water" && m_characterSO != null)
+        if (other.gameObject.tag == "Water" && m_characterData.m_characterSO != null)
         {
-            m_characterSO.SetGroundedValue(false);
-            m_animator.SetBool("Swim", false);
+            m_characterData.m_characterSO.SetGroundedValue(false);
+            m_characterData.m_animator.SetBool("Swim", false);
         }
 
     }

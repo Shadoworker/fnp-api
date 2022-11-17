@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class CharacterController : MonoBehaviour
 {
-    public CharacterSO m_characterSO;
     public CharacterData m_characterData;
     private float m_moveSpeed = 1;
     public Animator m_animator = null;
@@ -18,32 +17,45 @@ public class CharacterController : MonoBehaviour
     public float m_cameraRotationScale = 0.6f;
     public bool m_triggerJump;
     private const float SOLID_SURFACE_COLLISION_REF = 0.001f;
+    public CapsuleCollider m_capsuleCollider;
     RaycastHit m_objectHit;
 
     public void InitCharacterControllerValues()
     {
-        gameObject.AddComponent<Rigidbody>();
-        m_characterData = GetComponent<CharacterData>();
-        gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
-        gameObject.GetComponent<Rigidbody>().angularDrag = m_characterSO.m_airAngularDrag;
-        gameObject.GetComponent<Rigidbody>().drag = m_characterSO.m_dragForce;
+        Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
+        InitCapsuleCollider(transform.GetChild(0).GetComponent<CapsuleCollider>());
+        InittRigidbody(rigidbody);
         m_joystick = GameObject.Find("JoystickContainer").GetComponent<VariableJoystick>();
-        if (!m_animator) { m_animator = gameObject.GetComponent<Animator>(); }
-        if (!m_rigidBody) { m_rigidBody = gameObject.GetComponent<Rigidbody>(); }
-        m_rigidBody.maxAngularVelocity = m_characterSO.m_rotationSpeed;
-        m_rigidBody.drag = m_characterSO.m_dragForce;
-        m_rigidBody.mass = m_characterSO.m_mass;
-        m_characterSO.SetGroundedValue(true);
-        if (m_characterSO.m_character == CHARACTER.SHIBA)
-            GameStateManager.CharactersManager.SetCurrentCharacter(gameObject);
-        InvokeRepeating("PlaySpecialIdle", 1.0f, m_characterSO.m_specialIdleRepeatRate);
+        m_rigidBody = rigidbody;
+        m_characterData.m_characterSO.SetGroundedValue(true);
+        InvokeRepeating("PlaySpecialIdle", 1.0f, m_characterData.m_characterSO.m_specialIdleRepeatRate);
+    }
+
+    public void InittRigidbody(Rigidbody _rigidbody)
+    {
+        _rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+        _rigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        _rigidbody.angularDrag = m_characterData.m_characterSO.m_airAngularDrag;
+        _rigidbody.drag = m_characterData.m_characterSO.m_dragForce;
+        _rigidbody.maxAngularVelocity = m_characterData.m_characterSO.m_rotationSpeed;
+        _rigidbody.drag = m_characterData.m_characterSO.m_dragForce;
+        _rigidbody.mass = m_characterData.m_characterSO.m_mass;
+    }
+
+    public void InitCapsuleCollider(CapsuleCollider _copy)
+    {
+        m_capsuleCollider = GetComponent<CapsuleCollider>();
+        m_capsuleCollider.height = _copy.height;
+        m_capsuleCollider.center = _copy.center;
+        m_capsuleCollider.radius = _copy.radius;
+        _copy.enabled = false;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        m_characterSO.SetGroundedValue(true);
+        m_characterData.m_characterSO.SetGroundedValue(true);
         m_triggerJump = false;
-        m_characterSO.SetJumpInput(false);
+        m_characterData.m_characterSO.SetJumpInput(false);
     }
 
     public float GetYDistanceBetweenColliders(float _y1, float _y2)
@@ -53,7 +65,8 @@ public class CharacterController : MonoBehaviour
 
     public void PlaySpecialIdle()
     {
-        m_animator.SetTrigger("Idle");
+        if(m_animator != null)
+            m_animator.SetTrigger("Idle");
     }
 
     private void OnCollisionStay(Collision collision)
@@ -70,7 +83,7 @@ public class CharacterController : MonoBehaviour
 
         if (validSurfaceNormal)
         {
-            m_characterSO.SetGroundedValue(true);
+            m_characterData.m_characterSO.SetGroundedValue(true);
             if (!m_collisions.Contains(collision.collider))
             {
                 m_collisions.Add(collision.collider);
@@ -82,7 +95,7 @@ public class CharacterController : MonoBehaviour
             {
                 m_collisions.Remove(collision.collider);
             }
-            if (m_collisions.Count == 0 && !m_characterSO.IsUnderWater() && !Physics.Raycast(transform.position, Vector3.down, out m_objectHit, m_characterSO.m_rayCollisionRef)) { m_characterSO.SetGroundedValue(false);}
+            if (m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && !Physics.Raycast(transform.position, Vector3.down, out m_objectHit, m_characterData.m_characterSO.m_rayCollisionRef)) { m_characterData.m_characterSO.SetGroundedValue(false);}
         }
     }
 
@@ -92,24 +105,24 @@ public class CharacterController : MonoBehaviour
         {
             m_collisions.Remove(collision.collider);
         }
-        if (m_collisions.Count == 0 && !m_characterSO.IsUnderWater() && !Physics.Raycast(transform.position, Vector3.down, out m_objectHit, m_characterSO.m_rayCollisionRef)) { m_characterSO.SetGroundedValue(false);}
+        if (m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && !Physics.Raycast(transform.position, Vector3.down, out m_objectHit, m_characterData.m_characterSO.m_rayCollisionRef)) { m_characterData.m_characterSO.SetGroundedValue(false);}
     }
 
     private void FixedUpdate()
     {
-        if (m_characterSO != null)
+        if (m_characterData.m_characterSO != null)
         {
-            if (!m_characterSO.GetJumpInput() && (Input.GetKey(KeyCode.Space) || m_triggerJump))
+            if (!m_characterData.m_characterSO.GetJumpInput() && (Input.GetKey(KeyCode.Space) || m_triggerJump))
             {
-                m_characterSO.SetJumpInput(true);
+                m_characterData.m_characterSO.SetJumpInput(true);
             }
             DirectUpdate();
         }
         JumpingAndLanding();
         m_moveVector = Vector3.zero;
-        if (m_characterSO != null)
-            m_animator.SetBool("Grounded", m_characterSO.IsGrounded());
-        m_wasGrounded = m_characterSO.IsGrounded();
+        if (m_characterData.m_characterSO != null && m_animator != null)
+            m_animator.SetBool("Grounded", m_characterData.m_characterSO.IsGrounded());
+        m_wasGrounded = m_characterData.m_characterSO.IsGrounded();
     }
 
 
@@ -121,17 +134,19 @@ public class CharacterController : MonoBehaviour
             GameStateManager.CameraManager.m_cameraFollow.SetCurrentXValue(m_joystick.m_horizontal * GameStateManager.CameraManager.m_cameraRotationSensitivity);
             m_moveVector = PoolInput(); //get the original input
             m_moveVector = RotateWithView();//rotate the player using our move vector
-            if (!IsJumpCoolDownOver() || m_characterSO.IsGrounded())    // verified if the character is not jumping 
+            if (!IsJumpCoolDownOver() || m_characterData.m_characterSO.IsGrounded())    // verified if the character is not jumping 
             {
                 Move();
                 transform.rotation = Quaternion.LookRotation(m_moveVector);
-                m_animator.SetFloat("MoveSpeed", m_movement.magnitude);
+                if(m_animator)
+                    m_animator.SetFloat("MoveSpeed", m_movement.magnitude);
             }
         }
-        else if (!m_characterSO.GetJumpInput() && m_characterSO.IsGrounded())
+        else if (!m_characterData.m_characterSO.GetJumpInput() && m_characterData.m_characterSO.IsGrounded())
         {
             m_rigidBody.velocity = Vector3.zero;
-            m_animator.SetFloat("MoveSpeed", 0);
+            if(m_animator != null)
+                m_animator.SetFloat("MoveSpeed", 0);
         }
     }
 
@@ -142,23 +157,23 @@ public class CharacterController : MonoBehaviour
 
     public void JumpingAndLanding()
     {
-        if (IsJumpCoolDownOver() && m_characterSO.GetJumpInput() && m_characterData.m_buoyancyController != null && (m_characterSO.IsGrounded() || m_characterSO.IsUnderWater()))
+        if (IsJumpCoolDownOver() && m_characterData.m_characterSO.GetJumpInput() && m_characterData.m_buoyancyController != null && (m_characterData.m_characterSO.IsGrounded() || m_characterData.m_characterSO.IsUnderWater()))
         {
            m_jumpTimeStamp = Time.time;
             if(!m_characterData.m_buoyancyController.IsUnderwater())
-                m_rigidBody.AddForce(((Vector3.up * m_characterSO.m_jumpForce) + m_moveVector), ForceMode.Impulse);
+                m_rigidBody.AddForce(((Vector3.up * m_characterData.m_characterSO.m_jumpForce) + m_moveVector), ForceMode.Impulse);
             else
-                m_rigidBody.AddForce(((Vector3.up * m_characterSO.m_underwaterJumpForce) + m_moveVector), ForceMode.Impulse);
-            m_characterSO.SetGroundedValue(false);
-            m_characterSO.SetJumpInput(false);
+                m_rigidBody.AddForce(((Vector3.up * m_characterData.m_characterSO.m_underwaterJumpForce) + m_moveVector), ForceMode.Impulse);
+            m_characterData.m_characterSO.SetGroundedValue(false);
+            m_characterData.m_characterSO.SetJumpInput(false);
         }
 
-        if (!m_wasGrounded && m_characterSO.IsGrounded())
+        if (!m_wasGrounded && m_characterData.m_characterSO.IsGrounded())
         {
             m_animator.SetTrigger("Land");
         }
 
-        if (!m_characterSO.IsGrounded() && m_wasGrounded)
+        if (!m_characterData.m_characterSO.IsGrounded() && m_wasGrounded)
         {
             m_animator.SetTrigger("Jump");
         }
@@ -166,45 +181,43 @@ public class CharacterController : MonoBehaviour
 
     public bool IsJumpCoolDownOver()
     {
-        return (Time.time - m_jumpTimeStamp) >= m_characterSO.m_minJumpInterval; ;
+        return (Time.time - m_jumpTimeStamp) >= m_characterData.m_characterSO.m_minJumpInterval; ;
     }
 
     public void ToggleRunning(GameObject _runningIcon)
     {
-        if(!m_characterSO.IsRunning())
+        if(!m_characterData.m_characterSO.IsRunning())
         {
-            m_characterSO.SetRunningValue(true);
+            m_characterData.m_characterSO.SetRunningValue(true);
             _runningIcon.GetComponent<Image>().color = Color.black;
         }
         else
         {
-            m_characterSO.SetRunningValue(false);
+            m_characterData.m_characterSO.SetRunningValue(false);
             _runningIcon.GetComponent<Image>().color = Color.white;
         }
     }
 
     public void Move()
     {
-        //Vector3 dir = new Vector3(m_moveVector.x * m_moveSpeed, m_rigidBody.velocity.y, m_moveVector.z * m_moveSpeed);
         m_rigidBody.velocity = new Vector3(m_moveVector.x * m_moveSpeed, m_rigidBody.velocity.y, m_moveVector.z * m_moveSpeed);
-        //m_rigidBody.velocity = Vector3.ClampMagnitude(m_rigidBody.velocity, m_characterSO.m_maxSpeed);
     }
 
     public Vector3 PoolInput()
     {
         Vector3 dir = Vector3.zero;
-        if(m_characterSO.m_movementMode == MovementMode.CONSTANT)
+        if(m_characterData.m_characterSO.m_movementMode == MovementMode.CONSTANT)
         {
             if (m_movement.magnitude < 1)
-                m_moveSpeed = m_characterSO.m_walkSpeed;
+                m_moveSpeed = m_characterData.m_characterSO.m_walkSpeed;
             else
-                m_moveSpeed = m_characterSO.m_runSpeed;
+                m_moveSpeed = m_characterData.m_characterSO.m_runSpeed;
             dir.x = -m_joystick.m_horizontal;
             dir.z = -m_joystick.m_vertical;
         }
         else
         {
-            m_moveSpeed = m_characterSO.m_runSpeed;
+            m_moveSpeed = m_characterData.m_characterSO.m_runSpeed;
             dir.x = -m_joystick.m_horizontal;
             dir.z = -m_joystick.m_vertical;
         }

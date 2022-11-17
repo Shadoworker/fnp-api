@@ -15,7 +15,8 @@ public class CharacterSO : ScriptableObject
     [FancyHeader("  Character SO  ", 1.5f, "lime", 5.5f, order = 0)]
     [Label("")] public Empty e;
     public CHARACTER m_character;
-    [BoxGroup("Prefab")] public GameObject m_prefab;
+    [BoxGroup("References")] public GameObject m_prefab;
+    [BoxGroup("References")] public AnimatorOverrideController m_animator;
 
     [BoxGroup("Movement Controller")] private bool m_isRunning;
     [BoxGroup("Movement Controller")] public  MovementMode m_movementMode;

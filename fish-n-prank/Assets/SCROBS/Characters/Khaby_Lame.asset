@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_character: 3
   m_prefab: {fileID: 4960784670472737287, guid: 71f3fa9ea0d194c44878557621085277, type: 3}
+  m_animator: {fileID: 22100000, guid: 0a5896d13c11f884bb8b832d1bcf8c6d, type: 2}
   m_movementMode: 1
   m_runSpeed: 8
   m_walkSpeed: 0.3

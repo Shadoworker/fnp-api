@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BoatSO
   m_EditorClassIdentifier: 
   m_floatingPower: 500
-  m_waterHeight: 5.2
+  m_waterHeight: 6
   m_mass: 10
   m_underWaterDragForce: 0.5
   m_underWaterAngularDragForce: 3
