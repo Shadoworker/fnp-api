@@ -9,7 +9,8 @@ public class CameraManager : ScriptableObject
 
     [FancyHeader("  Camera Manager SO  ", 1.5f, "yellow", 5.5f, order = 0)]
     [Label("")] public Empty e;
-
+    private const float BOAT_CENTER_CAM_REF = 0.93f;
+    private const float BOAT_CAM_DELTA_REF = 0.001f;
     [BoxGroup("Joystick settings")] public float m_sensivityX = 5.0f;
     [BoxGroup("Joystick settings")] public float m_boatSensivityX = 0.3f;
     [BoxGroup("Joystick settings")] public float m_sensivityY = 5.0f;
@@ -18,12 +19,18 @@ public class CameraManager : ScriptableObject
     [HideInInspector] public float m_cameraXSensitivity;
     [BoxGroup("Camera transform")] public Vector3 m_characterCamPos = new Vector3(3, 5, 4);
     [BoxGroup("Camera transform")] public Vector3 m_initBoatCamPos = new Vector3(3, 10, 11);
-    [BoxGroup("Camera transform")] public Vector3 m_boatCamPos = new Vector3(3, 10, 11);
-    [BoxGroup("Camera transform")] public Vector3 m_boatCamRot = new Vector3(3, 10, 11);
+    [BoxGroup("Camera transform")] public float m_boatRotationSensitivity = 0.9f;
+    public bool m_isRotatingCamera;
+    public bool m_isCameraCentered;
+    public bool m_isLeftDamping = false;
+    public bool m_isRightDamping = false;
 
     public void Init()
     {
         m_cameraFollow = Camera.main.GetComponent<CameraFollow>();
+        m_isCameraCentered = false;
+        m_isLeftDamping = false;
+        m_isRightDamping = false;
     }
 
     public void SetTarget(GameObject _target, bool _isCharacter = true, Transform _boat = null)
@@ -39,5 +46,40 @@ public class CameraManager : ScriptableObject
             m_cameraXSensitivity = m_boatSensivityX;
             m_cameraFollow.m_dir = m_initBoatCamPos;
         }
+    }
+    public void CenterCameraOnTarget(Transform _target)
+    {
+        var direction = (Camera.main.transform.position - _target.position).normalized;
+        if (Mathf.Abs(Vector3.Dot(-_target.forward, direction) - BOAT_CENTER_CAM_REF) > BOAT_CAM_DELTA_REF && !IsCameraRotating())
+        {
+            if ((Mathf.Sign(Vector3.Dot(-_target.right, direction)) == 1 && !m_isRightDamping) || m_isLeftDamping)
+            {
+                m_isLeftDamping = true;
+                m_cameraFollow.SetCurrentXValue(-m_boatRotationSensitivity * GameStateManager.CameraManager.m_boatSensivityX);
+            }
+            else if (!m_isLeftDamping)
+            {
+                m_isRightDamping = true;
+                m_cameraFollow.SetCurrentXValue(m_boatRotationSensitivity * GameStateManager.CameraManager.m_boatSensivityX);
+            }
+        }
+        else
+        {
+            m_isCameraCentered = true;
+            m_isRightDamping = false;
+            m_isLeftDamping = false;
+        }
+    }
+
+    public void ToggleCameraRotation(bool _value)
+    {
+        m_isRotatingCamera = _value;
+        if (_value)
+            m_isCameraCentered = false;
+    }
+
+    public bool IsCameraRotating()
+    {
+        return m_isRotatingCamera;
     }
 }

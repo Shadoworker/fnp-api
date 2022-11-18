@@ -17,8 +17,11 @@ MonoBehaviour:
   m_sensivityY: 4.25
   m_cameraRotationSensitivity: 0.6
   m_cameraFollow: {fileID: 0}
-  m_cameraXSensitivity: 0.53
+  m_cameraXSensitivity: 4.25
   m_characterCamPos: {x: 3, y: 5, z: 4}
   m_initBoatCamPos: {x: 3, y: 10, z: 11}
-  m_boatCamPos: {x: 3, y: 10, z: 11}
-  m_boatCamRot: {x: 18.617, y: 0.569, z: 0.053}
+  m_boatCenterCamPos: {x: 0.1, y: 0.37, z: -0.92}
+  m_isRotatingCamera: 0
+  m_isCameraCentered: 0
+  m_isLeftDamping: 0
+  m_isRightDamping: 0

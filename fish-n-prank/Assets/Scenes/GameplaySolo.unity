@@ -965,7 +965,7 @@ Transform:
   - {fileID: 749219255}
   - {fileID: 1377830593}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &675654167
 PrefabInstance:
@@ -1523,7 +1523,6 @@ MonoBehaviour:
   - {fileID: 787196063}
   - {fileID: 251768004}
   - {fileID: 1045820305}
-  m_animator: {fileID: 0}
   m_waterHeight: 6
   m_floatingPower: 200
   m_underWaterDragForce: 0
@@ -1604,6 +1603,7 @@ MonoBehaviour:
   m_steerm_power: 50000
   m_power: 30
   m_maxSpeed: 50
+  m_reverseSpeed: 10
   m_drag: 0.1
   m_steerPower: 10000
   m_joystick: {fileID: 1814962028}
@@ -3577,7 +3577,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1087318831378253937, guid: 9b94b4939a9fb8e4e92d6d86da112ee4, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1087318831378253937, guid: 9b94b4939a9fb8e4e92d6d86da112ee4, type: 3}
       propertyPath: m_AnchorMax.x
