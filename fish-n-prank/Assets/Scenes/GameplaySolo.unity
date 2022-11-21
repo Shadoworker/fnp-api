@@ -1603,7 +1603,7 @@ MonoBehaviour:
   m_steerm_power: 50000
   m_power: 30
   m_maxSpeed: 50
-  m_reverseSpeed: 10
+  m_reverseSpeed: 5
   m_drag: 0.1
   m_steerPower: 10000
   m_joystick: {fileID: 1814962028}

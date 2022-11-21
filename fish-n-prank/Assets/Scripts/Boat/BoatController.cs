@@ -35,7 +35,6 @@ public class BoatController : MonoBehaviour
     public void FixedUpdate()
     {
         float steer = 0;
-        //steer direction [-1,0,1]
         if (Input.GetAxis("Horizontal") != 0 || m_joystick.m_horizontal != 0)
         {
             steer -= m_joystick.m_horizontal;
@@ -46,11 +45,11 @@ public class BoatController : MonoBehaviour
             GameStateManager.CameraManager.ToggleCameraRotation(false);
         }
 
-
         if (!GameStateManager.CameraManager.m_isCameraCentered)
             GameStateManager.CameraManager.CenterCameraOnTarget(transform);
         
         GameStateManager.CameraManager.m_cameraFollow.SetCurrentXValue(m_joystick.m_horizontal * GameStateManager.CameraManager.m_boatSensivityX);
+        GameStateManager.CameraManager.IsBoatFacingCam(transform, ref steer, new Vector3(m_joystick.m_horizontal, 0, m_joystick.m_vertical));
         //Rotational Force
         m_rigidbody.AddForceAtPosition(steer * transform.right * m_steerm_power / 100f, m_motor.position);
 

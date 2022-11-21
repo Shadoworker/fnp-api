@@ -47,6 +47,10 @@ public class CameraFollow : MonoBehaviour
     {
         m_currentX += _value * GameStateManager.CameraManager.m_sensivityX;
     }
+    public void SetCurrentYValue(float _value)
+    {
+        m_currentY += _value * GameStateManager.CameraManager.m_sensivityY;
+    }
 
     private float ClampAngle(float _angle, float _min, float _max)
     {

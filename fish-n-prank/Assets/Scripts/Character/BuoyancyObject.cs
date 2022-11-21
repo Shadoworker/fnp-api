@@ -122,7 +122,7 @@ public class BuoyancyObject : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Water" && m_characterData.m_characterSO != null)
+        if (other.gameObject.tag == "Water" && m_characterData != null)
         {
             m_characterData.m_characterSO.SetGroundedValue(false);
             m_characterData.m_animator.SetBool("Swim", false);
