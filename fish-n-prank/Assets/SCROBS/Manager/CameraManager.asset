@@ -15,13 +15,15 @@ MonoBehaviour:
   m_sensivityX: 4.25
   m_boatSensivityX: 0.35
   m_sensivityY: 4.25
+  m_xJoystickOffset: 0.5
+  m_yJoystickOffset: 0.5
   m_cameraRotationSensitivity: 0.6
   m_cameraFollow: {fileID: 0}
-  m_cameraXSensitivity: 4.25
+  m_cameraXSensitivity: 0.35
   m_characterCamPos: {x: 3, y: 5, z: 4}
   m_initBoatCamPos: {x: 3, y: 10, z: 11}
-  m_boatCenterCamPos: {x: 0.1, y: 0.37, z: -0.92}
+  m_boatRotationSensitivity: 2
   m_isRotatingCamera: 0
-  m_isCameraCentered: 0
+  m_isCameraCentered: 1
   m_isLeftDamping: 0
   m_isRightDamping: 0

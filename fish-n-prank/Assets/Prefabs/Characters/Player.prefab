@@ -17,7 +17,6 @@ GameObject:
   - component: {fileID: 6594180712886397975}
   - component: {fileID: 2982256746181722372}
   - component: {fileID: -7580344562603282298}
-  - component: {fileID: 8162699874099025082}
   - component: {fileID: 2273657928815149355}
   m_Layer: 0
   m_Name: Player
@@ -53,6 +52,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 872945d025ee5094491ca177a34e5b7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0.1
   m_characterSO: {fileID: 11400000, guid: 8ad00e3d74a898048b99581e62e8b83b, type: 2}
   m_characterController: {fileID: 0}
   m_buoyancyController: {fileID: 0}
@@ -206,23 +208,6 @@ MonoBehaviour:
   showGizmos: 0
   showOverlay: 0
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
---- !u!114 &8162699874099025082
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4939025210828693239}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f6f3bf89aa97405989c802ba270f815, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0.1
-  clientAuthority: 0
-  animator: {fileID: 0}
 --- !u!114 &2273657928815149355
 MonoBehaviour:
   m_ObjectHideFlags: 0

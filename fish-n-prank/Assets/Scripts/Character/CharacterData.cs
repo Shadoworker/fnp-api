@@ -2,16 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-
+using Mirror;
 
 [RequireComponent(typeof(CharacterController), typeof(GameEventListener))]
-public class CharacterData : MonoBehaviour
+public class CharacterData : NetworkBehaviour
 {
     public CharacterSO m_characterSO;
     public CharacterController m_characterController;
     public BuoyancyObject m_buoyancyController;
     public FishingRodController m_fishingRodController;
     public Animator m_animator;
+
+
+    private void Start()
+    {
+        if (isLocalPlayer)
+        {
+            GameStateManager.CharactersManager.SetPlayerSkin(gameObject, CHARACTER.RANDOM.ToString());
+            //GetComponent<NetworkAnimator>().animator = GameStateManager.CharactersManager.GetCurrentCharacter().GetComponent<Animator>();
+        }
+    }
 
     public void InitCharacterData(CharacterSO _characterSO = null)
     {
