@@ -14,13 +14,23 @@ public class CharacterData : NetworkBehaviour
     public Animator m_animator;
 
 
-    private void Start()
+    //private void Start()
+    //{
+    //    //if (isOwned)
+    //    {
+    //        //GameStateManager.CharactersManager.SetPlayerSkin(gameObject, CHARACTER.RANDOM.ToString());
+    //        //GetComponent<NetworkAnimator>().animator = GameStateManager.CharactersManager.GetCurrentCharacter().GetComponent<Animator>();
+    //    }
+    //}
+
+    public override void OnStartLocalPlayer()
     {
-        if (isLocalPlayer)
-        {
-            GameStateManager.CharactersManager.SetPlayerSkin(gameObject, CHARACTER.RANDOM.ToString());
-            //GetComponent<NetworkAnimator>().animator = GameStateManager.CharactersManager.GetCurrentCharacter().GetComponent<Animator>();
-        }
+        base.OnStartLocalPlayer();
+
+        //GameStateManager.CharactersManager.SetPlayerSkin(gameObject, CHARACTER.RANDOM.ToString());
+
+        GameStateManager.CharactersManager.LocalPlayer = NetworkClient.localPlayer.gameObject;
+        GameStateManager.CameraManager.SetTarget(GameStateManager.CharactersManager.LocalPlayer);
     }
 
     public void InitCharacterData(CharacterSO _characterSO = null)

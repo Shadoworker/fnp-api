@@ -9,15 +9,17 @@ public class FnPNetworkManager : NetworkManager
     public override void OnServerAddPlayer(NetworkConnectionToClient conn)
     {
         base.OnServerAddPlayer(conn);
-
         Debug.Log($"A new player was added! There an now {numPlayers} connected players.");
+
+        GameStateManager.CharactersManager.SetPlayerSkin(conn.identity.gameObject, CHARACTER.RANDOM.ToString());
     }
 
-    
+
 
     #endregion
 
     #region CLIENT
+
     public override void OnClientConnect()
     {
         base.OnClientConnect();

@@ -29,22 +29,20 @@ public class CharactersManager : ScriptableObject
     [BoxGroup("Character movement")] public float m_xAxisSensitivity;
     [BoxGroup("Character movement")] public float m_zAxisSensitivity;
     [BoxGroup("Character position")] public Vector3 m_characterSpawnPosition;
-    private GameObject m_localPlayer;
-    public GameObject LocalPlayer { get { return m_localPlayer; } }
+    public GameObject LocalPlayer { get;  set; }
     private GameObject m_currentSkin;
     public float m_waterHeight;
-    private List<CHARACTER> m_characcterEnumValues;
+    private List<CHARACTER> m_characterEnumValues;
     private Transform m_playersContainer;
 
     public void Init()
     {
     }
 
-    public void SetLocalCharacter(GameObject _character)
+    public void SetPlayerSkin(GameObject _character)
     {
         m_currentSkin = _character;
         m_currentSkin.SetActive(true);
-        GameStateManager.CameraManager.SetTarget(m_currentSkin);
     }
 
     public GameObject GetCurrentCharacter()
@@ -57,23 +55,23 @@ public class CharactersManager : ScriptableObject
         Destroy(m_currentSkin.transform.GetChild(0).gameObject);
     }
 
-    public void SetPlayerSkin(GameObject _localPlayer, string _character)
+    public void SetPlayerSkin(GameObject _player, string _character)
     {
         CharacterSO characterSO = null;
-        CHARACTER characterEnum = m_characcterEnumValues.Where(c => c.ToString().Equals(_character)).FirstOrDefault();
+        CHARACTER characterEnum = m_characterEnumValues.Where(c => c.ToString().Equals(_character)).FirstOrDefault();
         if (characterEnum == CHARACTER.RANDOM)
             characterSO = m_characters[UnityEngine.Random.Range(0, m_characters.Count)];
         else
             characterSO = m_characters.Where(c => c.m_character == characterEnum).FirstOrDefault();
 
-        m_localPlayer = _localPlayer;
-        GameObject characterSkin = Instantiate(characterSO.m_prefab, _localPlayer.transform) ;
-        SetLocalCharacter(characterSkin);
+        LocalPlayer = _player;
+        GameObject characterSkin = Instantiate(characterSO.m_prefab, _player.transform) ;
+        SetPlayerSkin(characterSkin);
 
         characterSkin.transform.localPosition = Vector3.zero;
 
-        m_localPlayer.GetComponent<CharacterData>().m_animator = characterSkin.GetComponent<Animator>();
-        m_localPlayer.GetComponent<CharacterData>().m_fishingRodController = characterSkin.GetComponent<FishingRodController>();
-        m_localPlayer.GetComponent<CharacterData>().InitCharacterData(characterSO);
+        LocalPlayer.GetComponent<CharacterData>().m_animator = characterSkin.GetComponent<Animator>();
+        LocalPlayer.GetComponent<CharacterData>().m_fishingRodController = characterSkin.GetComponent<FishingRodController>();
+        LocalPlayer.GetComponent<CharacterData>().InitCharacterData(characterSO);
     }
 }
