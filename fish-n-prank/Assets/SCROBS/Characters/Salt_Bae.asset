@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_character: 4
   m_prefab: {fileID: 958490619140434563, guid: 93eb293973935324a9ced536afb60660, type: 3}
+  m_animator: {fileID: 22100000, guid: ecd2d28b476f8914d84ff26be9d24925, type: 2}
   m_movementMode: 1
   m_runSpeed: 9
   m_walkSpeed: 7
@@ -35,7 +36,7 @@ MonoBehaviour:
   m_rayCollisionRef: 0.1
   m_floatingPower: 126
   m_diveForce: 10
-  m_isUnderwater: 0
-  m_waterHeight: 2.9
+  m_isUnderwater: 1
+  m_waterHeight: 3.2
   m_isBackstrokeSwim: 0
   m_fishingRodObjName: Armature/Bone/Bone.001/Bone.002/Bone.006/Bone.007/Bone.008/Bone.031/FishingRodSaltBae

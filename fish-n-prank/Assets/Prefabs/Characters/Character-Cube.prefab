@@ -678,7 +678,6 @@ GameObject:
   - component: {fileID: 3306401306331978764}
   - component: {fileID: 2088735760466320204}
   - component: {fileID: 3497336816586153263}
-  - component: {fileID: 7923702917476145499}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -751,19 +750,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &7923702917476145499
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 966200568535723606}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &976028816783601991
 GameObject:
   m_ObjectHideFlags: 0
@@ -4069,12 +4055,10 @@ GameObject:
   - component: {fileID: 4689652004911229966}
   - component: {fileID: 5088580339288493037}
   - component: {fileID: 5088580339288493030}
-  - component: {fileID: 5088580339288493033}
-  - component: {fileID: 5088580339288493032}
-  - component: {fileID: 5088580339288493035}
   - component: {fileID: 5088580339288493034}
+  - component: {fileID: 6149404531005542685}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Character-Cube
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4152,71 +4136,6 @@ MonoBehaviour:
   invokeCheckOnEnable: 0
   m_disableFirstEvent: 0
   realTime: 0
---- !u!114 &5088580339288493033
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5359051603814839988}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 872945d025ee5094491ca177a34e5b7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_characterSO: {fileID: 11400000, guid: cd3d6a54277193647b56e335053759ca, type: 2}
-  m_characterController: {fileID: 0}
-  m_buoyancyController: {fileID: 0}
-  m_fishingRodController: {fileID: 0}
---- !u!114 &5088580339288493032
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5359051603814839988}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e839e4c12473014b9b3d3faccc0f61d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Event: {fileID: 11400000, guid: 6703276f8dc3b3e47936435529d46091, type: 2}
-  delay: 0
-  Response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5088580339288493035}
-        m_TargetAssemblyTypeName: CharacterController, Assembly-CSharp
-        m_MethodName: SetJumpInput
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  invokeCheckOnEnable: 0
-  m_disableFirstEvent: 0
-  realTime: 0
---- !u!114 &5088580339288493035
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5359051603814839988}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba158ff05cf30224f94bfdddec8e7635, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_characterSO: {fileID: 11400000, guid: cd3d6a54277193647b56e335053759ca, type: 2}
-  m_characterData: {fileID: 0}
-  m_animator: {fileID: 0}
-  m_cameraRotationScale: 0.6
-  m_triggerJump: 0
 --- !u!114 &5088580339288493034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4229,7 +4148,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa869df9c69e59440bb793ba06512732, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_characterSO: {fileID: 11400000, guid: cd3d6a54277193647b56e335053759ca, type: 2}
+  m_characterData: {fileID: 0}
+--- !u!136 &6149404531005542685
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5359051603814839988}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  m_Radius: 1.7177486
+  m_Height: 3.4354973
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.9571271, z: -0.08304453}
 --- !u!1 &5556890373687998542
 GameObject:
   m_ObjectHideFlags: 0

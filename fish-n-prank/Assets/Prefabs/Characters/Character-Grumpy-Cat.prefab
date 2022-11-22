@@ -1913,17 +1913,14 @@ GameObject:
   - component: {fileID: 9157907038316944283}
   - component: {fileID: 9157907038316944282}
   - component: {fileID: 9157907038316944272}
-  - component: {fileID: 9157907038316944287}
-  - component: {fileID: 9157907038316944286}
-  - component: {fileID: 9157907038316944285}
   - component: {fileID: 9157907038316944284}
   m_Layer: 0
-  m_Name: Grumpy Cat
+  m_Name: Character-Grumpy-Cat
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8691334386496114272
 Transform:
   m_ObjectHideFlags: 0
@@ -1950,7 +1947,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 8346861433036559578}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.5
   m_Height: 2.3563972
   m_Direction: 1
@@ -2007,71 +2004,6 @@ MonoBehaviour:
   invokeCheckOnEnable: 0
   m_disableFirstEvent: 0
   realTime: 0
---- !u!114 &9157907038316944287
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8346861433036559578}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 872945d025ee5094491ca177a34e5b7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_characterSO: {fileID: 11400000, guid: da5c5cd5eff3e0947965033173011c41, type: 2}
-  m_characterController: {fileID: 0}
-  m_buoyancyController: {fileID: 0}
-  m_fishingRodController: {fileID: 0}
---- !u!114 &9157907038316944286
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8346861433036559578}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e839e4c12473014b9b3d3faccc0f61d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Event: {fileID: 11400000, guid: 6703276f8dc3b3e47936435529d46091, type: 2}
-  delay: 0
-  Response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 9157907038316944285}
-        m_TargetAssemblyTypeName: CharacterController, Assembly-CSharp
-        m_MethodName: SetJumpInput
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  invokeCheckOnEnable: 0
-  m_disableFirstEvent: 0
-  realTime: 0
---- !u!114 &9157907038316944285
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8346861433036559578}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba158ff05cf30224f94bfdddec8e7635, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_characterSO: {fileID: 11400000, guid: da5c5cd5eff3e0947965033173011c41, type: 2}
-  m_characterData: {fileID: 0}
-  m_animator: {fileID: 0}
-  m_cameraRotationScale: 0.6
-  m_triggerJump: 0
 --- !u!114 &9157907038316944284
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2084,7 +2016,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa869df9c69e59440bb793ba06512732, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_characterSO: {fileID: 11400000, guid: da5c5cd5eff3e0947965033173011c41, type: 2}
+  m_characterData: {fileID: 0}
 --- !u!1 &8539586640393228407
 GameObject:
   m_ObjectHideFlags: 0

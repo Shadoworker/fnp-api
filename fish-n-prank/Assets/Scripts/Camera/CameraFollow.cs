@@ -27,6 +27,10 @@ public class CameraFollow : MonoBehaviour
         m_currentX += m_cameraJoystick.m_horizontal * GameStateManager.CameraManager.m_sensivityX;
         m_currentY += m_cameraJoystick.m_vertical * GameStateManager.CameraManager.m_sensivityY;
         m_currentY = ClampAngle(m_currentY, Y_ANGLE_MIN, Y_ANGLE_MAX);
+        if (m_cameraJoystick.m_horizontal != 0 || m_cameraJoystick.m_vertical != 0)
+            GameStateManager.CameraManager.ToggleCameraRotation(true);
+        else
+            GameStateManager.CameraManager.ToggleCameraRotation(false);
     }
 
     void LateUpdate()

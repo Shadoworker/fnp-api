@@ -22,6 +22,7 @@ public class CharactersManager : ScriptableObject
 {
     private const string CHARACTER_CONTAINER = "Players";
     [FancyHeader("  Characters Manager  ", 1.5f, "orange", 5.5f, order = 0)]
+    public GameObject m_playerPrefab;
     [BoxGroup("List of characters")] public List<CharacterSO> m_characters;
     [BoxGroup("Game Events")] public GameEvent m_jumpEvent;
     [BoxGroup("Game Events")] public GameEvent m_toggleFishingRodEvent;
@@ -36,9 +37,10 @@ public class CharactersManager : ScriptableObject
     public void Init()
     {
         // Character spawning done by Mirror
-        //m_playersContainer = GameObject.Find(CHARACTER_CONTAINER).transform;
+        m_playersContainer = GameObject.Find(CHARACTER_CONTAINER).transform;
         //m_characcterEnumValues = Enum.GetValues(typeof(CHARACTER)).Cast<CHARACTER>().ToList();
-        //SpawnCharacter(CHARACTER.RANDOM.ToString());
+        SpawnPlayer();
+        //SetPlayerSkin(CHARACTER.RANDOM.ToString());
     }
 
     public void SetCurrentCharacter(GameObject _character)
@@ -55,18 +57,28 @@ public class CharactersManager : ScriptableObject
 
     public void DestroyCurrentPlayer()
     {
-        Destroy(m_currentCharacter);
+        Destroy(m_currentCharacter.transform.GetChild(0).gameObject);
     }
 
-    public void SpawnCharacter(string _character)
+    public void SpawnPlayer()
     {
-        GameObject prefab = null;
+        // TODO: should be done by the server!
+        SetCurrentCharacter(Instantiate(m_playerPrefab, m_playersContainer));
+        SetPlayerSkin(CHARACTER.RANDOM.ToString());
+    }
+
+    public void SetPlayerSkin(string _character)
+    {
+        CharacterSO characterSO = null;
         CHARACTER characterEnum = m_characcterEnumValues.Where(c => c.ToString().Equals(_character)).FirstOrDefault();
         if (characterEnum == CHARACTER.RANDOM)
-            prefab = m_characters[UnityEngine.Random.Range(0, m_characters.Count)].m_prefab;
+            characterSO = m_characters[UnityEngine.Random.Range(0, m_characters.Count)];
         else
-            prefab = m_characters.Where(c => c.m_character == characterEnum).FirstOrDefault().m_prefab;
-        prefab.transform.localPosition = m_characterSpawnPosition;
-        SetCurrentCharacter(Instantiate(prefab, m_playersContainer));
+            characterSO = m_characters.Where(c => c.m_character == characterEnum).FirstOrDefault();
+        GameObject skin = Instantiate(characterSO.m_prefab, m_currentCharacter.transform);
+        skin.transform.localPosition = Vector3.zero;
+        m_currentCharacter.GetComponent<CharacterData>().m_animator = skin.GetComponent<Animator>();
+        m_currentCharacter.GetComponent<CharacterData>().m_fishingRodController = skin.GetComponent<FishingRodController>();
+        m_currentCharacter.GetComponent<CharacterData>().InitCharacterData(characterSO);
     }
 }

@@ -5,21 +5,19 @@ using UnityEngine.UI;
 
 public class FishingRodController : MonoBehaviour
 {
-    public CharacterSO m_characterSO;
+    public CharacterData m_characterData;
     private GameObject m_fishingRod;
     private Transform m_playerHead;
     private CharacterController m_characterController;
-    private BuoyancyObject m_buoyancy;
     private Animator m_animator;
 
     private bool m_initialized = false;
 
     public void InitFishingRod()
     {
-        m_playerHead = transform.Find(m_characterSO.m_playerHeadObjName);
-        m_fishingRod = transform.Find(m_characterSO.m_fishingRodObjName).gameObject;
+        m_playerHead = transform.Find(m_characterData.m_characterSO.m_playerHeadObjName);
+        m_fishingRod = transform.Find(m_characterData.m_characterSO.m_fishingRodObjName).gameObject;
         m_characterController = GetComponent<CharacterController>();
-        m_buoyancy = GetComponent<BuoyancyObject>();
         m_animator = GetComponent<Animator>();
 
         m_initialized = true;
@@ -29,8 +27,8 @@ public class FishingRodController : MonoBehaviour
     {
         if (!m_initialized) return;
 
-        if (m_fishingRod.activeInHierarchy && !FishingController.Instance.m_isFishing
-            && !m_buoyancy.IsUnderwater())
+        if (m_fishingRod.activeInHierarchy && !FishingController.Instance.m_isFishing 
+            && !m_characterData.m_buoyancyController.IsUnderwater())
         {
             Vector3 fwd = m_playerHead.TransformDirection(new Vector3(1, 5f, 1.5f));
             Debug.DrawRay(m_playerHead.position, fwd, Color.red);
@@ -60,7 +58,7 @@ public class FishingRodController : MonoBehaviour
     }
     public void ToggleFishingRod()
     {
-        if(!m_fishingRod.activeInHierarchy && !m_characterSO.IsUnderWater())
+        if(!m_fishingRod.activeInHierarchy && !m_characterData.m_characterSO.IsUnderWater())
         {
             m_animator.SetTrigger("GrabRod");
             m_fishingRod.SetActive(true);

@@ -330,17 +330,14 @@ GameObject:
   - component: {fileID: 111560788375421774}
   - component: {fileID: 111560788375421769}
   - component: {fileID: 111560788375421779}
-  - component: {fileID: 111560788375421778}
-  - component: {fileID: 111560788375421773}
-  - component: {fileID: 111560788375421772}
   - component: {fileID: 111560788375421775}
   m_Layer: 0
-  m_Name: 'Salt Bae '
+  m_Name: Character-Salt-Bae
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &434296713391943737
 Transform:
   m_ObjectHideFlags: 0
@@ -367,11 +364,11 @@ CapsuleCollider:
   m_GameObject: {fileID: 958490619140434563}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.4853791
-  m_Height: 2.278658
+  m_Enabled: 0
+  m_Radius: 0.58895874
+  m_Height: 2.3069644
   m_Direction: 1
-  m_Center: {x: -0.0146209, y: 1.0041099, z: 0}
+  m_Center: {x: -0.0146209, y: 0.9730208, z: 0.015632987}
 --- !u!95 &111560788375421769
 Animator:
   serializedVersion: 4
@@ -424,71 +421,6 @@ MonoBehaviour:
   invokeCheckOnEnable: 0
   m_disableFirstEvent: 0
   realTime: 0
---- !u!114 &111560788375421778
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 958490619140434563}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 872945d025ee5094491ca177a34e5b7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_characterSO: {fileID: 11400000, guid: a2141a0639b3da0469356ab87ec9f64e, type: 2}
-  m_characterController: {fileID: 0}
-  m_buoyancyController: {fileID: 0}
-  m_fishingRodController: {fileID: 0}
---- !u!114 &111560788375421773
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 958490619140434563}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e839e4c12473014b9b3d3faccc0f61d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Event: {fileID: 11400000, guid: 6703276f8dc3b3e47936435529d46091, type: 2}
-  delay: 0
-  Response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 111560788375421772}
-        m_TargetAssemblyTypeName: CharacterController, Assembly-CSharp
-        m_MethodName: SetJumpInput
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  invokeCheckOnEnable: 0
-  m_disableFirstEvent: 0
-  realTime: 0
---- !u!114 &111560788375421772
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 958490619140434563}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba158ff05cf30224f94bfdddec8e7635, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_characterSO: {fileID: 11400000, guid: a2141a0639b3da0469356ab87ec9f64e, type: 2}
-  m_characterData: {fileID: 0}
-  m_animator: {fileID: 0}
-  m_cameraRotationScale: 0.6
-  m_triggerJump: 0
 --- !u!114 &111560788375421775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -501,7 +433,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa869df9c69e59440bb793ba06512732, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_characterSO: {fileID: 11400000, guid: a2141a0639b3da0469356ab87ec9f64e, type: 2}
+  m_characterData: {fileID: 0}
 --- !u!1 &1098276854381014366
 GameObject:
   m_ObjectHideFlags: 0
