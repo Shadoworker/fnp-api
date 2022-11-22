@@ -37,6 +37,7 @@ public class CharactersManager : ScriptableObject
 
     public void Init()
     {
+        m_characterEnumValues = Enum.GetValues(typeof(CHARACTER)).Cast<CHARACTER>().ToList();
     }
 
     public void SetPlayerSkin(GameObject _character)
