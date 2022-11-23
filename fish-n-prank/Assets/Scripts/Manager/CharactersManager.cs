@@ -5,6 +5,7 @@ using NaughtyAttributes;
 using System.Linq;
 using System.Collections.ObjectModel;
 using System;
+using Mirror;
 
 public enum CHARACTER
 {
@@ -40,13 +41,7 @@ public class CharactersManager : ScriptableObject
         m_characterEnumValues = Enum.GetValues(typeof(CHARACTER)).Cast<CHARACTER>().ToList();
     }
 
-    public void SetPlayerSkin(GameObject _character)
-    {
-        m_currentSkin = _character;
-        m_currentSkin.SetActive(true);
-    }
-
-    public GameObject GetCurrentCharacter()
+    public GameObject GetCurrentSkin()
     {
         return m_currentSkin;
     }
@@ -56,23 +51,41 @@ public class CharactersManager : ScriptableObject
         Destroy(m_currentSkin.transform.GetChild(0).gameObject);
     }
 
-    public void SetPlayerSkin(GameObject _player, string _character)
+    // TODO: limit to server
+    public GameObject SetPlayerSkin(GameObject _player, string _character)
     {
         CharacterSO characterSO = null;
         CHARACTER characterEnum = m_characterEnumValues.Where(c => c.ToString().Equals(_character)).FirstOrDefault();
+
         if (characterEnum == CHARACTER.RANDOM)
             characterSO = m_characters[UnityEngine.Random.Range(0, m_characters.Count)];
         else
             characterSO = m_characters.Where(c => c.m_character == characterEnum).FirstOrDefault();
 
+        //GameObject characterSkin = Instantiate(characterSO.m_prefab, _player.transform) ;
+        m_currentSkin = _player.transform.GetChild(0).gameObject;
+        //m_currentSkin.SetActive(true);
+
+        m_currentSkin.transform.localPosition = Vector3.zero;
+
+        // should do CharacterController.InitCapsuleCollider (and more?)
+
+        _player.GetComponent<CharacterData>().m_animator = m_currentSkin.GetComponent<Animator>();
+        _player.GetComponent<CharacterData>().m_fishingRodController = m_currentSkin.GetComponent<FishingRodController>();
+        return m_currentSkin;
+    }
+
+    // TODO: limit to local client
+    public void InitLocalPlayer(GameObject _player)
+    {
         LocalPlayer = _player;
-        GameObject characterSkin = Instantiate(characterSO.m_prefab, _player.transform) ;
-        SetPlayerSkin(characterSkin);
 
-        characterSkin.transform.localPosition = Vector3.zero;
+        
+        //CHARACTER characterEnum = m_characterEnumValues.Where(c => c.ToString().Equals("GRUMPY_CAT")).FirstOrDefault();
+        //CharacterSO characterSO = m_characters.Where(c => c.m_character == characterEnum).FirstOrDefault();
 
-        LocalPlayer.GetComponent<CharacterData>().m_animator = characterSkin.GetComponent<Animator>();
-        LocalPlayer.GetComponent<CharacterData>().m_fishingRodController = characterSkin.GetComponent<FishingRodController>();
-        LocalPlayer.GetComponent<CharacterData>().InitCharacterData(characterSO);
+        //SetPlayerSkin(_player, "GRUMPY_CAT"); // hack
+
+        //LocalPlayer.GetComponent<CharacterData>().InitCharacterController();
     }
 }

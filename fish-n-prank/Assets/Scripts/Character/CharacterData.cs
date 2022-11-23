@@ -14,30 +14,21 @@ public class CharacterData : NetworkBehaviour
     public Animator m_animator;
 
 
-    //private void Start()
-    //{
-    //    //if (isOwned)
-    //    {
-    //        //GameStateManager.CharactersManager.SetPlayerSkin(gameObject, CHARACTER.RANDOM.ToString());
-    //        //GetComponent<NetworkAnimator>().animator = GameStateManager.CharactersManager.GetCurrentCharacter().GetComponent<Animator>();
-    //    }
-    //}
-
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
 
-        //GameStateManager.CharactersManager.SetPlayerSkin(gameObject, CHARACTER.RANDOM.ToString());
-
         GameStateManager.CharactersManager.LocalPlayer = NetworkClient.localPlayer.gameObject;
         GameStateManager.CameraManager.SetTarget(GameStateManager.CharactersManager.LocalPlayer);
+        GameStateManager.CharactersManager.InitLocalPlayer(GameStateManager.CharactersManager.LocalPlayer);
+        InitCharacterController();
     }
 
     public void InitCharacterData(CharacterSO _characterSO = null)
     {
         m_characterSO = _characterSO;
         AddBuoyancyScript();
-        InitCharacterController();
+        //InitCharacterController();
         AddFishingRodController();
         m_animator.runtimeAnimatorController = m_characterSO.m_animator;
     }

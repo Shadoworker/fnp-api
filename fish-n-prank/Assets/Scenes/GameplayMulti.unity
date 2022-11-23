@@ -1561,8 +1561,13 @@ MonoBehaviour:
   authenticator: {fileID: 0}
   playerPrefab: {fileID: 4939025210828693239, guid: 7a12d1dbd37773841b5ed29adb6280fd, type: 3}
   autoCreatePlayer: 1
-  playerSpawnMethod: 0
-  spawnPrefabs: []
+  playerSpawnMethod: 1
+  spawnPrefabs:
+  - {fileID: 4960784670472737287, guid: 71f3fa9ea0d194c44878557621085277, type: 3}
+  - {fileID: 958490619140434563, guid: 93eb293973935324a9ced536afb60660, type: 3}
+  - {fileID: 3025230682810942501, guid: 1682ce21c3211d94bab1923ad9f48351, type: 3}
+  - {fileID: 5878211031499736002, guid: 93b6cacd9e85e4d4cafadb405c39b93c, type: 3}
+  - {fileID: 5359051603814839988, guid: 073a886f226099e4c8324872034f8dbe, type: 3}
   timeInterpolationGui: 0
 --- !u!114 &867450616
 MonoBehaviour:

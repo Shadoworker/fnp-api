@@ -86,9 +86,9 @@ public class FishingController : MonoBehaviour
         m_fishingUI.SetActive(false);
         m_jumpBtn.SetActive(true);
         m_isFishing = false;
-        if (GameStateManager.CharactersManager.GetCurrentCharacter() != null)
+        if (GameStateManager.CharactersManager.GetCurrentSkin() != null)
         {
-            CharacterController characterController = GameStateManager.CharactersManager.GetCurrentCharacter().GetComponent<CharacterController>();
+            CharacterController characterController = GameStateManager.CharactersManager.GetCurrentSkin().GetComponent<CharacterController>();
             characterController.enabled = true;
             characterController.m_animator.SetBool("Fish", false);
         }
@@ -117,7 +117,7 @@ public class FishingController : MonoBehaviour
         m_isNearFishingSpot.Raise("false");
 
         // setup character
-        CharacterController characterController = GameStateManager.CharactersManager.GetCurrentCharacter().GetComponent<CharacterController>();
+        CharacterController characterController = GameStateManager.CharactersManager.GetCurrentSkin().GetComponent<CharacterController>();
         characterController.enabled = false;
         characterController.m_animator.SetBool("Fish", true);
 

@@ -11,7 +11,14 @@ public class FnPNetworkManager : NetworkManager
         base.OnServerAddPlayer(conn);
         Debug.Log($"A new player was added! There an now {numPlayers} connected players.");
 
-        GameStateManager.CharactersManager.SetPlayerSkin(conn.identity.gameObject, CHARACTER.RANDOM.ToString());
+        // Spawn player skin
+        //GameObject playerSkin = GameStateManager.CharactersManager.SetPlayerSkin(conn.identity.gameObject, CHARACTER.RANDOM.ToString());
+        //GameStateManager.CharactersManager.SetPlayerSkin(conn.identity.gameObject, CHARACTER.RANDOM.ToString());
+
+        // Hack: force Grumpycat skin (for harcoded prefab NetworkdAnimator)
+        GameStateManager.CharactersManager.SetPlayerSkin(conn.identity.gameObject, "GRUMPY_CAT");
+
+        //NetworkServer.Spawn(playerSkin, conn.identity.gameObject);
     }
 
 

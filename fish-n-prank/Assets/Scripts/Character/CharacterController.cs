@@ -25,14 +25,14 @@ public class CharacterController : NetworkBehaviour
     {
         Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
         InitCapsuleCollider(m_animator.gameObject.GetComponent<CapsuleCollider>());
-        InittRigidbody(rigidbody);
+        InitRigidbody(rigidbody);
         m_joystick = GameObject.Find("JoystickContainer").GetComponent<VariableJoystick>();
         m_rigidBody = rigidbody;
         m_characterData.m_characterSO.SetGroundedValue(true);
         InvokeRepeating("PlaySpecialIdle", 1.0f, m_characterData.m_characterSO.m_specialIdleRepeatRate);
     }
 
-    public void InittRigidbody(Rigidbody _rigidbody)
+    public void InitRigidbody(Rigidbody _rigidbody)
     {
         _rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
         _rigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
