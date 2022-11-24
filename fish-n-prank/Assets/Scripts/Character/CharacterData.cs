@@ -21,14 +21,14 @@ public class CharacterData : NetworkBehaviour
         GameStateManager.CharactersManager.LocalPlayer = NetworkClient.localPlayer.gameObject;
         GameStateManager.CameraManager.SetTarget(GameStateManager.CharactersManager.LocalPlayer);
         GameStateManager.CharactersManager.InitLocalPlayer(GameStateManager.CharactersManager.LocalPlayer);
-        InitCharacterController();
+        //InitCharacterController();
     }
 
     public void InitCharacterData(CharacterSO _characterSO)
     {
         m_characterSO = _characterSO;
         AddBuoyancyScript();
-        //InitCharacterController();
+        InitCharacterController();
         AddFishingRodController();
         m_animator.runtimeAnimatorController = m_characterSO.m_animator;
     }

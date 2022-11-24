@@ -42,7 +42,10 @@ public class NetworkPlayer : NetworkBehaviour
             {
                 characterGO = characterSkin.gameObject;
                 characterSkin.gameObject.SetActive(true);
-                //GetComponent<NetworkAnimator>().animator = characterSkin.gameObject.GetComponent<Animator>();
+                //if (isOwned)
+                //{
+                    GetComponent<NetworkAnimator>().animator = characterSkin.gameObject.GetComponent<Animator>();
+                //}
             }
             else
             {

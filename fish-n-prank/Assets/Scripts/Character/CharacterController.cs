@@ -160,8 +160,11 @@ public class CharacterController : NetworkBehaviour
         }
     }
 
+    [ClientCallback]
     public void SetJumpInput()
     {
+        if (!isLocalPlayer)
+            return;
         m_triggerJump = true;
     }
 
