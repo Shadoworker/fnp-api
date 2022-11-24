@@ -69,7 +69,7 @@ public class CharactersManager : ScriptableObject
         m_currentSkin.transform.localPosition = Vector3.zero;
 
         // should do CharacterController.InitCapsuleCollider (and more?)
-
+        _player.GetComponent<CharacterData>().InitCharacterData(characterSO);
         _player.GetComponent<CharacterData>().m_animator = m_currentSkin.GetComponent<Animator>();
         _player.GetComponent<CharacterData>().m_fishingRodController = m_currentSkin.GetComponent<FishingRodController>();
         return m_currentSkin;

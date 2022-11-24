@@ -3241,8 +3241,20 @@ PrefabInstance:
       value: 57
       objectReference: {fileID: 0}
     - target: {fileID: 1087318830296208735, guid: 9b94b4939a9fb8e4e92d6d86da112ee4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1087318830296208735, guid: 9b94b4939a9fb8e4e92d6d86da112ee4, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 11400000, guid: 6703276f8dc3b3e47936435529d46091, type: 2}
+    - target: {fileID: 1087318830296208735, guid: 9b94b4939a9fb8e4e92d6d86da112ee4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Raise
+      objectReference: {fileID: 0}
+    - target: {fileID: 1087318830296208735, guid: 9b94b4939a9fb8e4e92d6d86da112ee4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GameEvent, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1087318831378253937, guid: 9b94b4939a9fb8e4e92d6d86da112ee4, type: 3}
       propertyPath: m_Pivot.x
