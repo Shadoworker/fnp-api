@@ -5,7 +5,6 @@ using NaughtyAttributes;
 using System.Linq;
 using System.Collections.ObjectModel;
 using System;
-using Mirror;
 
 public enum CHARACTER
 {
@@ -15,7 +14,7 @@ public enum CHARACTER
     KHABY_LAME,
     SALT_BAE,
     TROLL_MAN,
-    CUBE
+    //CUBE
 }
 
 [CreateAssetMenu(menuName = "Managers/Characters Manager")]
@@ -51,28 +50,16 @@ public class CharactersManager : ScriptableObject
         Destroy(m_currentSkin.transform.GetChild(0).gameObject);
     }
 
-    // TODO: limit to server
-    public GameObject SetPlayerSkin(GameObject _player, string _character)
+    public string GetRandomSkin()
     {
-        CharacterSO characterSO = null;
-        CHARACTER characterEnum = m_characterEnumValues.Where(c => c.ToString().Equals(_character)).FirstOrDefault();
+        return m_characters[UnityEngine.Random.Range(0, m_characters.Count)].m_character.ToString();
+    }
 
-        if (characterEnum == CHARACTER.RANDOM)
-            characterSO = m_characters[UnityEngine.Random.Range(0, m_characters.Count)];
-        else
-            characterSO = m_characters.Where(c => c.m_character == characterEnum).FirstOrDefault();
+    public CharacterSO GetCharacterSO(string _characterName)
+    {
+        //CHARACTER characterEnum = m_characterEnumValues.Where(c => c.ToString().Equals(_characterName)).FirstOrDefault();
 
-        //GameObject characterSkin = Instantiate(characterSO.m_prefab, _player.transform) ;
-        m_currentSkin = _player.transform.GetChild(0).gameObject;
-        //m_currentSkin.SetActive(true);
-
-        m_currentSkin.transform.localPosition = Vector3.zero;
-
-        // should do CharacterController.InitCapsuleCollider (and more?)
-        _player.GetComponent<CharacterData>().InitCharacterData(characterSO);
-        _player.GetComponent<CharacterData>().m_animator = m_currentSkin.GetComponent<Animator>();
-        _player.GetComponent<CharacterData>().m_fishingRodController = m_currentSkin.GetComponent<FishingRodController>();
-        return m_currentSkin;
+        return m_characters.Where(c => c.m_character.ToString() == _characterName).FirstOrDefault();
     }
 
     // TODO: limit to local client
@@ -80,7 +67,6 @@ public class CharactersManager : ScriptableObject
     {
         LocalPlayer = _player;
 
-        
         //CHARACTER characterEnum = m_characterEnumValues.Where(c => c.ToString().Equals("GRUMPY_CAT")).FirstOrDefault();
         //CharacterSO characterSO = m_characters.Where(c => c.m_character == characterEnum).FirstOrDefault();
 

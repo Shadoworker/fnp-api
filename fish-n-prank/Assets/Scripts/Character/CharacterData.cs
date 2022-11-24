@@ -24,7 +24,7 @@ public class CharacterData : NetworkBehaviour
         InitCharacterController();
     }
 
-    public void InitCharacterData(CharacterSO _characterSO = null)
+    public void InitCharacterData(CharacterSO _characterSO)
     {
         m_characterSO = _characterSO;
         AddBuoyancyScript();

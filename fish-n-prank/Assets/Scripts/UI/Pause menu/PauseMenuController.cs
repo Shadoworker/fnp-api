@@ -9,7 +9,7 @@ public class PauseMenuController : MonoBehaviour
 
     public void SpawnCharacter(string _character)
     {
-        GameStateManager.CharactersManager.DestroyCurrentPlayer();
-        GameStateManager.CharactersManager.SetPlayerSkin(GameStateManager.CharactersManager.LocalPlayer, _character);
+        //GameStateManager.CharactersManager.DestroyCurrentPlayer();
+        //GameStateManager.CharactersManager.SetPlayerSkin(GameStateManager.CharactersManager.LocalPlayer, _character);
     }
 }

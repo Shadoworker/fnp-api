@@ -15,7 +15,6 @@ MonoBehaviour:
   m_playerPrefab: {fileID: 4939025210828693239, guid: 7a12d1dbd37773841b5ed29adb6280fd, type: 3}
   m_characters:
   - {fileID: 11400000, guid: 8ad00e3d74a898048b99581e62e8b83b, type: 2}
-  - {fileID: 11400000, guid: cd3d6a54277193647b56e335053759ca, type: 2}
   - {fileID: 11400000, guid: da5c5cd5eff3e0947965033173011c41, type: 2}
   - {fileID: 11400000, guid: 9c869fc468ee0774c84b962d7422d990, type: 2}
   - {fileID: 11400000, guid: a2141a0639b3da0469356ab87ec9f64e, type: 2}
