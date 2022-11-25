@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "fnps",
+  "info": {
+    "singularName": "fnp",
+    "pluralName": "fnps",
+    "displayName": "fnp",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "weight": {
+      "type": "decimal"
+    }
+  }
+}
