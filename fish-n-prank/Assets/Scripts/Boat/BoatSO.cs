@@ -15,4 +15,11 @@ public class BoatSO : ScriptableObject
     [BoxGroup("Physics")] public float m_underWaterAngularDragForce;
     [BoxGroup("Physics")] public float m_airDragForce;
     [BoxGroup("Physics")] public float m_airAngularDrag;
+
+    [BoxGroup("Boat Infos")] public float m_steermPower;
+    [BoxGroup("Boat Infos")] public float m_power;
+    [BoxGroup("Boat Infos")] public float m_maxSpeed;
+    [BoxGroup("Boat Infos")] public float m_reverseSpeed;
+    [BoxGroup("Boat Infos")] public float m_drag;
+    [BoxGroup("Boat Infos")] public float m_steerPower;
 }

@@ -24,6 +24,6 @@ MonoBehaviour:
   m_initBoatCamPos: {x: 3, y: 10, z: 11}
   m_boatRotationSensitivity: 2
   m_isRotatingCamera: 0
-  m_isCameraCentered: 1
+  m_isCameraCentered: 0
   m_isLeftDamping: 0
-  m_isRightDamping: 0
+  m_isRightDamping: 1

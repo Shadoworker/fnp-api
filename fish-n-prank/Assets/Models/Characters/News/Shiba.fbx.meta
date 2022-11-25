@@ -1,0 +1,177 @@
+fileFormatVersion: 2
+guid: f91be2c19f7eaba4d89272197a6e4a9f
+ModelImporter:
+  serializedVersion: 21202
+  internalIDToNameTable:
+  - first:
+      74: 16544463031404857
+    second: Shiba|Shiba|A_Shiba_Jump
+  - first:
+      74: -1613354179506046484
+    second: Shiba|Shiba|A_Shiba_Swim
+  - first:
+      74: -320333390962650227
+    second: Shiba|Shiba|A_Shiba_Walk
+  - first:
+      74: -4044499761453662471
+    second: Shiba|Shiba|A_Shiba_Wave
+  - first:
+      74: -7788635677031198429
+    second: Shiba|Shiba|Shiba|A_Shiba_Fish
+  - first:
+      74: 8613944082574391973
+    second: Shiba|Shiba|Shiba|A_Shiba_Fish_Rode
+  - first:
+      74: 5959015538145207000
+    second: Shiba|Shiba|Shiba|A_Shiba_Grab_Rode
+  - first:
+      74: 111526876519591351
+    second: Shiba|Shiba|Shiba|A_Shiba_Idle
+  - first:
+      74: -6309911867676631752
+    second: Shiba|Shiba|Shiba|A_Shiba_Idle2
+  - first:
+      74: 3419740952101957836
+    second: Shiba|Shiba|Shiba|A_Shiba_Idle_Fish
+  - first:
+      74: -5766667867504076476
+    second: Shiba|Shiba|Shiba|A_Shiba_Jump
+  - first:
+      74: 8372028533434651036
+    second: Shiba|Shiba|Shiba|A_Shiba_Jump1
+  - first:
+      74: 8782824816198022725
+    second: Shiba|Shiba|Shiba|A_Shiba_Jump2
+  - first:
+      74: -1568885229472565549
+    second: Shiba|Shiba|Shiba|A_Shiba_Jump3
+  - first:
+      74: 1519136007136160772
+    second: Shiba|Shiba|Shiba|A_Shiba_Jump_Climb
+  - first:
+      74: 8231257860782823452
+    second: Shiba|Shiba|Shiba|A_Shiba_Jump_Climb1
+  - first:
+      74: 6014409693763326456
+    second: Shiba|Shiba|Shiba|A_Shiba_Jump_Climb2
+  - first:
+      74: 4175103759741555611
+    second: Shiba|Shiba|Shiba|A_Shiba_Jump_Climb3
+  - first:
+      74: 6144198403438761068
+    second: Shiba|Shiba|Shiba|A_Shiba_Navigate
+  - first:
+      74: 6145236589920615900
+    second: Shiba|Shiba|Shiba|A_Shiba_Run
+  - first:
+      74: -7157616082799082457
+    second: Shiba|Shiba|Shiba|A_Shiba_Swim
+  - first:
+      74: 3913543075090127508
+    second: Shiba|Shiba|Shiba|A_Shiba_Swim_idle
+  - first:
+      74: 505206859168482930
+    second: Shiba|Shiba|Shiba|A_Shiba_Walk
+  - first:
+      74: -6817281080276939712
+    second: Shiba|Shiba|Shiba|A_Shiba_Wave
+  externalObjects: {}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 1
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

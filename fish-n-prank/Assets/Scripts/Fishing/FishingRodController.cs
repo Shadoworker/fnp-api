@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class FishingRodController : MonoBehaviour
 {
+    private const float MAX_RAY_DISTANCE = 40f;
     public CharacterData m_characterData;
     private GameObject m_fishingRod;
     private Transform m_playerHead;
@@ -25,9 +26,9 @@ public class FishingRodController : MonoBehaviour
         if (m_fishingRod.activeInHierarchy && !FishingController.Instance.m_isFishing 
             && !m_characterData.m_buoyancyController.IsUnderwater())
         {
-            Vector3 fwd = m_playerHead.TransformDirection(new Vector3(1, 5f, 1.5f));
-            Debug.DrawRay(m_playerHead.position, fwd, Color.red);
-            if (Physics.Raycast(m_playerHead.position, fwd, out objectHit, 40))
+            Vector3 fwd = m_characterData.m_characterController.m_playerHeadObj.transform.TransformDirection(m_characterData.m_characterSO.m_fishingRay);
+            Debug.DrawRay(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, Color.red);
+            if (Physics.Raycast(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, out objectHit, MAX_RAY_DISTANCE))
             {
                 if (objectHit.transform.gameObject.name == "Water")
                 {
@@ -47,10 +48,6 @@ public class FishingRodController : MonoBehaviour
         }
     }
 
-    public Transform GetPlayerHead()
-    {
-        return m_playerHead;
-    }
     public void ToggleFishingRod()
     {
         if(!m_fishingRod.activeInHierarchy && !m_characterData.m_characterSO.IsUnderWater())

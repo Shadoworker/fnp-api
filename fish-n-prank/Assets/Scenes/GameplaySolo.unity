@@ -1599,13 +1599,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14beb573dbc22cc4cade07565b3205d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_boatSO: {fileID: 11400000, guid: dac615b79716aed4fb11781e760d57b6, type: 2}
   m_motor: {fileID: 787196063}
-  m_steerm_power: 50000
-  m_power: 30
-  m_maxSpeed: 50
-  m_reverseSpeed: 5
-  m_drag: 0.1
-  m_steerPower: 10000
   m_joystick: {fileID: 1814962028}
   m_facingDirection: {fileID: 1546568629}
 --- !u!136 &912043007

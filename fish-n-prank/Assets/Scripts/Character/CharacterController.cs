@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CharacterController : MonoBehaviour
 {
+    private const float MAX_RAY_DISTANCE = 40f;
     public CharacterData m_characterData;
+    [HideInInspector]public GameObject m_playerHeadObj;
     private float m_moveSpeed = 1;
     public Animator m_animator = null;
     private Rigidbody m_rigidBody = null;
@@ -19,6 +22,7 @@ public class CharacterController : MonoBehaviour
     private const float SOLID_SURFACE_COLLISION_REF = 0.001f;
     public CapsuleCollider m_capsuleCollider;
     RaycastHit m_objectHit;
+    Vector3 m_oldPosition;
 
     public void InitCharacterControllerValues()
     {
@@ -29,6 +33,7 @@ public class CharacterController : MonoBehaviour
         m_rigidBody = rigidbody;
         m_characterData.m_characterSO.SetGroundedValue(true);
         InvokeRepeating("PlaySpecialIdle", 1.0f, m_characterData.m_characterSO.m_specialIdleRepeatRate);
+        StartCoroutine(GeneratePlayerHeadObj());
     }
 
     public void InittRigidbody(Rigidbody _rigidbody)
@@ -48,6 +53,7 @@ public class CharacterController : MonoBehaviour
         m_capsuleCollider.height = _copy.height;
         m_capsuleCollider.center = _copy.center;
         m_capsuleCollider.radius = _copy.radius;
+        m_capsuleCollider.material = _copy.material;
         _copy.enabled = false;
     }
 
@@ -56,6 +62,18 @@ public class CharacterController : MonoBehaviour
         m_characterData.m_characterSO.SetGroundedValue(true);
         m_triggerJump = false;
         m_characterData.m_characterSO.SetJumpInput(false);
+        GetSpeed();
+        if (collision.gameObject.tag != "Ground" && Mathf.Abs(m_movement.z) >= GameStateManager.CharactersManager.m_zJoystickOffset && !m_animator.GetBool("Land")
+            && !m_characterData.m_characterSO.m_isUnderwater)
+        {
+            Vector3 fwd = m_characterData.m_characterController.m_playerHeadObj.transform.TransformDirection(m_characterData.m_characterSO.m_jumpingRay);
+            Debug.DrawRay(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, Color.yellow);
+            if (!Physics.Raycast(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, out m_objectHit, MAX_RAY_DISTANCE) && GetSpeed() <= SOLID_SURFACE_COLLISION_REF)
+            {
+                SetJumpInput();
+                m_movement = Vector3.zero;
+            }
+        }
     }
 
     public float GetYDistanceBetweenColliders(float _y1, float _y2)
@@ -161,7 +179,9 @@ public class CharacterController : MonoBehaviour
         {
            m_jumpTimeStamp = Time.time;
             if(!m_characterData.m_buoyancyController.IsUnderwater())
-                m_rigidBody.AddForce(((Vector3.up * m_characterData.m_characterSO.m_jumpForce) + m_moveVector), ForceMode.Impulse);
+            {
+                m_rigidBody.AddForce(Vector3.up * m_characterData.m_characterSO.m_jumpForce, ForceMode.Impulse);
+            }
             else
                 m_rigidBody.AddForce(((Vector3.up * m_characterData.m_characterSO.m_underwaterJumpForce) + m_moveVector), ForceMode.Impulse);
             m_characterData.m_characterSO.SetGroundedValue(false);
@@ -171,6 +191,7 @@ public class CharacterController : MonoBehaviour
         if (!m_wasGrounded && m_characterData.m_characterSO.IsGrounded())
         {
             m_animator.SetTrigger("Land");
+            StartCoroutine(ResetJumpTrigger());
         }
 
         if (!m_characterData.m_characterSO.IsGrounded() && m_wasGrounded)
@@ -239,5 +260,31 @@ public class CharacterController : MonoBehaviour
             GameStateManager.CameraManager.m_cameraFollow = Camera.main.transform.GetComponent<CameraFollow>();
             return m_moveVector;
         }
+    }
+
+    public float GetSpeed()
+    {
+        float speedPerSec = Vector3.Distance(m_oldPosition, transform.position) / Time.deltaTime;
+        m_oldPosition = transform.position;
+        return speedPerSec;
+    }
+
+    public IEnumerator ResetJumpTrigger()
+    {
+        float delay = 0.5f;
+        yield return new WaitForSeconds(delay);
+        m_animator.ResetTrigger("Land");
+    }
+
+    public IEnumerator GeneratePlayerHeadObj()
+    {
+        float delay = 0.3f;
+        yield return new WaitForSeconds(delay);
+        GameObject head = new GameObject("Head");
+        Transform parent = transform.GetChild(0).Find(m_characterData.m_characterSO.m_headParentPath);
+        head.transform.SetParent(parent);
+        head.transform.localPosition = m_characterData.m_characterSO.m_headLocalPos;
+        head.transform.localEulerAngles = m_characterData.m_characterSO.m_headLocalRot;
+        m_playerHeadObj = head;
     }
 }

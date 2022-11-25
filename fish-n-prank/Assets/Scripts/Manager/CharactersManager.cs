@@ -29,6 +29,8 @@ public class CharactersManager : ScriptableObject
     [BoxGroup("Character movement")] public float m_xAxisSensitivity;
     [BoxGroup("Character movement")] public float m_zAxisSensitivity;
     [BoxGroup("Character position")] public Vector3 m_characterSpawnPosition;
+    [BoxGroup("Joystick offset")] public float m_xJoystickOffset = 0.2f;
+    [BoxGroup("Joystick offset")] public float m_zJoystickOffset = 0.2f;
     private GameObject m_currentCharacter;
     public float m_waterHeight;
     private List<CHARACTER> m_characcterEnumValues;
