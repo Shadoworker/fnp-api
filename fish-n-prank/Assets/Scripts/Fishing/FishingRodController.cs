@@ -58,6 +58,9 @@ public class FishingRodController : MonoBehaviour
     }
     public void ToggleFishingRod()
     {
+        if (!transform.parent.GetComponent<NetworkPlayer>().isLocalPlayer)
+            return;
+
         if(!m_fishingRod.activeInHierarchy && !m_characterData.m_characterSO.IsUnderWater())
         {
             m_animator.SetTrigger("GrabRod");

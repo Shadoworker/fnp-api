@@ -20,8 +20,6 @@ public class CharacterData : NetworkBehaviour
 
         GameStateManager.CharactersManager.LocalPlayer = NetworkClient.localPlayer.gameObject;
         GameStateManager.CameraManager.SetTarget(GameStateManager.CharactersManager.LocalPlayer);
-        GameStateManager.CharactersManager.InitLocalPlayer(GameStateManager.CharactersManager.LocalPlayer);
-        //InitCharacterController();
     }
 
     public void InitCharacterData(CharacterSO _characterSO)

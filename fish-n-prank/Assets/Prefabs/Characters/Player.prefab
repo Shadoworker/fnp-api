@@ -345,6 +345,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6724701180610496570, guid: 93b6cacd9e85e4d4cafadb405c39b93c, type: 3}
+      propertyPath: m_characterData
+      value: 
+      objectReference: {fileID: 5209425152053978026}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93b6cacd9e85e4d4cafadb405c39b93c, type: 3}
 --- !u!4 &7469802047010835177 stripped
@@ -363,6 +367,10 @@ PrefabInstance:
       propertyPath: _assetId
       value: 1858354796
       objectReference: {fileID: 0}
+    - target: {fileID: 111560788375421775, guid: 93eb293973935324a9ced536afb60660, type: 3}
+      propertyPath: m_characterData
+      value: 
+      objectReference: {fileID: 5209425152053978026}
     - target: {fileID: 434296713391943737, guid: 93eb293973935324a9ced536afb60660, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -473,6 +481,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2682648491355945339, guid: 1682ce21c3211d94bab1923ad9f48351, type: 3}
+      propertyPath: m_characterData
+      value: 
+      objectReference: {fileID: 5209425152053978026}
     - target: {fileID: 3025230682810942501, guid: 1682ce21c3211d94bab1923ad9f48351, type: 3}
       propertyPath: m_Name
       value: Character-Shiba
@@ -585,6 +597,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Character-Khaby-Lame
       objectReference: {fileID: 0}
+    - target: {fileID: 5195278815082732898, guid: 71f3fa9ea0d194c44878557621085277, type: 3}
+      propertyPath: m_characterData
+      value: 
+      objectReference: {fileID: 5209425152053978026}
     - target: {fileID: 5734190578603346109, guid: 71f3fa9ea0d194c44878557621085277, type: 3}
       propertyPath: m_RootOrder
       value: 1

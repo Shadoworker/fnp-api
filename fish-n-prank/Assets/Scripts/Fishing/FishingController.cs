@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using PathCreation;
-using Mirror;
 
 public class FishingController : MonoBehaviour
 {
@@ -42,7 +39,7 @@ public class FishingController : MonoBehaviour
     private void Start()
     {
         // TODO: that data should come from a cloud save in the future
-        m_numberOfCaughtFishesText.text = PlayerPrefs.GetInt(NUMBER_OF_CAUGHT_FISHES).ToString();
+        m_numberOfCaughtFishesText.text = PlayerPrefs.GetInt(NUMBER_OF_CAUGHT_FISHES).ToString(); // TODO: use a PersistenInt
     }
 
     void Update()
@@ -86,9 +83,9 @@ public class FishingController : MonoBehaviour
         m_fishingUI.SetActive(false);
         m_jumpBtn.SetActive(true);
         m_isFishing = false;
-        if (GameStateManager.CharactersManager.GetCurrentSkin() != null)
+        if (GameStateManager.CharactersManager.LocalPlayer != null) // TODO: test still necessary?
         {
-            CharacterController characterController = GameStateManager.CharactersManager.GetCurrentSkin().GetComponent<CharacterController>();
+            CharacterController characterController = GameStateManager.CharactersManager.LocalPlayer.GetComponent<CharacterController>();
             characterController.enabled = true;
             characterController.m_animator.SetBool("Fish", false);
         }
@@ -98,17 +95,19 @@ public class FishingController : MonoBehaviour
     /// <summary>
     /// Initiate server request to start fishing gameplay
     /// </summary>
-    public void ActivateFishingGameplay()
+    public void RequestStartFishingGameplay()
     {
-        FnPFishingNetworkInterface.Instance.CmdStartFishing();
+        //GameStateManager.CharactersManager.LocalPlayer.GetComponent<FnPFishingNetworkInterface>().CmdStartFishing(gameObject);
+        GameStateManager.CharactersManager.LocalPlayer.GetComponent<FnPFishingNetworkInterface>().RequestStartFishing();
     }
 
     /// <summary>
     /// Starts fishing gameplay locally (server validation done)
     /// </summary>
+    /// <param name="_fishSO">The fish that just bit</param>
     public void StartFishingGameplay(FishSO _fishSO)
     {
-        Debug.Log($"StartFishingGameplay: received fish from Server: {_fishSO.name}");
+        Debug.Log($"ShouldStartFishingGameplay: received fish from Server: {_fishSO.name}");
 
         // initialize rode settings
         m_distanceTravelled = INDICATOR_DEFAULT_POS;
@@ -117,7 +116,7 @@ public class FishingController : MonoBehaviour
         m_isNearFishingSpot.Raise("false");
 
         // setup character
-        CharacterController characterController = GameStateManager.CharactersManager.GetCurrentSkin().GetComponent<CharacterController>();
+        CharacterController characterController = GameStateManager.CharactersManager.LocalPlayer.GetComponent<CharacterController>();
         characterController.enabled = false;
         characterController.m_animator.SetBool("Fish", true);
 

@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class BoatController : MonoBehaviour
+public class BoatController : NetworkBehaviour
 {
-
     //visible Properties
     public Transform m_motor;
     public float m_steerm_power = 500f;
@@ -21,7 +21,7 @@ public class BoatController : MonoBehaviour
 
     //internal Properties
     protected Vector3 CamVel;
-    [SerializeField] private VariableJoystick m_joystick = null;
+    private VariableJoystick m_joystick = null;
     public Transform m_facingDirection;
     private Vector3 m_moveVector { set; get; }
 
@@ -30,6 +30,7 @@ public class BoatController : MonoBehaviour
         ParticleSystem = GetComponentInChildren<ParticleSystem>();
         m_rigidbody = GetComponent<Rigidbody>();
         StartRotation = m_motor.localRotation;
+        m_joystick = GameObject.Find("JoystickContainer").GetComponent<VariableJoystick>(); // TODO: get from NetworkPlayer.LocalPlayer
     }
 
     public void FixedUpdate()

@@ -10,9 +10,10 @@ public class DriveBoatTrigger : MonoBehaviour
     public GameObject m_driveBtn;
     public Transform m_playerSeatPos;
     private const string NAVIGATE_ANIM_PARAM = "Navigate";
+
     private void OnTriggerStay(Collider other)
     {
-        if (other.tag == "Player" && !m_boat.enabled)
+        if (other.tag == "Player" && !m_boat.enabled) // TODO: use a constant for Tags
         {
             m_driveBtn.SetActive(true);
             m_character = other.GetComponentInParent<CharacterController>();

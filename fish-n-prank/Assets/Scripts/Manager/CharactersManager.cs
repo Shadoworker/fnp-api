@@ -25,12 +25,12 @@ public class CharactersManager : ScriptableObject
     public GameObject m_playerPrefab;
     [BoxGroup("List of characters")] public List<CharacterSO> m_characters;
     [BoxGroup("Game Events")] public GameEvent m_jumpEvent;
+    [BoxGroup("Game Events")] public GameEvent m_fishEvent;
     [BoxGroup("Game Events")] public GameEvent m_toggleFishingRodEvent;
     [BoxGroup("Character movement")] public float m_xAxisSensitivity;
     [BoxGroup("Character movement")] public float m_zAxisSensitivity;
     [BoxGroup("Character position")] public Vector3 m_characterSpawnPosition;
     public GameObject LocalPlayer { get;  set; }
-    private GameObject m_currentSkin;
     public float m_waterHeight;
     private List<CHARACTER> m_characterEnumValues;
     private Transform m_playersContainer;
@@ -38,16 +38,6 @@ public class CharactersManager : ScriptableObject
     public void Init()
     {
         m_characterEnumValues = Enum.GetValues(typeof(CHARACTER)).Cast<CHARACTER>().ToList();
-    }
-
-    public GameObject GetCurrentSkin()
-    {
-        return m_currentSkin;
-    }
-
-    public void DestroyCurrentPlayer()
-    {
-        Destroy(m_currentSkin.transform.GetChild(0).gameObject);
     }
 
     public string GetRandomSkin()
@@ -60,18 +50,5 @@ public class CharactersManager : ScriptableObject
         //CHARACTER characterEnum = m_characterEnumValues.Where(c => c.ToString().Equals(_characterName)).FirstOrDefault();
 
         return m_characters.Where(c => c.m_character.ToString() == _characterName).FirstOrDefault();
-    }
-
-    // TODO: limit to local client
-    public void InitLocalPlayer(GameObject _player)
-    {
-        LocalPlayer = _player;
-
-        //CHARACTER characterEnum = m_characterEnumValues.Where(c => c.ToString().Equals("GRUMPY_CAT")).FirstOrDefault();
-        //CharacterSO characterSO = m_characters.Where(c => c.m_character == characterEnum).FirstOrDefault();
-
-        //SetPlayerSkin(_player, "GRUMPY_CAT"); // hack
-
-        //LocalPlayer.GetComponent<CharacterData>().InitCharacterController();
     }
 }

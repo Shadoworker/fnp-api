@@ -3,20 +3,10 @@ using Mirror;
 
 public class FnPFishingNetworkInterface : NetworkBehaviour
 {
-    #region Singleton
-    public static FnPFishingNetworkInterface Instance { get; private set; }
-    private void Awake()
+    public void RequestStartFishing()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
-        }
+        CmdStartFishing();
     }
-    #endregion
 
     #region SERVER
     [Command(requiresAuthority = false)]
@@ -26,14 +16,16 @@ public class FnPFishingNetworkInterface : NetworkBehaviour
         FishSO fishSO = GameStateManager.FishesManager.GetRandomFish();
 
         Debug.Log($"CmdStartFishing: Server chose {fishSO.name}");
-        TargetSetBitingFish(fishSO);
+        NetworkIdentity opponentIdentity = GetComponent<NetworkIdentity>();
+        TargetSetBitingFish(opponentIdentity.connectionToClient, fishSO);
     }
     #endregion
 
     #region CLIENT
     [TargetRpc]
-    private void TargetSetBitingFish(FishSO _fishSO)
+    private void TargetSetBitingFish(NetworkConnection target, FishSO _fishSO)
     {
+        Debug.LogWarning("TargetSetBitingFish will start fishing gameplay.");
         FishingController.Instance.StartFishingGameplay(_fishSO);
     }
     #endregion
