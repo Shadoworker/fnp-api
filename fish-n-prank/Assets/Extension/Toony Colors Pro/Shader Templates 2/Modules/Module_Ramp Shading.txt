@@ -1,5 +1,5 @@
 // Toony Colors Pro+Mobile 2
-// (c) 2014-2021 Jean Moreno
+// (c) 2014-2022 Jean Moreno
 
 // Shader Generator Module: Ramp Shading
 
@@ -356,9 +356,9 @@ mult	lbl="Lights"				kw=All Lights|,Main Light|WRAPPED_LIGHTING_MAIN_LIGHT,Other
 /// IF TEXTURE_RAMP
 
 			//Define ramp threshold and smoothstep depending on context
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # TEXTURE RAMP
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 	/// IF RAMP_MAIN_OTHER
 			#if defined(UNITY_PASS_FORWARDBASE)
 				#define		RAMP_TEXTURE	_Ramp
@@ -411,9 +411,9 @@ mult	lbl="Lights"				kw=All Lights|,Main Light|WRAPPED_LIGHTING_MAIN_LIGHT,Other
 		///
 	///
 /// ELIF RGB_RAMP
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # RGB RAMP
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 	/// IF RAMP_MAIN_OTHER
 			#if defined(UNITY_PASS_FORWARDBASE)
 				#define		RAMP_THRESHOLD	(1 - [[VALUE:Ramp Threshold RGB]])
@@ -443,9 +443,9 @@ mult	lbl="Lights"				kw=All Lights|,Main Light|WRAPPED_LIGHTING_MAIN_LIGHT,Other
 			#define		RAMP_SMOOTH		[[VALUE:Ramp Smoothing RGB]]
 	///
 /// ELIF CRISP_RAMP || CRISP_RAMP_NO_AA
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # CRISP RAMP
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 	/// IF RAMP_MAIN_OTHER
 			#if defined(UNITY_PASS_FORWARDBASE)
 				#define		RAMP_THRESHOLD	[[VALUE:Ramp Threshold]]
@@ -468,9 +468,9 @@ mult	lbl="Lights"				kw=All Lights|,Main Light|WRAPPED_LIGHTING_MAIN_LIGHT,Other
 			#define		RAMP_THRESHOLD	[[VALUE:Ramp Threshold]]
 	///
 /// ELIF RAMP_BANDS || RAMP_BANDS_CRISP || RAMP_BANDS_CRISP_NO_AA
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # BANDS RAMP
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 	/// IF RAMP_MAIN_OTHER
 			#if defined(UNITY_PASS_FORWARDBASE)
 				#define		RAMP_THRESHOLD		[[VALUE:Ramp Threshold]]
@@ -528,9 +528,9 @@ mult	lbl="Lights"				kw=All Lights|,Main Light|WRAPPED_LIGHTING_MAIN_LIGHT,Other
 		///
 	///
 /// ELIF !TEXTURE_RAMP && !NO_RAMP && !NO_RAMP_UNLIT
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # SLIDER RAMP
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 	/// IF RAMP_MAIN_OTHER
 			#if defined(UNITY_PASS_FORWARDBASE)
 				#define		RAMP_THRESHOLD	[[VALUE:Ramp Threshold]]

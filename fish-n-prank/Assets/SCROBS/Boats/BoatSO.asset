@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9818d172165f2341a3b5f78c236fe4e, type: 3}
   m_Name: BoatSO
   m_EditorClassIdentifier: 
-  m_floatingPower: 80.3
-  m_waterHeight: 5.67
-  m_mass: 20
+  m_floatingPower: 500
+  m_waterHeight: 6
+  m_mass: 10
   m_underWaterDragForce: 0.5
-  m_underWaterAngularDragForce: 0.5
-  m_airDragForce: 19.11
-  m_airAngularDrag: 43.6
+  m_underWaterAngularDragForce: 3
+  m_airDragForce: 2.5
+  m_airAngularDrag: 5

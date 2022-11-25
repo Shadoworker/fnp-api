@@ -1,5 +1,5 @@
 // Toony Colors Pro 2
-// (c) 2014-2021 Jean Moreno
+// (c) 2014-2022 Jean Moreno
 
 using System;
 using System.Collections.Generic;
@@ -23,10 +23,22 @@ namespace ToonyColorsPro
 		{
 			public static bool DebugMode = false;
 
-			internal const string TCP2_VERSION = "2.7.2";
+			internal const string TCP2_VERSION = "2.9.3";
 			internal const string DOCUMENTATION_URL = "https://jeanmoreno.com/unity/toonycolorspro/doc/shader_generator_2";
 			internal const string OUTPUT_PATH = "/JMO Assets/Toony Colors Pro/Shaders Generated/";
 
+			[MenuItem(Menu.MENU_PATH + "Version " + TCP2_VERSION, false, 100)]
+			static void Empty() 
+			{
+				
+			}
+
+			[MenuItem(Menu.MENU_PATH + "Version " + TCP2_VERSION, true, 100)]
+			static bool Disabled()
+			{
+				return false;
+			}
+			
 			[MenuItem(Menu.MENU_PATH + "Shader Generator 2", false, 500)]
 			static void OpenTool()
 			{
@@ -44,7 +56,7 @@ namespace ToonyColorsPro
 			{
 				var window = GetWindow<ShaderGenerator2>(!GlobalOptions.data.DockableWindow, GlobalOptions.data.DockableWindow ? "Shader Generator" : "Shader Generator 2", true);
 				window.minSize = new Vector2(375f, 400f);
-				window.maxSize = new Vector2(500f, 4000f);
+				window.maxSize = new Vector2(900f, 4000f);
 				return window;
 			}
 
@@ -53,7 +65,6 @@ namespace ToonyColorsPro
 			internal static Config CurrentConfig { get; private set; }
 			internal static Template CurrentTemplate { get { return instance.template; }}
 
-			internal static string TemplateID { get; private set; }
 			internal static VertexToFragmentVariablesManager VariablesManager { get; private set; }
 			internal static ShaderProperty.ProgramType CurrentProgram = ShaderProperty.ProgramType.Undefined;
 			internal static string CurrentInput;
@@ -67,7 +78,7 @@ namespace ToonyColorsPro
 			{
 				get
 				{
-					return TemplateID == "TEMPLATE_URP" || TemplateID == "TEMPLATE_LWRP";
+					return instance._template != null && instance._template.id == "TEMPLATE_URP";
 				}
 			}
 
@@ -86,6 +97,8 @@ namespace ToonyColorsPro
 			}
 
 			static ShaderGenerator2 instance;
+			
+			internal static List<string> TerrainPersistentKeywords = new List<string>();
 
 			//--------------------------------------------------------------------------------------------------
 
@@ -493,7 +506,10 @@ namespace ToonyColorsPro
 
 				OnGUI_Internal();
 
-				GUI.skin.font = font;
+				if (ProjectOptions.data.UseCustomFont && ProjectOptions.data.CustomFont != null)
+				{
+					GUI.skin.font = font;
+				}
 			}
 
 			void OnGUI_Internal()
@@ -539,9 +555,16 @@ namespace ToonyColorsPro
 
 				if (GUILayout.Button(TCP2_GUI.TempContent("Reload"), EditorStyles.miniButton, GUILayout.ExpandWidth(false)))
 				{
-					//Twice to prevent bug with used variable names
-					LoadNewTemplate(template.textAsset);
-					LoadNewTemplate(template.textAsset);
+					if (currentShader != null)
+					{
+						LoadCurrentConfigFromShader(currentShader);
+					}
+					else
+					{
+						//Twice to prevent bug with used variable names
+						LoadNewTemplate(template.textAsset);
+						LoadNewTemplate(template.textAsset);
+					}
 				}
 
 				EditorGUILayout.EndHorizontal();
@@ -646,7 +669,7 @@ namespace ToonyColorsPro
 				{
 					EditorGUILayout.BeginHorizontal();
 					currentConfig.Filename = EditorGUILayout.TextField(TCP2_GUI.TempContent("Filename", "The filename for the generated shader." + (ProjectOptions.data.AutoNames ? "" : "\nYou can input your own by disabling the auto-filename option in the options below.")), currentConfig.Filename);
-					currentConfig.Filename = Regex.Replace(currentConfig.Filename, @"[^a-zA-Z0-9 _!/]", "");
+					currentConfig.Filename = Regex.Replace(currentConfig.Filename, "[/?<>\\:*|\"]", "");
 					GUILayout.Label(".shader", GUILayout.Width(50f));
 					EditorGUILayout.EndHorizontal();
 				}
@@ -944,14 +967,7 @@ namespace ToonyColorsPro
 					TCP2_GUI.SeparatorSimple();
 
 					GlobalOptions.data.ShowDisabledFeatures = GUILayout.Toggle(GlobalOptions.data.ShowDisabledFeatures, TCP2_GUI.TempContent("Show disabled fields", "Show all settings, including disabled ones. Allows you to view all options available."), GUILayout.ExpandWidth(false));
-
-					EditorGUI.BeginChangeCheck();
 					GlobalOptions.data.ShowContextualHelp = GUILayout.Toggle(GlobalOptions.data.ShowContextualHelp, TCP2_GUI.TempContent("Show contextual help", "Will show help boxes throughout the UI regarding the usage of the Shader Generator"), GUILayout.Width(180f));
-					if (EditorGUI.EndChangeCheck())
-					{
-						this.wantsMouseMove = GlobalOptions.data.ShowContextualHelp;
-					}
-
 					GlobalOptions.data.DockableWindow = GUILayout.Toggle(GlobalOptions.data.DockableWindow, TCP2_GUI.TempContent("Dockable Window", "Makes the Shader Generator 2 window dockable in the Editor UI (close and reopen the tool to apply)"), GUILayout.ExpandWidth(false));
 
 					EditorGUILayout.BeginHorizontal();
@@ -1359,22 +1375,27 @@ namespace ToonyColorsPro
 				return path;
 			}
 
+			public static long LastCompilationTimestamp = -1;
 			static Shader Compile(Config config, Shader existingShader, Template template, bool showProgressBar = true, bool overwritePrompt = true, bool externallyModifiedPrompt = true)
 			{
 				return Compile(config, existingShader, template, showProgressBar ? 0f : -1f, overwritePrompt, externallyModifiedPrompt);
 			}
 			static Shader Compile(Config config, Shader existingShader, Template template, float progress, bool overwritePrompt, bool externallyModifiedPrompt)
 			{
+				LastCompilationTimestamp = DateTime.Now.ToBinary();
+				TerrainPersistentKeywords.Clear();
+				
 				//UI
 				if (progress >= 0f)
+				{
 					EditorUtility.DisplayProgressBar("Hold On", "Generating Shader: " + config.ShaderName, progress);
+				}
 
 				// Set up statics
 				ShaderGenerator2.CurrentConfig = config;
-				ShaderGenerator2.TemplateID = template.id;
 
 				//Generate source
-				var source = GenerateShaderSource(config, template, existingShader);
+				var source = GenerateShaderSource(config, template);
 				if (string.IsNullOrEmpty(source))
 				{
 					Debug.LogError(ErrorMsg("Can't save Shader: source is null or empty!"));
@@ -1383,40 +1404,61 @@ namespace ToonyColorsPro
 				}
 
 				//Save to disk
-				var shader = SaveShader(config, existingShader, source, overwritePrompt, externallyModifiedPrompt && config.isModifiedExternally);
+				var shader = SaveShader(config, existingShader, config.Filename, source, overwritePrompt, externallyModifiedPrompt && config.isModifiedExternally);
 
-				//Special configs
-				if (template.templateType == "terrain")
+				// Extra shader files for special cases
+				if (shader != null && config.isTerrainShader)
 				{
-					//Generate Base shader
-					var baseConfig = config.Copy();
-					baseConfig.Filename = baseConfig.Filename + "_Base";
-					baseConfig.ShaderName = "Hidden/" + baseConfig.ShaderName + "-Base";
-					baseConfig.Features.Add("TERRAIN_BASE");
+					// We can modify config here as it will be reloaded from the main generated shader afterwards
 
-					source = GenerateShaderSource(baseConfig, template, existingShader);
+					// Terrain Add Pass:
+					if (!config.Features.Contains("TERRAIN_SHADER_8_LAYERS"))
+					{
+						config.Features.Add("TERRAIN_ADDPASS");
+						source = GenerateShaderSource(config, template, true);
+						if (string.IsNullOrEmpty(source))
+						{
+							Debug.LogError(ErrorMsg("Error trying to generate Terrain Add Pass shader."));
+						}
+						else
+						{
+							SaveShader(config, existingShader, config.Filename + "-AddPass", source, false, false);
+						}
+					}
+
+					// Terrain Base Pass:
+					config.Features.Remove("TERRAIN_ADDPASS");
+					config.Features.Add("TERRAIN_BASEPASS");
+					source = GenerateShaderSource(config, template, true);
 					if (string.IsNullOrEmpty(source))
-						Debug.LogError(ErrorMsg("Can't save Terrain Base Shader: source is null or empty!"));
+					{
+						Debug.LogError(ErrorMsg("Error trying to generate Terrain Base Pass shader."));
+					}
 					else
-						SaveShader(baseConfig, existingShader, source, false, false);
-
-					//Generate AddPass shader
-					var addPassConfig = config.Copy();
-					addPassConfig.Filename = addPassConfig.Filename + "_AddPass";
-					addPassConfig.ShaderName = "Hidden/" + addPassConfig.ShaderName + "-AddPass";
-					addPassConfig.Features.Add("TERRAIN_ADDPASS");
-					addPassConfig.Flags.Add("decal:add");
-
-					source = GenerateShaderSource(addPassConfig, template, existingShader);
+					{
+						SaveShader(config, existingShader, config.Filename + "-BasePass", source, false, false);
+					}
+					
+					// Terrain BaseGen Shader:
+					config.Features.Remove("TERRAIN_BASEPASS");
+					config.Features.Add("TERRAIN_BASEGEN");
+					config.Features.AddRange(TerrainPersistentKeywords);
+					source = GenerateShaderSource(config, template, true);
 					if (string.IsNullOrEmpty(source))
-						Debug.LogError(ErrorMsg("Can't save Terrain AddPass Shader: source is null or empty!"));
+					{
+						Debug.LogError(ErrorMsg("Error trying to generate Terrain BaseGen shader."));
+					}
 					else
-						SaveShader(addPassConfig, existingShader, source, false, false);
+					{
+						SaveShader(config, existingShader, config.Filename + "-BaseGen", source, false, false);
+					}
 				}
-
+				
 				//UI
 				if (progress >= 0f)
+				{
 					EditorUtility.ClearProgressBar();
+				}
 
 				return shader;
 			}
@@ -1481,7 +1523,7 @@ namespace ToonyColorsPro
 			// 2. Get stripped template lines based on conditions
 			// 3. Find used ShadeProperties for each pass
 			// 4. Generate the output code
-			static string GenerateShaderSource(Config config, Template template, Shader existingShader = null)
+			static string GenerateShaderSource(Config config, Template template, bool skipSerializationData = false)
 			{
 				if (config == null)
 				{
@@ -1545,6 +1587,118 @@ namespace ToonyColorsPro
 					if (kvp.Value.Count > 0)
 					{
 						keywords.Add("FLAGS:" + kvp.Key, string.Join(" ", kvp.Value.ToArray()));
+					}
+				}
+				
+				// terrain special keywords
+				if (config.isTerrainShader)
+				{
+					var countPerTerrainVariable = new Dictionary<string, int>();
+					Action<string, ShaderProperty, bool> FetchLabelForVariable = (layerVariable, shadeProperty, hasLabel) =>
+					{
+						string keywordKey = string.Format("TERRAIN_LAYER_LABEL__{0}", layerVariable);
+						
+						if (!hasLabel)
+						{
+							if (!keywords.ContainsKey(keywordKey))
+							{
+								keywords[keywordKey] = "Unused";
+							}
+							return;
+						}
+						
+						if (!countPerTerrainVariable.ContainsKey(layerVariable))
+						{
+							countPerTerrainVariable.Add(layerVariable, 0);
+						}
+						
+						// Find the label for a terrain layer property, to generate the custom layer UI
+						if (countPerTerrainVariable[layerVariable] == 0)
+						{
+							keywords[keywordKey] = shadeProperty.Name;
+						}
+						else
+						{
+							keywords[keywordKey] = string.Format("{0} (+{1})", shadeProperty.Name, countPerTerrainVariable[layerVariable]);
+						}
+						countPerTerrainVariable[layerVariable]++;	
+					};
+					
+					foreach (var shaderProperty in config.VisibleShaderProperties)
+					{
+						foreach (var implementation in shaderProperty.implementations)
+						{
+							var imp_generic = implementation as ShaderProperty.Imp_GenericFromTemplate;
+							if (imp_generic != null)
+							{
+								string[] features = imp_generic.NeededFeaturesStr.Split(',');
+								foreach (string feature in features)
+								{
+									if (feature.StartsWith("USE_TERRAIN_"))
+									{
+										string layerVariable = feature.Substring("USE_TERRAIN_".Length);
+										if (!config.Features.Contains(string.Format("TERRAIN_LAYER_LABEL__{0}_MANUAL", layerVariable)))
+										{
+											// 4 individual Floats mode: fetch labels for each part
+											if (config.Features.Contains("TERRAIN_LAYER_4FLOATS__" + layerVariable))
+											{
+												string layerVariableR = layerVariable + "_R";
+												string layerVariableG = layerVariable + "_G";
+												string layerVariableB = layerVariable + "_B";
+												string layerVariableA = layerVariable + "_A";
+
+												bool hasR = false;
+												bool hasG = false;
+												bool hasB = false;
+												bool hasAlpha = false;
+												foreach (Char c in imp_generic.Channels)
+												{
+													switch (c)
+													{
+														case 'X': hasR = true; break;
+														case 'Y': hasG = true; break;
+														case 'Z': hasB = true; break;
+														case 'W': hasAlpha = true; break;
+													}
+												}
+
+												FetchLabelForVariable(layerVariableR, imp_generic.ParentShaderProperty, hasR);
+												FetchLabelForVariable(layerVariableG, imp_generic.ParentShaderProperty, hasG);
+												FetchLabelForVariable(layerVariableB, imp_generic.ParentShaderProperty, hasB);
+												FetchLabelForVariable(layerVariableA, imp_generic.ParentShaderProperty, hasAlpha);
+											}
+											// RGB + Float mode: fetch labels for each part
+											else if (config.Features.Contains("TERRAIN_LAYER_RGBFloat__" + layerVariable))
+											{
+												string layerVariableRGB = layerVariable + "_RGB";
+												string layerVariableA = layerVariable + "_A";
+
+												bool hasAnyRGB = false;
+												bool hasAlpha = false;
+												foreach (Char c in imp_generic.Channels)
+												{
+													if (c == 'X' || c == 'Y' || c == 'Z') { hasAnyRGB = true; }
+													if (c == 'W') { hasAlpha = true; }
+												}
+
+												FetchLabelForVariable(layerVariableRGB, imp_generic.ParentShaderProperty, hasAnyRGB);
+												FetchLabelForVariable(layerVariableA, imp_generic.ParentShaderProperty, hasAlpha);
+											}
+											else
+											{
+												FetchLabelForVariable(layerVariable, imp_generic.ParentShaderProperty, true);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					// Special case for Mask Map: it's always visible, so it needs a valid label
+					if (!keywords.ContainsKey("TERRAIN_LAYER_LABEL__MASKMAP"))
+					{
+						keywords.Add("TERRAIN_LAYER_LABEL__MASKMAP", "Mask Map");
 					}
 				}
 
@@ -1699,11 +1853,37 @@ namespace ToonyColorsPro
 						//All used Custom Material Properties so that we can print them in [[PROPERTIES]] + get the ones used per pass
 						foreach (var imp in sp.implementations)
 						{
+							ShaderProperty.CustomMaterialProperty cmp = null;
+							
 							var ctImp = imp as ShaderProperty.Imp_CustomMaterialProperty;
 							if (ctImp != null)
 							{
-								var cmp = ctImp.LinkedCustomMaterialProperty;
+								cmp = ctImp.LinkedCustomMaterialProperty;	
+							}
+							else
+							{
+								var impMpTex = imp as ShaderProperty.Imp_MaterialProperty_Texture;
+								if (impMpTex != null && impMpTex.UvSource == ShaderProperty.Imp_MaterialProperty_Texture.UvSourceType.CustomMaterialProperty)
+								{
+									cmp = impMpTex.LinkedCustomMaterialProperty;
+								}
 
+								var impCc = imp as ShaderProperty.Imp_CustomCode;
+								if (impCc != null)
+								{
+									foreach (var customMaterialProperty in config.CustomMaterialProperties)
+									{
+										if (impCc.code.Contains(customMaterialProperty.PropertyName) || impCc.prependCode.Contains(customMaterialProperty.PropertyName))
+										{
+											cmp = customMaterialProperty;
+											break;
+										}
+									}
+								}
+							}
+							
+							if (cmp != null)
+							{
 								if (cmp == null)
 								{
 									Debug.LogError(ErrorMsg(string.Format("No Custom Material Property defined for property '{0}'", sp.Name)));
@@ -1920,6 +2100,12 @@ namespace ToonyColorsPro
 							}
 						}
 
+						if (config.isTerrainShader)
+						{
+							// Terrain always needs TEXCOORD0
+							AddUvChannelUsage(usedUvChannelsVertex, 0, 2);
+						}
+
 						uvChannelGlobalTilingOffset = new Dictionary<int, List<ShaderProperty.Imp_MaterialProperty_Texture>>();
 						uvChannelGlobalScrolling = new Dictionary<int, List<ShaderProperty.Imp_MaterialProperty_Texture>>();
 						uvChannelGlobalRandomOffset = new Dictionary<int, List<ShaderProperty.Imp_MaterialProperty_Texture>>();
@@ -1940,6 +2126,21 @@ namespace ToonyColorsPro
 						var processedCustomMaterialProperties = new HashSet<ShaderProperty.CustomMaterialProperty>();
 						foreach (var sp in shaderPropertiesAndClones)
 						{
+							bool isUsedInFragment = sp.Program == ShaderProperty.ProgramType.Fragment;
+							// If Material Layer source (or contrast/noise), find if any of the properties that use it is used in Fragment shader
+							if (sp.isMaterialLayerProperty)
+							{
+								foreach (var sp2 in shaderPropertiesAndClones)
+								{
+									if (sp2.Program == ShaderProperty.ProgramType.Fragment
+									    && sp2.linkedMaterialLayers.Contains(sp.materialLayerUid))
+									{
+										isUsedInFragment = true;
+										break;
+									}
+								}
+							}
+
 							foreach (var imp in sp.implementations)
 							{
 								var vertexUvImp = imp as ShaderProperty.Imp_VertexTexcoord;
@@ -1947,7 +2148,7 @@ namespace ToonyColorsPro
 								{
 									AddUvChannelUsage(usedUvChannelsVertex, vertexUvImp.TexcoordChannel, 2);
 
-									if (sp.Program == ShaderProperty.ProgramType.Fragment)
+									if (isUsedInFragment)
 									{
 										int dimensions = 2;
 										if (vertexUvImp.Channels.Contains("W"))
@@ -1968,8 +2169,11 @@ namespace ToonyColorsPro
 								bool isCustomMaterialPropertyFragment = false;
 								if (textureImp == null)
 								{
+									// Implementation is a Custom Material Property with a Texture implementation
 									var imp_ct = imp as ShaderProperty.Imp_CustomMaterialProperty;
-									if (imp_ct != null && imp_ct.LinkedCustomMaterialProperty != null && !processedCustomMaterialProperties.Contains(imp_ct.LinkedCustomMaterialProperty))
+									if (imp_ct != null
+									    && imp_ct.LinkedCustomMaterialProperty != null
+									    && !processedCustomMaterialProperties.Contains(imp_ct.LinkedCustomMaterialProperty))
 									{
 										textureImp = imp_ct.LinkedCustomMaterialProperty.implementation as ShaderProperty.Imp_MaterialProperty_Texture;
 										processedCustomMaterialProperties.Add(imp_ct.LinkedCustomMaterialProperty);
@@ -1979,11 +2183,24 @@ namespace ToonyColorsPro
 									}
 								}
 
+								// Implementation is a texture that uses a Custom Material Property as UVs
+								if (textureImp != null
+								    && textureImp.UvSource == ShaderProperty.Imp_MaterialProperty_Texture.UvSourceType.CustomMaterialProperty
+								    && textureImp.LinkedCustomMaterialProperty != null
+								    && !processedCustomMaterialProperties.Contains(textureImp.LinkedCustomMaterialProperty))
+								{
+									textureImp = textureImp.LinkedCustomMaterialProperty.implementation as ShaderProperty.Imp_MaterialProperty_Texture;
+									processedCustomMaterialProperties.Add(textureImp.LinkedCustomMaterialProperty);
+									
+									var cmp_usage = currentPassUsedCustomMaterialProperties.Find(item => item.customMaterialProperty == textureImp.LinkedCustomMaterialProperty);
+									isCustomMaterialPropertyFragment = cmp_usage.program == ShaderProperty.ProgramType.Fragment;
+								}
+
 								if (textureImp != null && textureImp.UvSource == ShaderProperty.Imp_MaterialProperty_Texture.UvSourceType.Texcoord)
 								{
 									AddUvChannelUsage(usedUvChannelsVertex, textureImp.UvChannel, 2);
 
-									if (sp.Program == ShaderProperty.ProgramType.Fragment || isCustomMaterialPropertyFragment)
+									if (isUsedInFragment || isCustomMaterialPropertyFragment)
 									{
 										AddUvChannelUsage(usedUvChannelsFragment, textureImp.UvChannel, 2);
 									}
@@ -2116,7 +2333,7 @@ namespace ToonyColorsPro
 							}
 							else
 							{
-								Debug.LogError(ErrorMsg("No match for '<b>PROP:" + propName + "'</b>"));
+								Debug.LogError(ErrorMsg("No match for '<b>PROP:" + propName + "'</b>\nLine " + templateLines[i].lineNumber + ": " + line));
 							}
 						}
 						//output code to declare texture coordinates and necessary vertex-to-fragment variables, packed as float4 (for v2f struct)
@@ -2187,16 +2404,20 @@ namespace ToonyColorsPro
 									{
 										foreach (var sp in allPassesUsedShaderProperties)
 										{
-											if (!printedShaderProperties.Contains(sp) && !sp.isMaterialLayerProperty)
+											if (!printedShaderProperties.Contains(sp) && !sp.isMaterialLayerProperty && !sp.isLayerClone)
 											{
 												var prop = sp.PrintProperties(indent);
 												if (!string.IsNullOrEmpty(prop))
+												{
 													replacement += prop + "\n" + indent;
+												}
 											}
 										}
 
 										if (!string.IsNullOrEmpty(replacement))
+										{
 											replacement = "\n" + indent + replacement;
+										}
 									}
 
 									//custom material properties
@@ -3085,17 +3306,38 @@ namespace ToonyColorsPro
 				// Code Injection replace blocks:
 				CodeInjectionManager.instance.ProcessReplaceBlocks(stringBuilder);
 
-				//Add serialized data
-				stringBuilder.AppendLine(config.GetSerializedData());
-
-				//Calculate hash
-				string normalizedLineEndings = stringBuilder.ToString().Replace("\r\n", "\n");
-				var hash = GetHash(normalizedLineEndings);
-				stringBuilder.AppendLine(string.Format(Config.kHashPrefix + hash + Config.kHashSuffix));
-
-				//Convert line endings to current OS format
+				// Convert line endings to current OS format
 				stringBuilder.Replace("\r\n", "\n");
 				stringBuilder.Replace("\n", Environment.NewLine);
+				
+#if !UNITY_2019_1_OR_NEWER
+				// Local/program keyword suffixes not supported before Unity 2019.1
+				stringBuilder.Replace("shader_feature_local", "shader_feature");
+				stringBuilder.Replace("shader_feature_local_fragment", "shader_feature");
+				stringBuilder.Replace("shader_feature_local_vertex", "shader_feature");
+				
+				stringBuilder.Replace("multi_compile_fragment", "multi_compile");
+				stringBuilder.Replace("multi_compile_vertex", "multi_compile");
+				stringBuilder.Replace("multi_compile_local_fragment", "multi_compile");
+				stringBuilder.Replace("multi_compile_local_vertex", "multi_compile");
+#elif !UNITY_2020_3_OR_NEWER
+				// program keyword suffix not supported before Unity 2020.3
+				stringBuilder.Replace("shader_feature_local_fragment", "shader_feature_local");
+				stringBuilder.Replace("shader_feature_local_vertex", "shader_feature_local");
+				stringBuilder.Replace("multi_compile_local_fragment", "multi_compile_local");
+				stringBuilder.Replace("multi_compile_fragment", "multi_compile");
+#endif
+
+				if (!skipSerializationData)
+				{
+					// Add serialized data
+					stringBuilder.AppendLine(config.GetSerializedData());
+
+					// Calculate hash
+					string normalizedLineEndings = stringBuilder.ToString().Replace("\r\n", "\n");
+					var hash = GetHash(normalizedLineEndings);
+					stringBuilder.AppendLine(string.Format(Config.kHashPrefix + hash + Config.kHashSuffix));
+				}
 
 				var sourceCode = stringBuilder.ToString();
 
@@ -3129,7 +3371,7 @@ namespace ToonyColorsPro
 			}
 
 			//Save .shader file
-			static Shader SaveShader(Config config, Shader existingShader, string sourceCode, bool overwritePrompt, bool modifiedPrompt)
+			static Shader SaveShader(Config config, Shader existingShader, string filename, string sourceCode, bool overwritePrompt, bool modifiedPrompt)
 			{
 				if (string.IsNullOrEmpty(config.Filename))
 				{
@@ -3139,7 +3381,6 @@ namespace ToonyColorsPro
 
 				//Save file
 				var outputPath = GetOutputPath();
-				var filename = config.Filename;
 
 				//Get existing shader exact path
 				if (existingShader != null)
@@ -3164,56 +3405,58 @@ namespace ToonyColorsPro
 					overwrite = EditorUtility.DisplayDialog("TCP2 : Shader Generation", "The following shader seems to have been modified externally or manually:\n\n" + fullPath + "\n\nOverwrite anyway?", "Yes", "No");
 				}
 
-				if (overwrite)
+				if (!overwrite)
 				{
-					var directory = Path.GetDirectoryName(fullPath);
-					if (!Directory.Exists(directory))
-					{
-						Directory.CreateDirectory(directory);
-					}
-
-					//Write file to disk
-					File.WriteAllText(fullPath, sourceCode, Encoding.UTF8);
-					AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
-
-					//Import (to compile shader)
-					var assetPath = fullPath.Replace(@"\", "/").Replace(Application.dataPath, "Assets");
-
-					var shader = AssetDatabase.LoadAssetAtPath(assetPath, typeof(Shader)) as Shader;
-					if (GlobalOptions.data.SelectGeneratedShader)
-					{
-						Selection.objects = new Object[] { shader };
-					}
-
-					//Set ShaderImporter userData
-					var shaderImporter = ShaderImporter.GetAtPath(assetPath) as ShaderImporter;
-					if (shaderImporter != null)
-					{
-						//Set default textures
-						string[] names = new string[]
-						{
-							"_NoTileNoiseTex",
-							"_Ramp"
-						};
-						Texture[] textures = new Texture[]
-						{
-							AssetDatabase.LoadAssetAtPath<Texture2D>(AssetDatabase.GUIDToAssetPath("af5515bfe14f1af4a9b8b3bf306b9261")),
-							AssetDatabase.LoadAssetAtPath<Texture2D>(AssetDatabase.GUIDToAssetPath("ccad9b0732473ee4e95de81e50e9050f"))
-						};
-						shaderImporter.SetDefaultTextures(names, textures);
-
-						//Needed to save userData in .meta file
-						AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.Default);
-					}
-					else
-					{
-						Debug.LogWarning("[TCP2 Shader Generator] Couldn't find ShaderImporter.\nDefault textures won't be set for the generated shader.");
-					}
-
-					return shader;
+					return null;
 				}
 
-				return null;
+				var directory = Path.GetDirectoryName(fullPath);
+				if (!Directory.Exists(directory))
+				{
+					Directory.CreateDirectory(directory);
+				}
+
+				//Write file to disk
+				File.WriteAllText(fullPath, sourceCode, Encoding.UTF8);
+				AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+
+				//Import (to compile shader)
+				var assetPath = fullPath.Replace(@"\", "/").Replace(Application.dataPath, "Assets");
+
+				var shader = AssetDatabase.LoadAssetAtPath(assetPath, typeof(Shader)) as Shader;
+				if (GlobalOptions.data.SelectGeneratedShader)
+				{
+					Selection.objects = new Object[] { shader };
+				}
+
+				//Set ShaderImporter userData
+				var shaderImporter = ShaderImporter.GetAtPath(assetPath) as ShaderImporter;
+				if (shaderImporter != null)
+				{
+					//Set default textures
+					string[] names = new string[]
+					{
+						"_NoTileNoiseTex",
+						"_Ramp",
+						"_DitherTex"
+					};
+					Texture[] textures = new Texture[]
+					{
+						AssetDatabase.LoadAssetAtPath<Texture2D>(AssetDatabase.GUIDToAssetPath("af5515bfe14f1af4a9b8b3bf306b9261")),
+						AssetDatabase.LoadAssetAtPath<Texture2D>(AssetDatabase.GUIDToAssetPath("ccad9b0732473ee4e95de81e50e9050f")),
+						AssetDatabase.LoadAssetAtPath<Texture2D>(AssetDatabase.GUIDToAssetPath("f059f76a52d0b374c85c681ed571185e"))
+					};
+					shaderImporter.SetDefaultTextures(names, textures);
+
+					//Needed to save userData in .meta file
+					AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.Default);
+				}
+				else
+				{
+					Debug.LogWarning("[TCP2 Shader Generator] Couldn't find ShaderImporter.\nDefault textures won't be set for the generated shader.");
+				}
+
+				return shader;
 			}
 
 			static string GetExistingShaderPath(Config config, Shader existingShader)

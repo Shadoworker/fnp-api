@@ -1,5 +1,5 @@
 // Toony Colors Pro+Mobile 2
-// (c) 2014-2021 Jean Moreno
+// (c) 2014-2022 Jean Moreno
 
 // Shader Generator Module: Depth Texture effects
 
@@ -94,8 +94,7 @@
 	///
 
 	/// IF URP
-		//float localDepth = LinearEyeDepth(worldPos, UNITY_MATRIX_V);
-		float localDepth = LinearEyeDepth(positionNDC.z / positionNDC.w, _ZBufferParams);
+		float localDepth = LinearEyeDepth(positionWS.xyz, GetWorldToViewMatrix());
 	/// ELSE
 		float localDepth = screenPos.z;
 	///

@@ -318,12 +318,23 @@ namespace ToonyColorsPro
 
 						return _PropertyName;
 					}
-					set { _PropertyName = UniqueMaterialPropertyName.GetUniquePropertyName(value, this); }
+					set
+					{
+						// ensure we get the actual name from the template if the variable name is locked:
+						if (PropertyNameLocked)
+						{
+							_PropertyName = value;
+							return;
+						}
+						
+						_PropertyName = UniqueMaterialPropertyName.GetUniquePropertyName(value, this);
+					}
 				}
 				[Serialization.SerializeAs("md")] public string MaterialDrawers = "";
 				[Serialization.SerializeAs("gbv")] public bool IsGlobalVariable = false;
 				[Serialization.SerializeAs("custom")] public bool IsCustomMaterialProperty = false;
 				[Serialization.SerializeAs("refs")] public string CustomMaterialPropertyReferences = "";
+				[Serialization.SerializeAs("pnlock")] public bool PropertyNameLocked = false;
 
 				public Imp_MaterialProperty(ShaderProperty shaderProperty) : base(shaderProperty) { }
 
@@ -375,7 +386,19 @@ namespace ToonyColorsPro
 								if (imp_cmp.LinkedCustomMaterialProperty != null && imp_cmp.LinkedCustomMaterialProperty.implementation == this)
 								{
 									isReferenced = true;
-									CustomMaterialPropertyReferences += imp_cmp.ParentShaderProperty.DisplayName + ", ";
+									if (!CustomMaterialPropertyReferences.Contains(imp_cmp.ParentShaderProperty.DisplayName))
+									{
+										CustomMaterialPropertyReferences += imp_cmp.ParentShaderProperty.DisplayName + ", ";
+									}
+								}
+							}
+
+							var imp_cc = imp as Imp_CustomCode;
+							if (imp_cc != null)
+							{
+								if (imp_cc.code.Contains(this.PropertyName) || imp_cc.prependCode.Contains(this.PropertyName))
+								{
+									CustomMaterialPropertyReferences += imp_cc.ParentShaderProperty.DisplayName + ", ";
 								}
 							}
 						}
@@ -450,17 +473,20 @@ namespace ToonyColorsPro
 						buttonRect.width = 18;
 						rect.xMin += buttonRect.width + 2;
 
-						if (GUI.Button(buttonRect, TCP2_GUI.TempContent(">", "Generate from Label"), SGUILayout.Styles.ShurikenMiniButtonFlexible))
+						using (new EditorGUI.DisabledScope(PropertyNameLocked))
 						{
-							PropertyName = string.Format("_{0}", this.Label);
-							//ShaderGenerator2.PushUndoState();
-						}
+							if (GUI.Button(buttonRect, TCP2_GUI.TempContent(">", "Generate from Label"), SGUILayout.Styles.ShurikenMiniButtonFlexible))
+							{
+								PropertyName = string.Format("_{0}", this.Label);
+								//ShaderGenerator2.PushUndoState();
+							}
 
-						var newName = SGUILayout.TextFieldShaderVariable(rect, PropertyName);
-						if (newName != PropertyName)
-						{
-							// Only update if value is effectively changed, because we're calling a setter that loops through all ShaderProperties
-							PropertyName = newName;
+							var newName = SGUILayout.TextFieldShaderVariable(rect, PropertyName);
+							if (newName != PropertyName)
+							{
+								// Only update if value is effectively changed, because we're calling a setter that loops through all ShaderProperties
+								PropertyName = newName;
+							}
 						}
 					}
 					EndHorizontal();
@@ -847,11 +873,15 @@ namespace ToonyColorsPro
 						bool linkedSpErrors = UvSource == UvSourceType.OtherShaderProperty &&
 							( _linkedShaderProperty == null || (_linkedShaderProperty != null && !_linkedShaderProperty.IsVisible()) );
 
+						bool linkedCmpErrors = UvSource == UvSourceType.CustomMaterialProperty && _linkedCustomMaterialProperty == null;
+						
 						return base.HasErrors
 						       | linkedSpErrors
+						       | linkedCmpErrors
 						       | (UseTilingOffset && invalidTilingOffsetVariable)
 						       | (UseScrolling && invalidScrollingVariable)
-						       | (SineAnimation && invalidSinAnimVariable);
+						       | (SineAnimation && invalidSinAnimVariable)
+						       | InvalidSampler;
 					}
 				}
 
@@ -860,6 +890,7 @@ namespace ToonyColorsPro
 					base.CheckErrors();
 
 					VerifyReferencedValuesValidity();
+					VerifySamplerValidity();
 				}
 
 				internal override OptionFeatures[] NeededFeatures()
@@ -868,9 +899,16 @@ namespace ToonyColorsPro
 
 					list.AddRange(base.NeededFeatures());
 
-					if (NoTile && program == ProgramType.Fragment)
+					if (NoTile)
 					{
-						list.Add(OptionFeatures.NoTile_Sampling);
+						if (program == ProgramType.Fragment)
+						{
+							list.Add(OptionFeatures.NoTile_Sampling);
+						}
+						else if (program == ProgramType.Vertex)
+						{
+							list.Add(OptionFeatures.NoTile_Sampling_Vertex);
+						}
 					}
 
 					if (UvSource == UvSourceType.Triplanar)
@@ -935,7 +973,8 @@ namespace ToonyColorsPro
 					ScreenSpace,
 					WorldPosition,
 					OtherShaderProperty,
-					Triplanar
+					Triplanar,
+					CustomMaterialProperty
 				}
 
 				[Serialization.SerializeAs("uto")] public bool UseTilingOffset;
@@ -968,8 +1007,26 @@ namespace ToonyColorsPro
 				//[Serialization.SerializeAs("wpuv")] public bool UseWorldPosUV;
 				[Serialization.SerializeAs("uv_type")] public UvSourceType UvSource = UvSourceType.Texcoord;
 				[Serialization.SerializeAs("uv_chan")] public string UVChannels = "XZ";
+				[Serialization.SerializeAs("tpln_scale")] public float UVTriplanarScale = 1.0f;
 				[Serialization.SerializeAs("uv_shaderproperty")] public string LinkedShaderPropertyName;
+				[Serialization.SerializeAs("uv_cmp")] public string LinkedCustomMaterialPropertyName;
 				string UvChannelsOptions = "XYZ";
+				
+				// Allow reusing samplers from other textures
+				// Only works with Unity 2019.4+ due to bugs with Surface Shaders prior to that version
+#if UNITY_2019_4_OR_NEWER
+				[Serialization.SerializeAs("sep_sampler")] public string SeparateSamplerName;
+				internal int SamplerGroup;
+				bool InvalidSampler;
+				bool UseSeparateSampler { get { return SeparateSamplerName != null && CanUseSeparateSampler && !UseOldSampler2DSyntax; } }
+				bool UseOldSampler2DSyntax { get { return !ShaderGenerator2.IsURP && (NoTile || UvSource == UvSourceType.Triplanar); }}
+				bool CanUseSeparateSampler { get { return ShaderGenerator2.IsURP || !(NoTile || UvSource == UvSourceType.Triplanar); } }
+#else
+				bool InvalidSampler
+				{
+					get { return false; }
+				}
+#endif
 
 				// ------------------------------------------------------------------------------------------------
 				// UV Other Shader Property mode
@@ -1080,13 +1137,87 @@ namespace ToonyColorsPro
 				}
 
 				// ------------------------------------------------------------------------------------------------
+				// Custom Material Property UV Property mode
+
+				CustomMaterialProperty _linkedCustomMaterialProperty;
+				public CustomMaterialProperty LinkedCustomMaterialProperty
+				{
+					get { return _linkedCustomMaterialProperty; }
+					set
+					{
+						SetLinkedCustomMaterialProperty(value);
+					}
+				}
+				// public List<ShaderProperty> Dependencies = new List<ShaderProperty>();
+
+				public void TryToFindLinkedCustomMaterialProperty()
+				{
+					if (string.IsNullOrEmpty(LinkedCustomMaterialPropertyName))
+					{
+						return;
+					}
+
+					if (ShaderGenerator2.CurrentConfig == null)
+					{
+						return;
+					}
+
+					var match = Array.Find(ShaderGenerator2.CurrentConfig.CustomMaterialProperties, cmp => cmp.PropertyName == LinkedCustomMaterialPropertyName);
+					if (match != null)
+					{
+						SetLinkedCustomMaterialProperty(match);
+					}
+				}
+
+				void SetLinkedCustomMaterialProperty(CustomMaterialProperty customMaterialProperty)
+				{
+					if (customMaterialProperty == LinkedCustomMaterialProperty)
+						return;
+
+					if (customMaterialProperty == null)
+					{
+						_linkedCustomMaterialProperty = null;
+						LinkedCustomMaterialPropertyName = null;
+						return;
+					}
+					
+					//assign as new linked shader property
+					_linkedCustomMaterialProperty = customMaterialProperty;
+					LinkedCustomMaterialPropertyName = _linkedCustomMaterialProperty == null ? "" : _linkedCustomMaterialProperty.PropertyName;
+
+					//determine default swizzle value based on channels count & linked shader property available channels
+					bool sourceIsColor = customMaterialProperty.implementation is Imp_MaterialProperty_Color || customMaterialProperty.implementation is Imp_MaterialProperty_Texture; 
+					string options = sourceIsColor ? "RGBA" : "XYZW";
+
+					UvChannelsOptions = customMaterialProperty.Channels;
+
+					// set default channels, or preserve existing ones as far as possible (the implementation could have just been deserialized)
+					var prevChannels = UVChannels;
+					UVChannels = "";
+					for (int i = 0; i < 2; i++)
+					{
+						if (i < prevChannels.Length && options.Contains(prevChannels[i].ToString()))
+							UVChannels += prevChannels[i];
+						else
+							UVChannels += options[i % options.Length];
+					}
+				}
+
+				void OnSelectCustomMaterialProperty(object cmp)
+				{
+					LinkedCustomMaterialProperty = cmp as CustomMaterialProperty;
+					ParentShaderProperty.CheckHash();
+					ShaderGenerator2.NeedsHashUpdate = true;
+				}
+
+				// ------------------------------------------------------------------------------------------------
 
 				string DefaultChannels = "RGB";
 
 				ProgramType program = ProgramType.Undefined;
-				public bool invalidTilingOffsetVariable = false;
-				public bool invalidScrollingVariable = false;
-				public bool invalidSinAnimVariable = false;
+				bool invalidTilingOffsetVariable = false;
+				bool invalidScrollingVariable = false;
+				bool invalidSinAnimVariable = false;
 
 				bool? _uvExpandedCache;
 				bool uvExpandedCache
@@ -1184,6 +1315,13 @@ namespace ToonyColorsPro
 					UvChannel = Array.IndexOf(uvLabelArray, SGUILayout.Constants.shaderPropertyUVLabel);
 				}
 
+				public void SetCustomMaterialPropertyUV()
+				{
+					UvSource = UvSourceType.CustomMaterialProperty;
+					var uvLabelArray = program == ProgramType.Vertex ? SGUILayout.Constants.UvChannelOptionsVertex : SGUILayout.Constants.UvChannelOptions;
+					UvChannel = Array.IndexOf(uvLabelArray, SGUILayout.Constants.customMaterialPropertyUVLabel);
+				}
+
 				string GetUV(string input, string output, ProgramType programType)
 				{
 					if (UvSource == UvSourceType.Triplanar)
@@ -1214,6 +1352,11 @@ namespace ToonyColorsPro
 						else
 							return string.Format("{0}.{1}", LinkedShaderProperty.GetVariableName(), UVChannels.ToLowerInvariant());
 					}
+					else if (UvSource == UvSourceType.CustomMaterialProperty)
+					{
+						string variable = this.ParentShaderProperty.Program == ProgramType.Vertex ? LinkedCustomMaterialProperty.PrintVariableVertex() : LinkedCustomMaterialProperty.PrintVariableFragment();
+						return string.Format("{0}.{1}", variable, UVChannels.ToLowerInvariant());
+					}
 					else
 					{
 						string coord = ShaderGenerator2.VariablesManager.GetVariable("texcoord" + UvChannel);
@@ -1242,18 +1385,18 @@ namespace ToonyColorsPro
 				#region Tiling/Offset & Scrolling Variables
 
 
-				public string GetDefaultTilingOffsetVariable()
+				internal string GetDefaultTilingOffsetVariable()
 				{
 					return FetchVariable(GetTilingOffsetVariableName(), true);
 				}
 
-				public string GetTilingOffsetVariableName()
+				string GetTilingOffsetVariableName()
 				{
 					return string.Format("{0}_ST", PropertyName);
 				}
 
 				// Uses a tiling/offset variable from another property
-				public bool UseCustomTilingOffsetVariable()
+				bool UseCustomTilingOffsetVariable()
 				{
 					return !string.IsNullOrEmpty(TilingOffsetVariable);
 				}
@@ -1265,57 +1408,97 @@ namespace ToonyColorsPro
 				}
 
 
-				public string GetDefaultScrollingVariable()
+				internal string GetDefaultScrollingVariable()
 				{
 					return FetchVariable(GetScrollingVariableName(), true);
 				}
 
-				public string GetScrollingVariableName()
+				string GetScrollingVariableName()
 				{
 					return string.Format("{0}_SC", PropertyName);
 				}
 
 				// Uses a tiling/offset variable from another property
-				public bool UseCustomScrollingVariable()
+				bool UseCustomScrollingVariable()
 				{
 					return !string.IsNullOrEmpty(ScrollingVariable);
 				}
 
 				// Returns true if this property's tiling/offset variable can be referenced
-				public bool HasValidScrollingVariable()
+				bool HasValidScrollingVariable()
 				{
 					return this.UseScrolling && !this.GlobalScrolling && !this.UseCustomScrollingVariable();
 				}
 
 
-				public string GetDefaultOffsetSpeedVariable()
+				internal string GetDefaultOffsetSpeedVariable()
 				{
 					return FetchVariable(string.Format("{0}_OffsetSpeed", PropertyName), true);
 				}
 
-				public string GetDefaultSineAnimVariable()
+				internal string GetDefaultSineAnimVariable()
 				{
 					return FetchVariable(GetSineAnimVariableName(), true);
 				}
 
-				public string GetSineAnimVariableName()
+				string GetSineAnimVariableName()
 				{
 					// x: speed, y: amplitude, z: frequency, w: unused
 					return string.Format("{0}_SinAnimParams", PropertyName);
 				}
 
 				// Uses a UV sin anim variable from another property
-				public bool UseCustomSineAnimVariable()
+				internal bool UseCustomSineAnimVariable()
 				{
 					return !string.IsNullOrEmpty(SineAnimationVariable);
 				}
 
 				// Returns true if this property's UV sin anim variable can be referenced
-				public bool HasValidSineAnimVariable()
+				bool HasValidSineAnimVariable()
 				{
 					return this.SineAnimation && !this.GlobalSineAnimation && !this.UseCustomSineAnimVariable();
 				}
 
+#if UNITY_2019_4_OR_NEWER
+				string GetSamplerVariableName()
+				{
+					return string.Format("sampler{0}", this.PropertyName);
+				}
+				
+				string GetSamplerVariableUsed()
+				{
+					if (!UseSeparateSampler)
+					{
+						return null;
+					}
+					
+					// note: "sampler" prefix is omitted, because the macro automatically adds it
+					return SeparateSamplerName;
+				}
+				
+				bool HasValidSamplerVariable()
+				{
+					return !this.UseSeparateSampler && this.CanUseSeparateSampler;
+				}
+
+				void VerifySamplerValidity()
+				{
+					InvalidSampler = false;
+					if (UseSeparateSampler)
+					{
+						var availableSamplers = FetchValidSamplerValues();
+						if (!availableSamplers.Exists(val => val.value == this.SeparateSamplerName))
+						{
+							InvalidSampler = true;
+						}
+					}
+				}
+#else
+				void VerifySamplerValidity()
+				{
+					
+				}
+#endif
 				
 				/// <summary>
 				/// Verify that the tiling/offset & scrolling values are correct if they reference another implementation
@@ -1389,6 +1572,19 @@ namespace ToonyColorsPro
 				{
 					return FetchValidValuesGeneric(imp => imp.HasValidSineAnimVariable(), imp => imp.GetDefaultSineAnimVariable(), imp => imp.GetSineAnimVariableName());
 				}
+
+#if UNITY_2019_4_OR_NEWER
+				/// <summary>
+				/// Returns the currently available texture sampler values
+				/// </summary>
+				List<AvailableValue> FetchValidSamplerValues()
+				{
+					return FetchValidValuesGeneric(
+						imp => this.SamplerGroup == imp.SamplerGroup && imp.HasValidSamplerVariable() && imp.ParentShaderProperty.passBitmask == this.ParentShaderProperty.passBitmask,
+						imp => { return imp.PropertyName; }, 
+						imp => imp.GetSamplerVariableName());
+				}
+#endif
 
 				// Generic function to return available tiling/offset or scrolling variables
 				List<AvailableValue> FetchValidValuesGeneric(Func<Imp_MaterialProperty_Texture, bool> checkFunction, Func<Imp_MaterialProperty_Texture, string> valueFunction, Func<Imp_MaterialProperty_Texture, string> valueLabelFunction)
@@ -1469,7 +1665,15 @@ namespace ToonyColorsPro
 				}
 				internal override string PrintVariableDeclareOutsideCBuffer(string indent)
 				{
+#if UNITY_2019_4_OR_NEWER
+					if (UseOldSampler2DSyntax)
+					{
+						return string.Format("{0}sampler2D {1};", indent, PropertyName);
+					}
+					return string.Format(UseSeparateSampler ? "{0}TCP2_TEX2D_NO_SAMPLER({1});" : "{0}TCP2_TEX2D_WITH_SAMPLER({1});", indent, PropertyName);
+#else
 					return string.Format("{0}sampler2D {1};", indent, PropertyName);
+#endif
 				}
 				internal override string PrintVariableDeclare(string indent)
 				{
@@ -1535,19 +1739,43 @@ namespace ToonyColorsPro
 					}
 
 					// function
-					string function = NoTile ? "tex2D_noTile" : "tex2D";
+#if UNITY_2019_4_OR_NEWER
+					string function;
+					if (!UseOldSampler2DSyntax)
+						function = NoTile ? "TCP2_TEX2D_SAMPLE_NOTILE" : "TCP2_TEX2D_SAMPLE";
+					else
+#endif
+						function = NoTile ? "tex2D_noTile" : "tex2D";
 
 					// channels
 					var hideChannels = TryGetArgument("hide_channels", arguments);
 					var channels = string.IsNullOrEmpty(hideChannels) ? "." + Channels.ToLowerInvariant() : "";
-
+					
+#if UNITY_2019_4_OR_NEWER
+					// sampler
+					string sampler = GetSamplerVariableUsed();
+					if (sampler == null)
+					{
+						sampler = PropertyName;
+					}
+#endif
+					
 					if (UvSource == UvSourceType.Triplanar)
 					{
-						function = NoTile ? "tex2D_triplanar_noTile" : "tex2D_triplanar";
+#if UNITY_2019_4_OR_NEWER
+						if (!UseOldSampler2DSyntax)
+							function = NoTile ? "TCP2_TEX2D_SAMPLE_TRIPLANAR_NOTILE" : "TCP2_TEX2D_SAMPLE_TRIPLANAR";
+						else
+#endif
+							function = NoTile ? "tex2D_triplanar_noTile" : "tex2D_triplanar";
 
-						bool useTilingOffset = ((UseTilingOffset && (!GlobalTilingOffset || UvSource != UvSourceType.Texcoord)));
+						bool useTilingOffset = UseTilingOffset && (!GlobalTilingOffset || UvSource != UvSourceType.Texcoord);
 						string texelScaling = ScaleByTexelSize ? string.Format(" * {0}_TexelSize.xy", PropertyName) : "";
-						string triplanarTiling = useTilingOffset ? tilingOffsetVariable + ".xy" : "float2(1,1)";
+						string triplanarTiling = string.Format(CultureInfo.InvariantCulture, "float2({0}, {0})", UVTriplanarScale);
+						if (useTilingOffset)
+						{
+							triplanarTiling += string.Format(" * {0}.xy", tilingOffsetVariable);
+						}
 						string triplanarOffset = useTilingOffset ? tilingOffsetVariable + ".zw" : "float2(0,0)";
 
 						string triplanarTilingOffset;
@@ -1557,7 +1785,9 @@ namespace ToonyColorsPro
 						}
 						else
 						{
-							triplanarTilingOffset = useTilingOffset ? tilingOffsetVariable : "float4(1,1,0,0)";
+							triplanarTilingOffset = useTilingOffset ?
+								string.Format(CultureInfo.InvariantCulture, "float4({0}, {0}, 1, 1) * {1}", UVTriplanarScale, tilingOffsetVariable) :
+								string.Format(CultureInfo.InvariantCulture, "float4({0}, {0}, 0, 0)", UVTriplanarScale);
 						}
 
 						// figure out position/normal input values
@@ -1573,12 +1803,23 @@ namespace ToonyColorsPro
 							worldPositionInput = ShaderGenerator2.IsURP ? "positionWS" : inputSource + ".[[INPUT_VALUE:worldPos]]";
 							worldNormalInput = ShaderGenerator2.IsURP ? "normalWS" : inputSource + ".[[INPUT_VALUE:worldNormal]]";
 						}
-
+						
+#if UNITY_2019_4_OR_NEWER
+						if (!UseOldSampler2DSyntax)
+							return string.Format("{0}({1}, {2}, {3}, {4}, {5}){6}", function, PropertyName, sampler, triplanarTilingOffset, worldPositionInput, worldNormalInput, channels);
+						else
+#endif
 						return string.Format("{0}({1}, {2}, {3}, {4})", function, PropertyName, triplanarTilingOffset, worldPositionInput, worldNormalInput);
 					}
 
-					return string.Format("{0}({1}, {2}{3}{4}{5}{6}{7}){8}", function, PropertyName, coords, tilingMod, scrollingMod, offsetMod, randomOffsetMod, uvSineMod, channels);
+#if UNITY_2019_4_OR_NEWER
+					if (!UseOldSampler2DSyntax)
+						return string.Format("{0}({1}, {2}, {3}{4}{5}{6}{7}{8}){9}", function, PropertyName, sampler, coords, tilingMod, scrollingMod, offsetMod, randomOffsetMod, uvSineMod, channels);
+					else
+#endif
+						return string.Format("{0}({1}, {2}{3}{4}{5}{6}{7}){8}", function, PropertyName, coords, tilingMod, scrollingMod, offsetMod, randomOffsetMod, uvSineMod, channels);
 				}
+				
 				internal override string PrintVariableVertex(string inputSource, string outputSource, string arguments)
 				{
 					var tilingOffsetVariable = UseCustomTilingOffsetVariable() ? TilingOffsetVariable : GetDefaultTilingOffsetVariable();
@@ -1626,12 +1867,33 @@ namespace ToonyColorsPro
 					var hideChannels = TryGetArgument("hide_channels", arguments);
 					var channels = string.IsNullOrEmpty(hideChannels) ? "." + Channels.ToLowerInvariant() : "";
 
+#if UNITY_2019_4_OR_NEWER
+					// sampler
+					string sampler = GetSamplerVariableUsed();
+					if (sampler == null)
+					{
+						sampler = PropertyName;
+					}
+
+					string function = NoTile ? "TCP2_TEX2D_SAMPLE_LOD_NOTILE" : "TCP2_TEX2D_SAMPLE_LOD";
+#else
+					string function = NoTile ? "tex2Dlod_noTile" : "tex2Dlod";
+#endif
 					if (UvSource == UvSourceType.Triplanar)
 					{
-						string function = NoTile ? "tex2Dlod_triplanar_noTile" : "tex2Dlod_triplanar";
+#if UNITY_2019_4_OR_NEWER
+						if (!UseOldSampler2DSyntax)
+							function = NoTile ? "TCP2_TEX2D_SAMPLE_LOD_TRIPLANAR_NOTILE" : "TCP2_TEX2D_SAMPLE_LOD_TRIPLANAR";
+						else
+#endif
+						function = NoTile ? "tex2Dlod_triplanar_noTile" : "tex2Dlod_triplanar";
 
 						bool useTilingOffset = UseTilingOffset && !GlobalTilingOffset;
-						string triplanarTiling = useTilingOffset ? tilingOffsetVariable + ".xy" : "float2(1,1)";
+						string triplanarTiling = string.Format(CultureInfo.InvariantCulture, "float2({0}, {0})", UVTriplanarScale);
+						if (useTilingOffset)
+						{
+							triplanarTiling += string.Format(" * {0}.xy", tilingOffsetVariable);
+						}
 						string triplanarOffset = useTilingOffset ? tilingOffsetVariable + ".zw" : "float2(0,0)";
 
 						string triplanarTilingOffset;
@@ -1641,16 +1903,27 @@ namespace ToonyColorsPro
 						}
 						else
 						{
-							triplanarTilingOffset = useTilingOffset ? tilingOffsetVariable : "float4(1,1,0,0)";
+							triplanarTilingOffset = useTilingOffset ?
+								string.Format(CultureInfo.InvariantCulture, "float4({0}, {0}, 1, 1) * {1}", UVTriplanarScale, tilingOffsetVariable) :
+								string.Format(CultureInfo.InvariantCulture, "float4({0}, {0}, 0, 0)", UVTriplanarScale);							
 						}
 
 						string worldPositionInput = LocalSpaceTriplanar ? "v.vertex.xyz" : "worldPosUv";
 						string worldNormalInput = LocalSpaceTriplanar ? "v.normal.xyz" : "worldNormalUv";
 
+#if UNITY_2019_4_OR_NEWER
+						if (!UseOldSampler2DSyntax)
+							return string.Format("{0}({1}, {2}, {3}, {4}, {5}, {6})", function, PropertyName, sampler, triplanarTilingOffset, GetMipValue(), worldPositionInput, worldNormalInput);
+						else
+#endif
 						return string.Format("{0}({1}, {2}, {3}, {4}, {5})", function, PropertyName, triplanarTilingOffset, GetMipValue(), worldPositionInput, worldNormalInput);
 					}
 
+#if UNITY_2019_4_OR_NEWER
+					return string.Format("{0}({1}, {2}, {3}{4}{5}{6}{7}{8}, {9}){10}", function, PropertyName, sampler, coords, tilingMod, scrollingMod, offsetMod, randomOffsetMod, uvSineMod, GetMipValue(), channels);
+#else
 					return string.Format("tex2Dlod({0}, float4({1}{2}{3}{4}{5}{6}, 0, {7})){8}", PropertyName, coords, tilingMod, scrollingMod, offsetMod, randomOffsetMod, uvSineMod, GetMipValue(), channels);
+#endif
 				}
 
 				internal override void NewLineGUI(bool usedByCustomCode)
@@ -1689,12 +1962,54 @@ namespace ToonyColorsPro
 							else
 							{
 								if (ChannelsCount == 1)
+								{
 									Channels = SGUILayout.RGBASelector(Channels);
+								}
 								else
+								{
 									Channels = SGUILayout.RGBASwizzle(Channels, ChannelsCount);
+								}
 							}
 						}
 						EndHorizontal();
+						
+#if UNITY_2019_4_OR_NEWER
+						BeginHorizontal();
+						{
+							using (new EditorGUI.DisabledScope(!CanUseSeparateSampler))
+							{
+								bool highlighted = !IsDefaultImplementation ? SeparateSamplerName != null : SeparateSamplerName != GetDefaultImplementation<Imp_MaterialProperty_Texture>().SeparateSamplerName;
+								SGUILayout.InlineLabel("Sampler", highlighted);
+
+								string label = UseSeparateSampler ? SeparateSamplerName : "Default";
+								string tooltip = CanUseSeparateSampler ? null : "Using a separate sampler isn't compatible with 'No Tile' and 'Triplanar' UVs with the Built-in Render Pipeline due to bugs in its Surface Shader system";
+								if (SGUILayout.ButtonPopup(TCP2_GUI.TempContent(label, tooltip)))
+								{
+									GenericMenu.MenuFunction2 OnSelectSampler = (sampler) =>
+									{
+										SeparateSamplerName = (sampler == null) ? null : (string)sampler;
+									};
+
+									GenericMenu menu = new GenericMenu();
+									menu.AddItem(new GUIContent("Default"), !UseSeparateSampler, OnSelectSampler, null);
+
+									var samplerList = FetchValidSamplerValues();
+									if (samplerList.Count > 0)
+									{
+										menu.AddSeparator("");
+										foreach (var availableValue in samplerList)
+										{
+											string itemLabel = string.Format("{0}: {1}", availableValue.label, availableValue.valueLabel); // note: has non-breaking space character
+											menu.AddItem(new GUIContent(itemLabel), SeparateSamplerName == availableValue.value, OnSelectSampler, availableValue.value);
+										}
+									}
+
+									menu.ShowAsContext();
+								}
+							}
+						}
+						EndHorizontal();
+#endif
 					}
 
 					BeginHorizontal();
@@ -1741,6 +2056,11 @@ namespace ToonyColorsPro
 									UvSource = UvSourceType.OtherShaderProperty;
 									UvChannelsOptions = "XXX";
 								}
+								else if (Array.IndexOf(uvLabelArray, SGUILayout.Constants.customMaterialPropertyUVLabel) == UvChannel && !IsUvLocked)
+								{
+									UvSource = UvSourceType.CustomMaterialProperty;
+									UvChannelsOptions = "XXX";
+								}
 								else if (Array.IndexOf(uvLabelArray, SGUILayout.Constants.triplanarUVLabel) == UvChannel && !IsUvLocked)
 								{
 									UvSource = UvSourceType.Triplanar;
@@ -1753,13 +2073,26 @@ namespace ToonyColorsPro
 							}
 						}
 
-						if (UvSource == UvSourceType.WorldPosition || UvSource == UvSourceType.OtherShaderProperty)
+						if (UvSource == UvSourceType.WorldPosition || UvSource == UvSourceType.OtherShaderProperty || UvSource == UvSourceType.CustomMaterialProperty)
 						{
 							var gc = TCP2_GUI.TempContent(".");
-							var rect = GUILayoutUtility.GetRect(gc, EditorStyles.label, GUILayout.ExpandWidth(false));
+							var rect = GUILayoutUtility.GetRect(gc, SGUILayout.Styles.GrayMiniLabel, GUILayout.ExpandWidth(false));
+#if !UNITY_2019_3_OR_NEWER
 							rect.y -= 2;
-							GUI.Label(rect, gc);
+#endif
+							GUI.Label(rect, gc, SGUILayout.Styles.GrayMiniLabel);
 							UVChannels = SGUILayout.GenericSwizzle(UVChannels, 2, UvChannelsOptions, 30, showAvailableChannels: false);
+						}
+
+						if (UvSource == UvSourceType.Triplanar)
+						{
+							var gc = TCP2_GUI.TempContent("Scale:");
+							var rect = GUILayoutUtility.GetRect(gc, SGUILayout.Styles.GrayMiniLabel, GUILayout.ExpandWidth(false));
+#if !UNITY_2019_3_OR_NEWER
+							rect.y -= 2;
+#endif
+							GUI.Label(rect, gc, SGUILayout.Styles.GrayMiniLabel);
+							UVTriplanarScale = SGUILayout.FloatField(UVTriplanarScale);
 						}
 					}
 					EndHorizontal();
@@ -2234,6 +2567,36 @@ namespace ToonyColorsPro
 							EndHorizontal();
 						}
 					}
+					
+					if (UvSource == UvSourceType.CustomMaterialProperty)
+					{
+						BeginHorizontal();
+						{
+							bool highlighted = !IsDefaultImplementation ? false : LinkedCustomMaterialPropertyName != GetDefaultImplementation<Imp_MaterialProperty_Texture>().LinkedCustomMaterialPropertyName;
+							SGUILayout.InlineLabel("UV Custom Material Property", highlighted);
+
+							if (GUILayout.Button((LinkedCustomMaterialProperty != null) ? LinkedCustomMaterialProperty.PropertyName : "None", SGUILayout.Styles.ShurikenPopup))
+							{
+								var menu = ShaderProperty.Imp_CustomMaterialProperty.CreateCustomMaterialPropertiesMenu(this.LinkedCustomMaterialProperty, OnSelectCustomMaterialProperty);
+								if (menu != null)
+								{
+									menu.ShowAsContext();
+								}
+							}
+						}
+						EndHorizontal();
+						GUILayout.Space(3);
+
+						// linked shader property errors
+						if (_linkedCustomMaterialProperty == null)
+						{
+							BeginHorizontal();
+							{
+								TCP2_GUI.HelpBoxLayout("No Custom Material Property defined.", MessageType.Error);
+							}
+							EndHorizontal();
+						}
+					}
 
 					// errors
 
@@ -2263,6 +2626,16 @@ namespace ToonyColorsPro
 						}
 						EndHorizontal();
 					}
+					
+					if (InvalidSampler)
+					{
+						BeginHorizontal();
+						{
+							TCP2_GUI.HelpBoxLayout("The selected sampler is invalid.\nMaybe the original texture has been removed or can't be used anymore?", MessageType.Error);
+						}
+						EndHorizontal();
+					}
+					
 				}
 			}
 
@@ -3040,6 +3413,7 @@ namespace ToonyColorsPro
 					public int pass;
 					public string MenuLabel;
 					public string HelpMessage;
+					public string WarningMessage;
 					public VariableType Compatibility;
 					public string VariableName;
 					public string ChannelsOptions;
@@ -3056,6 +3430,7 @@ namespace ToonyColorsPro
 						imp.ChannelsOptions = this.ChannelsOptions;
 						imp.MenuLabel = this.MenuLabel;
 						imp.HelpMessage = this.HelpMessage;
+						imp.WarningMessage = this.WarningMessage;
 						imp.Compatibility = this.Compatibility;
 						imp.VariableName = this.VariableName;
 						imp.NeededFeaturesStr = this.NeededFeatures;
@@ -3108,6 +3483,7 @@ namespace ToonyColorsPro
 					string label = "No Label";
 					string compatibility = "all";
 					string help = null;
+					string warning = null;
 					string neededFeatures = "";
 					string options = "";
 					bool customCodeCompatible = false;
@@ -3122,6 +3498,7 @@ namespace ToonyColorsPro
 							case "lbl": label = subdata1; break;
 							case "compat": compatibility = subdata1; break;
 							case "help": help = subdata1; break;
+							case "warning": warning = subdata1; break;
 							case "toggles": neededFeatures = subdata1; break;
 							case "options": options = subdata1; break;
 							case "custom_code_compatible": customCodeCompatible = bool.Parse(subdata1); break;
@@ -3136,6 +3513,7 @@ namespace ToonyColorsPro
 						pass = pass,
 						MenuLabel = label,
 						HelpMessage = help,
+						WarningMessage = warning,
 						Compatibility = (compatibility == "all") ? VariableTypeAll : (VariableType)Enum.Parse(typeof(VariableType), compatibility),
 						VariableName = name,
 						ChannelsOptions = GetChannelsOption(type),
@@ -3152,6 +3530,9 @@ namespace ToonyColorsPro
 				{
 					switch (type)
 					{
+						default:
+							Debug.LogError("Invalid type for channels: " + type);
+							break;
 						case "float": return "X";
 						case "float2": return "XY";
 						case "float3": return "XYZ";
@@ -3343,6 +3724,7 @@ namespace ToonyColorsPro
 				// These are determined from the template, and are not serialized in case they are updated in the template:
 				public string MenuLabel;
 				public string HelpMessage;
+				public string WarningMessage;
 				public VariableType Compatibility;
 				public string VariableName;
 				public string ChannelsOptions = "XYZW";
@@ -3455,6 +3837,7 @@ namespace ToonyColorsPro
 					{
 						this.MenuLabel = source.MenuLabel;
 						this.HelpMessage = source.HelpMessage;
+						this.WarningMessage = source.WarningMessage;
 						this.ChannelsOptions = source.ChannelsOptions;
 						this.Compatibility = source.Compatibility;
 						this.VariableName = source.VariableName;
@@ -3562,6 +3945,13 @@ namespace ToonyColorsPro
 					BeginHorizontal();
 					ShaderGenerator2.ContextualHelpBox("Special implementation defined in the template" + (HelpMessage != null ? ":\n" + HelpMessage : "."));
 					EndHorizontal();
+
+					if (!string.IsNullOrEmpty(WarningMessage))
+					{
+						BeginHorizontal();
+						EditorGUILayout.HelpBox(WarningMessage, MessageType.Warning);
+						EndHorizontal();
+					}
 
 					BeginHorizontal();
 					{
@@ -4612,8 +5002,8 @@ namespace ToonyColorsPro
 					replacementParts.Clear();
 					usedImplementations.Clear();
 					tagError = null;
-					int customCodeIndex = ParentShaderProperty.implementations.IndexOf(this);
-					int maxIndex = ParentShaderProperty.implementations.Count - 1;
+					int customCodeIndex = ParentShaderProperty.implementations == null ? -1 : ParentShaderProperty.implementations.IndexOf(this);
+					int maxIndex = ParentShaderProperty.implementations == null ? 0 : ParentShaderProperty.implementations.Count - 1;
 
 					// parse code
 					var codeReplacements = ReplaceNNotationWithReplacementTags(code, customCodeIndex, maxIndex);
@@ -5329,6 +5719,18 @@ namespace ToonyColorsPro
 				/// <returns>null if the reference is allowed, an error message if not, an empty string if the reference should be hidden in the menus</returns>
 				public static string IsReferencePossible(ShaderProperty parent, ShaderProperty reference)
 				{
+					// Clones now copy the passBitmask, but for backward compatibility we need
+					// to retrieve the source of the clone and fetch its passBitmask directly
+					if (parent.isLayerClone)
+					{
+						string sourceName = parent.Name.Substring(0, parent.Name.LastIndexOf('_'));
+						var sourceSp = ShaderGenerator2.CurrentConfig.GetShaderPropertyByName(sourceName);
+						if (sourceSp != null)
+						{
+							parent.passBitmask = sourceSp.passBitmask;
+						}
+					}
+					
 					//can't reference (from) a hook
 					if (parent.isHook || reference.isHook)
 						return "";
@@ -5479,7 +5881,7 @@ namespace ToonyColorsPro
 							&& imp_texture != null
 							&& imp_texture.UvSource == Imp_MaterialProperty_Texture.UvSourceType.ScreenSpace)
 						{
-							// TODO is that stills true?
+							// TODO is that still true?
 							errorMessage = "You can't use a texture with screen-space UV on a vertex Shader Property.";
 						}
 
@@ -5587,9 +5989,10 @@ namespace ToonyColorsPro
 					{
 						SGUILayout.InlineLabel("Custom Property");
 
-						if (GUILayout.Button((LinkedCustomMaterialProperty != null) ? LinkedCustomMaterialProperty.Label : "None", SGUILayout.Styles.ShurikenPopup))
+						var rect = EditorGUILayout.GetControlRect();
+						if (GUI.Button(rect, (LinkedCustomMaterialProperty != null) ? LinkedCustomMaterialProperty.Label : "None", SGUILayout.Styles.ShurikenPopup))
 						{
-							var menu = CreateCustomMaterialPropertiesMenu();
+							var menu = CreateCustomMaterialPropertiesMenu(LinkedCustomMaterialProperty, OnSelectCustomTexture);
 							menu.ShowAsContext();
 						}
 					}
@@ -5636,7 +6039,7 @@ namespace ToonyColorsPro
 					}
 				}
 
-				GenericMenu CreateCustomMaterialPropertiesMenu()
+				internal static GenericMenu CreateCustomMaterialPropertiesMenu(CustomMaterialProperty selected, GenericMenu.MenuFunction2 callback)
 				{
 					var customTextures = ShaderGenerator2.CurrentConfig.CustomMaterialProperties;
 					var menu = new GenericMenu();
@@ -5645,7 +6048,7 @@ namespace ToonyColorsPro
 					{
 						foreach (var ct in customTextures)
 						{
-							menu.AddItem(new GUIContent(string.Format("{0} ({1})", ct.Label, ct.PropertyName)), LinkedCustomMaterialProperty == ct, OnSelectCustomTexture, ct);
+							menu.AddItem(new GUIContent(string.Format("{0} ({1})", ct.Label, ct.PropertyName)), selected == ct, callback, ct);
 						}
 						return menu;
 					}

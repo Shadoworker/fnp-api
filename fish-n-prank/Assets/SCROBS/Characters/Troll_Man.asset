@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de911494d1ce0e94fb75d34876201468, type: 3}
   m_Name: Troll_Man
   m_EditorClassIdentifier: 
-  m_character: 4
+  m_character: 5
+  m_prefab: {fileID: 5878211031499736002, guid: 93b6cacd9e85e4d4cafadb405c39b93c, type: 3}
+  m_animator: {fileID: 22100000, guid: aae844d669ab7894e8d5badc1fb751fb, type: 2}
   m_movementMode: 1
   m_runSpeed: 8
   m_walkSpeed: 0.3
@@ -20,16 +22,17 @@ MonoBehaviour:
   m_rotationSpeed: 0.33
   m_playerHeadObjName: Armature/Bone/Bone.001/Bone.002/Bone.019/Bone.020/Bone.021/Head
   m_specialIdleRepeatRate: 20
-  m_jumpForce: 5
+  m_jumpForce: 17
+  m_underwaterJumpForce: 23
   m_minJumpInterval: 1
   m_jumpInput: 0
   m_isGrounded: 1
-  m_dragForce: 0
-  m_mass: 1.2
+  m_dragForce: 0.2
+  m_mass: 2.2
   m_underWaterDragForce: 3
   m_underWaterAngularDragForce: 1
   m_airDragForce: 0
-  m_airAngularDrag: 20
+  m_airAngularDrag: 5
   m_rayCollisionRef: 0.1
   m_floatingPower: 126
   m_diveForce: 10

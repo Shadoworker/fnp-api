@@ -1,5 +1,5 @@
 ﻿// Toony Colors Pro+Mobile 2
-// (c) 2014-2021 Jean Moreno
+// (c) 2014-2022 Jean Moreno
 
 Shader "Toony Colors Pro 2/Examples/SG2/Wind Animation"
 {
@@ -26,7 +26,7 @@ Shader "Toony Colors Pro 2/Examples/SG2/Wind Animation"
 		_WindSpeed ("Speed", Range(0,10)) = 2.5
 		_WindFrequency ("Frequency", Range(0,5)) = 0.5
 		
-		//Avoid compile error if the properties are ending with a drawer
+		// Avoid compile error if the properties are ending with a drawer
 		[HideInInspector] __dummy__ ("unused", Float) = 0
 	}
 
@@ -75,7 +75,7 @@ Shader "Toony Colors Pro 2/Examples/SG2/Wind Animation"
 		//================================================================
 		// STRUCTS
 
-		//Vertex input
+		// Vertex input
 		struct appdata_tcp2
 		{
 			float4 vertex : POSITION;
@@ -94,6 +94,29 @@ Shader "Toony Colors Pro 2/Examples/SG2/Wind Animation"
 		{
 			float vFace : VFACE;
 			float2 texcoord0;
+		};
+
+		//================================================================
+
+		// Custom SurfaceOutput
+		struct SurfaceOutputCustom
+		{
+			half atten;
+			half3 Albedo;
+			half3 Normal;
+			half3 Emission;
+			half Specular;
+			half Gloss;
+			half Alpha;
+
+			Input input;
+
+			// Shader Properties
+			float __rampThreshold;
+			float __rampSmoothing;
+			float3 __highlightColor;
+			float3 __shadowColor;
+			float __ambientIntensity;
 		};
 
 		//================================================================
@@ -144,29 +167,6 @@ Shader "Toony Colors Pro 2/Examples/SG2/Wind Animation"
 		}
 
 		//================================================================
-
-		//Custom SurfaceOutput
-		struct SurfaceOutputCustom
-		{
-			half atten;
-			half3 Albedo;
-			half3 Normal;
-			half3 Emission;
-			half Specular;
-			half Gloss;
-			half Alpha;
-
-			Input input;
-			
-			// Shader Properties
-			float __rampThreshold;
-			float __rampSmoothing;
-			float3 __highlightColor;
-			float3 __shadowColor;
-			float __ambientIntensity;
-		};
-
-		//================================================================
 		// SURFACE FUNCTION
 
 		void surf(Input input, inout SurfaceOutputCustom output)
@@ -187,10 +187,11 @@ Shader "Toony Colors Pro 2/Examples/SG2/Wind Animation"
 			output.Albedo = __albedo.rgb;
 			output.Alpha = __alpha;
 
-			//Sharpen Alpha-to-Coverage
+			// Sharpen Alpha-to-Coverage
 			output.Alpha = (output.Alpha - __cutoff) / max(fwidth(output.Alpha), 0.0001) + 0.5;
 			
 			output.Albedo *= __mainColor.rgb;
+
 		}
 
 		//================================================================
@@ -198,12 +199,13 @@ Shader "Toony Colors Pro 2/Examples/SG2/Wind Animation"
 
 		inline half4 LightingToonyColorsCustom(inout SurfaceOutputCustom surface, UnityGI gi)
 		{
+
 			half3 lightDir = gi.light.dir;
 			#if defined(UNITY_PASS_FORWARDBASE)
 				half3 lightColor = _LightColor0.rgb;
 				half atten = surface.atten;
 			#else
-				//extract attenuation from point/spot lights
+				// extract attenuation from point/spot lights
 				half3 lightColor = _LightColor0.rgb;
 				half atten = max(gi.light.color.r, max(gi.light.color.g, gi.light.color.b)) / max(_LightColor0.r, max(_LightColor0.g, _LightColor0.b));
 			#endif
@@ -217,19 +219,18 @@ Shader "Toony Colors Pro 2/Examples/SG2/Wind Animation"
 			#define		RAMP_SMOOTH		surface.__rampSmoothing
 			ndl = saturate(ndl);
 			ramp = smoothstep(RAMP_THRESHOLD - RAMP_SMOOTH*0.5, RAMP_THRESHOLD + RAMP_SMOOTH*0.5, ndl);
-			half3 rampGrayscale = ramp;
 
-			//Apply attenuation (shadowmaps & point/spot lights attenuation)
+			// Apply attenuation (shadowmaps & point/spot lights attenuation)
 			ramp *= atten;
 
-			//Highlight/Shadow Colors
+			// Highlight/Shadow Colors
 			#if !defined(UNITY_PASS_FORWARDBASE)
 				ramp = lerp(half3(0,0,0), surface.__highlightColor, ramp);
 			#else
 				ramp = lerp(surface.__shadowColor, surface.__highlightColor, ramp);
 			#endif
 
-			//Output color
+			// Output color
 			half4 color;
 			color.rgb = surface.Albedo * lightColor.rgb * ramp;
 			color.a = surface.Alpha;
@@ -250,7 +251,7 @@ Shader "Toony Colors Pro 2/Examples/SG2/Wind Animation"
 		{
 			half3 normal = surface.Normal;
 
-			//GI without reflection probes
+			// GI without reflection probes
 			gi = UnityGlobalIllumination(data, 1.0, normal); // occlusion is applied in the lighting function, if necessary
 
 			surface.atten = data.atten; // transfer attenuation to lighting function
@@ -266,5 +267,5 @@ Shader "Toony Colors Pro 2/Examples/SG2/Wind Animation"
 	CustomEditor "ToonyColorsPro.ShaderGenerator.MaterialInspector_SG2"
 }
 
-/* TCP_DATA u config(unity:"2018.4.11f1";ver:"2.4.3";tmplt:"SG2_Template_Default";features:list["UNITY_5_4","UNITY_5_5","UNITY_5_6","UNITY_2017_1","ALPHA_TESTING","ALPHA_TO_COVERAGE","CULLING","BACKFACE_LIGHTING_XYZ","WIND_ANIM_SIN","WIND_ANIM","WIND_SIN_4","UNITY_2018_1","UNITY_2018_2","UNITY_2018_3"];flags:list["addshadow","fullforwardshadows"];flags_extra:dict[];keywords:dict[RENDER_TYPE="TransparentCutout",RampTextureDrawer="[TCP2Gradient]",RampTextureLabel="Ramp Texture",SHADER_TARGET="3.0"];shaderProperties:list[,sp(name:"Main Color";imps:list[imp_customcode(prepend_type:Disabled;prepend_code:"";prepend_file:"";prepend_file_block:"";preprend_params:dict[];code:"lerp({2}, {3}, step({4},0.5))";guid:"1c5db44b-8d01-49ad-a5ee-416d3d4962c4";op:Multiply;lbl:"Main Color";gpu_inst:False;locked:False;impl_index:-1),imp_mp_color(def:RGBA(1, 1, 1, 1);hdr:False;cc:4;chan:"RGBA";prop:"_Color";md:"";custom:False;refs:"";guid:"789f2dec-39bb-4470-9840-9f7f921bf298";op:Multiply;lbl:"Color";gpu_inst:False;locked:False;impl_index:0),imp_mp_color(def:RGBA(1, 1, 1, 1);hdr:False;cc:4;chan:"RGBA";prop:"_ColorBack";md:"";custom:False;refs:"";guid:"d3cfedbe-7cb8-4bfe-9976-761cf43aa208";op:Multiply;lbl:"Color Backfaces";gpu_inst:False;locked:False;impl_index:-1),imp_generic(cc:4;chan:"XXXX";source_id:"float input.vFace3fragment";needed_features:"USE_VFACE";custom_code_compatible:True;options_v:dict[];guid:"12cd787c-e7d9-4b08-9a80-42936cbe31fb";op:Multiply;lbl:"Main Color";gpu_inst:False;locked:False;impl_index:-1)];layers:list[];unlocked:list[];clones:dict[];isClone:False),,,,,,,,,,sp(name:"Wind Frequency";imps:list[imp_mp_range(def:0.5;min:0;max:5;prop:"_WindFrequency";md:"";custom:False;refs:"";guid:"67b5ef57-6852-4c5c-90e3-574ff9fb1792";op:Multiply;lbl:"Frequency";gpu_inst:False;locked:False;impl_index:-1)];layers:list[];unlocked:list[];clones:dict[];isClone:False),,,sp(name:"Wind Time Offset";imps:list[imp_vcolors(cc:1;chan:"G";guid:"2ebc261a-2229-4562-af73-fbd31c837a69";op:Multiply;lbl:"Mask";gpu_inst:False;locked:False;impl_index:0),imp_mp_range(def:1;min:0;max:1;prop:"_WindTimeOffset";md:"";custom:False;refs:"";guid:"e0b01e50-df71-4294-aca6-2130bf9f7a29";op:Multiply;lbl:"Wind Time Offset Range";gpu_inst:False;locked:False;impl_index:-1)];layers:list[];unlocked:list[];clones:dict[];isClone:False),,,,,,,sp(name:"Face Culling";imps:list[imp_enum(value_type:0;value:2;enum_type:"ToonyColorsPro.ShaderGenerator.Culling";guid:"02177cce-d630-4014-9924-a87706edb4c2";op:Multiply;lbl:"Face Culling";gpu_inst:False;locked:False;impl_index:0)];layers:list[];unlocked:list[];clones:dict[];isClone:False),,,,,,,,,,,,,sp(name:"Depth Write";imps:list[imp_enum(value_type:0;value:1;enum_type:"ToonyColorsPro.ShaderGenerator.DepthWrite";guid:"29f3cfcf-9a2e-4e62-92da-941217ec7141";op:Multiply;lbl:"Depth Write";gpu_inst:False;locked:False;impl_index:0)];layers:list[];unlocked:list[];clones:dict[];isClone:False)];customTextures:list[];codeInjection:codeInjection(injectedFiles:list[];mark:False);matLayers:list[]) */
-/* TCP_HASH e98d75a547e731c7869d5e6ecd35e1b6 */
+/* TCP_DATA u config(unity:"2018.4.11f1";ver:"2.4.3";tmplt:"SG2_Template_Default";features:list["UNITY_5_4","UNITY_5_5","UNITY_5_6","UNITY_2017_1","ALPHA_TESTING","ALPHA_TO_COVERAGE","CULLING","BACKFACE_LIGHTING_XYZ","WIND_ANIM_SIN","WIND_ANIM","WIND_SIN_4","UNITY_2018_1","UNITY_2018_2","UNITY_2018_3"];flags:list["addshadow","fullforwardshadows"];flags_extra:dict[];keywords:dict[RENDER_TYPE="TransparentCutout",RampTextureDrawer="[TCP2Gradient]",RampTextureLabel="Ramp Texture",SHADER_TARGET="3.0"];shaderProperties:list[,sp(name:"Main Color";imps:list[imp_customcode(prepend_type:Disabled;prepend_code:"";prepend_file:"";prepend_file_block:"";preprend_params:dict[];code:"lerp({2}, {3}, step({4},0.5))";guid:"1c5db44b-8d01-49ad-a5ee-416d3d4962c4";op:Multiply;lbl:"Main Color";gpu_inst:False;locked:False;impl_index:-1),imp_mp_color(def:RGBA(1, 1, 1, 1);hdr:False;cc:4;chan:"RGBA";prop:"_Color";md:"";gbv:False;custom:False;refs:"";guid:"789f2dec-39bb-4470-9840-9f7f921bf298";op:Multiply;lbl:"Color";gpu_inst:False;locked:False;impl_index:0),imp_mp_color(def:RGBA(1, 1, 1, 1);hdr:False;cc:4;chan:"RGBA";prop:"_ColorBack";md:"";gbv:False;custom:False;refs:"";guid:"d3cfedbe-7cb8-4bfe-9976-761cf43aa208";op:Multiply;lbl:"Color Backfaces";gpu_inst:False;locked:False;impl_index:-1),imp_generic(cc:4;chan:"XXXX";source_id:"float input.vFace3fragment";needed_features:"USE_VFACE";custom_code_compatible:True;options_v:dict[];guid:"12cd787c-e7d9-4b08-9a80-42936cbe31fb";op:Multiply;lbl:"Main Color";gpu_inst:False;locked:False;impl_index:-1)];layers:list[];unlocked:list[];clones:dict[];isClone:False),,,,,,,,,,sp(name:"Wind Frequency";imps:list[imp_mp_range(def:0.5;min:0;max:5;prop:"_WindFrequency";md:"";gbv:False;custom:False;refs:"";guid:"67b5ef57-6852-4c5c-90e3-574ff9fb1792";op:Multiply;lbl:"Frequency";gpu_inst:False;locked:False;impl_index:-1)];layers:list[];unlocked:list[];clones:dict[];isClone:False),,,sp(name:"Wind Time Offset";imps:list[imp_vcolors(cc:1;chan:"G";guid:"2ebc261a-2229-4562-af73-fbd31c837a69";op:Multiply;lbl:"Mask";gpu_inst:False;locked:False;impl_index:0),imp_mp_range(def:1;min:0;max:1;prop:"_WindTimeOffset";md:"";gbv:False;custom:False;refs:"";guid:"e0b01e50-df71-4294-aca6-2130bf9f7a29";op:Multiply;lbl:"Wind Time Offset Range";gpu_inst:False;locked:False;impl_index:-1)];layers:list[];unlocked:list[];clones:dict[];isClone:False),,,,,,,sp(name:"Face Culling";imps:list[imp_enum(value_type:0;value:2;enum_type:"ToonyColorsPro.ShaderGenerator.Culling";guid:"02177cce-d630-4014-9924-a87706edb4c2";op:Multiply;lbl:"Face Culling";gpu_inst:False;locked:False;impl_index:0)];layers:list[];unlocked:list[];clones:dict[];isClone:False),,,,,,,,,,,,,sp(name:"Depth Write";imps:list[imp_enum(value_type:0;value:1;enum_type:"ToonyColorsPro.ShaderGenerator.DepthWrite";guid:"29f3cfcf-9a2e-4e62-92da-941217ec7141";op:Multiply;lbl:"Depth Write";gpu_inst:False;locked:False;impl_index:0)];layers:list[];unlocked:list[];clones:dict[];isClone:False)];customTextures:list[];codeInjection:codeInjection(injectedFiles:list[];mark:False);matLayers:list[]) */
+/* TCP_HASH 506e847002860b1639f77e1c3b74cd55 */

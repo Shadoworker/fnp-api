@@ -1,5 +1,5 @@
 // Toony Colors Pro+Mobile 2
-// (c) 2014-2021 Jean Moreno
+// (c) 2014-2022 Jean Moreno
 
 #define WRITE_UNCOMPRESSED_SERIALIZED_DATA
 
@@ -65,7 +65,7 @@ namespace ToonyColorsPro
 		internal class Config
 		{
 #pragma warning disable 414
-			[Serialization.SerializeAs("ver")] string tcp2version = ShaderGenerator2.TCP2_VERSION;
+			[Serialization.SerializeAs("ver")] string tcp2version { get { return ShaderGenerator2.TCP2_VERSION; } }
 			[Serialization.SerializeAs("unity")] string unityVersion { get { return Application.unityVersion; } }
 #pragma warning restore 414
 
@@ -85,6 +85,10 @@ namespace ToonyColorsPro
 			[Serialization.SerializeAs("flags_extra")] internal Dictionary<string, List<string>> FlagsExtra = new Dictionary<string, List<string>>();
 			[Serialization.SerializeAs("keywords")] internal Dictionary<string, string> Keywords = new Dictionary<string, string>();
 			internal bool isModifiedExternally = false;
+			internal bool isTerrainShader
+			{
+				get { return this.Features.Contains("TERRAIN_SHADER"); }
+			}
 
 			// UI list of Shader Properties
 			struct ShaderPropertyGroup
@@ -1233,8 +1237,23 @@ namespace ToonyColorsPro
 							// Header
 							const float buttonWidth = 20;
 							var rect = EditorGUILayout.GetControlRect(GUILayout.Height(EditorGUIUtility.singleLineHeight));
-							GUI.Label(rect, TCP2_GUI.TempContent("Layer: " + matLayer.name), EditorStyles.boldLabel);
 							rect.width -= buttonWidth * 2;
+
+							TCP2_GUI.DrawHoverRect(rect);
+							
+							EditorGUI.BeginChangeCheck();
+							matLayer.expanded = GUI.Toggle(rect, matLayer.expanded, TCP2_GUI.TempContent("Layer: " + matLayer.name), TCP2_GUI.HeaderDropDown);
+							if (EditorGUI.EndChangeCheck())
+							{
+								if (Event.current.alt || Event.current.control)
+								{
+									var state = matLayer.expanded;
+									foreach (var ml in materialLayers)
+									{
+										ml.expanded = state;
+									}
+								}
+							}
 
 							// Add/Remove buttons
 							rect.x += rect.width;
@@ -1253,58 +1272,61 @@ namespace ToonyColorsPro
 						}
 
 						// Parameters:
+						if (matLayer.expanded)
+						{
 
-						using (new SGUILayout.IndentedLine(margin))
-						{
-							matLayer.name = EditorGUILayout.DelayedTextField(TCP2_GUI.TempContent("Name"), matLayer.name);
-						}
-						
-						using (new SGUILayout.IndentedLine(margin))
-						{
-							GUILayout.Label(TCP2_GUI.TempContent("ID"), GUILayout.Width(EditorGUIUtility.labelWidth - 4));
-							using (new EditorGUI.DisabledScope(true))
+							using (new SGUILayout.IndentedLine(margin))
 							{
-								EditorGUILayout.TextField(GUIContent.none, matLayer.uid);
+								matLayer.name = EditorGUILayout.DelayedTextField(TCP2_GUI.TempContent("Name"), matLayer.name);
 							}
-						}
 
-						using (new SGUILayout.IndentedLine(margin))
-						{
-							using (new EditorGUI.DisabledScope(true))
+							using (new SGUILayout.IndentedLine(margin))
 							{
-								GUILayout.Label("The ID will be replaced with the actual Material Layer name for variables and labels in the final shader.", SGUILayout.Styles.GrayMiniLabelWrap);
+								GUILayout.Label(TCP2_GUI.TempContent("ID"), GUILayout.Width(EditorGUIUtility.labelWidth - 4));
+								using (new EditorGUI.DisabledScope(true))
+								{
+									EditorGUILayout.TextField(GUIContent.none, matLayer.uid);
+								}
 							}
-						}
 
-						using (new SGUILayout.IndentedLine(margin))
-						{
-							EditorGUI.BeginChangeCheck();
-							matLayer.UseContrastProperty = EditorGUILayout.Toggle(TCP2_GUI.TempContent("Add Contrast Property", "Automatically add a range property to adjust the layer contrast in the material inspector"), matLayer.UseContrastProperty);
-						}
-						
-						using (new SGUILayout.IndentedLine(margin))
-						{
-							matLayer.UseNoiseProperty = EditorGUILayout.Toggle(TCP2_GUI.TempContent("Add Noise Property", "Automatically add a properties to adjust the layer based on a noise texture"), matLayer.UseNoiseProperty);
-							if (EditorGUI.EndChangeCheck())
+							using (new SGUILayout.IndentedLine(margin))
 							{
-								spChange = true;
+								using (new EditorGUI.DisabledScope(true))
+								{
+									GUILayout.Label("The ID will be replaced with the actual Material Layer name for variables and labels in the final shader.", SGUILayout.Styles.GrayMiniLabelWrap);
+								}
 							}
-							
-							if (GUILayout.Button(TCP2_GUI.TempContent("Load Source Preset "), EditorStyles.miniPullDown, GUILayout.ExpandWidth(false)))
-							{
-								matLayer.ShowPresetsMenu();
-							}
-						}
-						
-						matLayer.sourceShaderProperty.ShowGUILayout(margin);
-						if (matLayer.UseContrastProperty)
-						{
-							matLayer.contrastProperty.ShowGUILayout(margin);
-						}
 
-						if (matLayer.UseNoiseProperty)
-						{
-							matLayer.noiseProperty.ShowGUILayout(margin);
+							using (new SGUILayout.IndentedLine(margin))
+							{
+								EditorGUI.BeginChangeCheck();
+								matLayer.UseContrastProperty = EditorGUILayout.Toggle(TCP2_GUI.TempContent("Add Contrast Property", "Automatically add a range property to adjust the layer contrast in the material inspector"), matLayer.UseContrastProperty);
+							}
+
+							using (new SGUILayout.IndentedLine(margin))
+							{
+								matLayer.UseNoiseProperty = EditorGUILayout.Toggle(TCP2_GUI.TempContent("Add Noise Property", "Automatically add a properties to adjust the layer based on a noise texture"), matLayer.UseNoiseProperty);
+								if (EditorGUI.EndChangeCheck())
+								{
+									spChange = true;
+								}
+
+								if (GUILayout.Button(TCP2_GUI.TempContent("Load Source Preset "), EditorStyles.miniPullDown, GUILayout.ExpandWidth(false)))
+								{
+									matLayer.ShowPresetsMenu();
+								}
+							}
+
+							matLayer.sourceShaderProperty.ShowGUILayout(margin);
+							if (matLayer.UseContrastProperty)
+							{
+								matLayer.contrastProperty.ShowGUILayout(margin);
+							}
+
+							if (matLayer.UseNoiseProperty)
+							{
+								matLayer.noiseProperty.ShowGUILayout(margin);
+							}
 						}
 					}
 					EditorGUILayout.EndVertical();
@@ -1484,6 +1506,9 @@ namespace ToonyColorsPro
 #endif
 #if UNITY_2019_3_OR_NEWER
 				Utils.AddIfMissing(this.Features, "UNITY_2019_3");
+#endif
+#if UNITY_2019_4_OR_NEWER
+				Utils.AddIfMissing(this.Features, "UNITY_2019_4");
 #endif
 #if UNITY_2020_1_OR_NEWER
 				Utils.AddIfMissing(this.Features, "UNITY_2020_1");

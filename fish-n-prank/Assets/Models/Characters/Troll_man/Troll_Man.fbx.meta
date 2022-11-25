@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 5ab082d3294afd948a12a2af9a7e07ae
+guid: a9d532889cec8c04eb0b437ff427eb77
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable:
   - first:
       74: -826894768058083641
-    second: A_Troll_Man_Drop_Rode.
+    second: Armature|A_Troll_Man_Drop_Rode.
   - first:
       74: -3459422270258655187
     second: Armature|A_Troll_Man_Fish
@@ -17,52 +17,52 @@ ModelImporter:
     second: Armature|A_Troll_Man_Idle
   - first:
       74: -8453390118569899500
-    second: A_Troll_Man_Idle2
+    second: Armature|A_Troll_Man_Idle2
   - first:
       74: -7061422732622131891
-    second: A_Troll_Man_Jump
+    second: Armature|A_Troll_Man_Jump
   - first:
       74: 5222564647858216413
-    second: A_Troll_Man_Jump1
+    second: Armature|A_Troll_Man_Jump1
   - first:
       74: 7624507773338970433
-    second: A_Troll_Man_Jump2
+    second: Armature|A_Troll_Man_Jump2
   - first:
       74: -778622726268216117
-    second: A_Troll_Man_Jump3
+    second: Armature|A_Troll_Man_Jump3
   - first:
       74: 3958328275447540011
-    second: A_Troll_Man_Jump_Climb
+    second: Armature|A_Troll_Man_Jump_Climb
   - first:
       74: -2140654767560839970
-    second: A_Troll_Man_Jump_Climb1
+    second: Armature|A_Troll_Man_Jump_Climb1
   - first:
       74: -2512964266982086383
-    second: A_Troll_Man_Jump_Climb2
+    second: Armature|A_Troll_Man_Jump_Climb2
   - first:
       74: -2070752469831565120
-    second: A_Troll_Man_Jump_Climb3
+    second: Armature|A_Troll_Man_Jump_Climb3
   - first:
       74: -4101300043173515053
-    second: A_Troll_Man_Navigate
+    second: Armature|A_Troll_Man_Navigate
   - first:
       74: -8330943807723277513
-    second: A_Troll_Man_Run
+    second: Armature|A_Troll_Man_Run
   - first:
       74: -2152589882678360419
-    second: A_Troll_Man_Swim
+    second: Armature|A_Troll_Man_Swim
   - first:
       74: 2445477754200432791
-    second: A_Troll_Man_Swim_Idle
+    second: Armature|A_Troll_Man_Swim_Idle
   - first:
       74: 1068604542675293669
-    second: A_Troll_Man_Walk
+    second: Armature|A_Troll_Man_Walk
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Mat.001
-    second: {fileID: 2100000, guid: 8633e98fbce8bc540ae63928f12f6155, type: 2}
+    second: {fileID: 2100000, guid: 095ee5f5dbc90fe469e494da58247177, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -92,7 +92,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: A_Troll_Man_Drop_Rode.
+      name: Armature|A_Troll_Man_Drop_Rode.
       takeName: Armature|A_Troll_Man_Drop_Rode.
       internalID: 0
       firstFrame: 0
@@ -208,7 +208,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Troll_Man_Idle2
+      name: Armature|A_Troll_Man_Idle2
       takeName: Armature|A_Troll_Man_Idle2
       internalID: 0
       firstFrame: 0
@@ -237,7 +237,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Troll_Man_Jump
+      name: Armature|A_Troll_Man_Jump
       takeName: Armature|A_Troll_Man_Jump
       internalID: 0
       firstFrame: 0
@@ -266,7 +266,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Troll_Man_Jump1
+      name: Armature|A_Troll_Man_Jump1
       takeName: Armature|A_Troll_Man_Jump1
       internalID: 0
       firstFrame: 0
@@ -295,7 +295,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Troll_Man_Jump2
+      name: Armature|A_Troll_Man_Jump2
       takeName: Armature|A_Troll_Man_Jump2
       internalID: 0
       firstFrame: 0
@@ -324,7 +324,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Troll_Man_Jump3
+      name: Armature|A_Troll_Man_Jump3
       takeName: Armature|A_Troll_Man_Jump3
       internalID: 0
       firstFrame: 0
@@ -353,7 +353,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Troll_Man_Jump_Climb
+      name: Armature|A_Troll_Man_Jump_Climb
       takeName: Armature|A_Troll_Man_Jump_Climb
       internalID: 0
       firstFrame: 0
@@ -382,7 +382,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Troll_Man_Jump_Climb1
+      name: Armature|A_Troll_Man_Jump_Climb1
       takeName: Armature|A_Troll_Man_Jump_Climb1
       internalID: 0
       firstFrame: 0
@@ -411,7 +411,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Troll_Man_Jump_Climb2
+      name: Armature|A_Troll_Man_Jump_Climb2
       takeName: Armature|A_Troll_Man_Jump_Climb2
       internalID: 0
       firstFrame: 0
@@ -440,7 +440,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Troll_Man_Jump_Climb3
+      name: Armature|A_Troll_Man_Jump_Climb3
       takeName: Armature|A_Troll_Man_Jump_Climb3
       internalID: 0
       firstFrame: 0
@@ -469,7 +469,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Troll_Man_Navigate
+      name: Armature|A_Troll_Man_Navigate
       takeName: Armature|A_Troll_Man_Navigate
       internalID: 0
       firstFrame: 0
@@ -480,7 +480,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -498,7 +498,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Troll_Man_Run
+      name: Armature|A_Troll_Man_Run
       takeName: Armature|A_Troll_Man_Run
       internalID: 0
       firstFrame: 0
@@ -527,7 +527,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Troll_Man_Swim
+      name: Armature|A_Troll_Man_Swim
       takeName: Armature|A_Troll_Man_Swim
       internalID: 0
       firstFrame: 0
@@ -556,7 +556,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Troll_Man_Swim_Idle
+      name: Armature|A_Troll_Man_Swim_Idle
       takeName: Armature|A_Troll_Man_Swim_Idle
       internalID: 0
       firstFrame: 0
@@ -585,7 +585,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Troll_Man_Walk
+      name: Armature|A_Troll_Man_Walk
       takeName: Armature|A_Troll_Man_Walk
       internalID: 0
       firstFrame: 0
@@ -616,7 +616,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 0.013
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -628,7 +628,7 @@ ModelImporter:
     nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
-    generateSecondaryUV: 1
+    generateSecondaryUV: 0
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
@@ -669,7 +669,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 1
+    globalScale: 0.013
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

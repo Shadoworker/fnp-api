@@ -1,5 +1,5 @@
 // Toony Colors Pro+Mobile 2
-// (c) 2014-2021 Jean Moreno
+// (c) 2014-2022 Jean Moreno
 
 using System;
 using System.Collections.Generic;
@@ -373,6 +373,8 @@ namespace ToonyColorsPro
 					{
 						_HeaderDropDown = new GUIStyle(EditorStyles.foldout);
 
+						_HeaderDropDown.clipping = TextClipping.Clip;
+
 						_HeaderDropDown.focused.background = _HeaderDropDown.normal.background;
 						_HeaderDropDown.active.background = _HeaderDropDown.normal.background;
 						_HeaderDropDown.onFocused.background = _HeaderDropDown.onNormal.background;
@@ -403,6 +405,8 @@ namespace ToonyColorsPro
 					{
 						_HeaderDropDownBold = new GUIStyle(HeaderDropDown);
 						_HeaderDropDownBold.fontStyle = FontStyle.Bold;
+						
+						_HeaderDropDownBold.clipping = TextClipping.Overflow;
 
 						var gray1 = EditorGUIUtility.isProSkin ? 0.7f : 0.3f;
 						var gray2 = EditorGUIUtility.isProSkin ? 0.6f : 0.45f;
@@ -452,7 +456,7 @@ namespace ToonyColorsPro
 					{
 						_SubHeaderLabel = new GUIStyle(EditorStyles.label);
 						_SubHeaderLabel.fontStyle = FontStyle.Normal;
-						_SubHeaderLabel.normal.textColor = EditorGUIUtility.isProSkin ? new Color(0.5f, 0.5f, 0.5f) : new Color(0.35f, 0.35f, 0.35f);
+						_SubHeaderLabel.normal.textColor = EditorGUIUtility.isProSkin ? new Color(0.65f, 0.65f, 0.65f) : new Color(0.35f, 0.35f, 0.35f);
 					}
 					return _SubHeaderLabel;
 				}
@@ -991,8 +995,8 @@ namespace ToonyColorsPro
 
 		public class TCP2HeaderHelpDecorator : MaterialPropertyDrawer
 		{
-			protected readonly string header;
-			protected readonly string help;
+			readonly string header;
+			readonly string help;
 
 			public TCP2HeaderHelpDecorator(string header)
 			{
