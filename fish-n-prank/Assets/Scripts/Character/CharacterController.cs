@@ -271,7 +271,7 @@ public class CharacterController : MonoBehaviour
 
     public IEnumerator ResetJumpTrigger()
     {
-        float delay = 0.5f;
+        float delay = 1.5f;
         yield return new WaitForSeconds(delay);
         m_animator.ResetTrigger("Land");
     }
