@@ -20,6 +20,7 @@ public class CharacterData : MonoBehaviour
         InitCharacterController();
         AddFishingRodController();
         m_animator.runtimeAnimatorController = m_characterSO.m_animator;
+        m_characterController.GeneratePlayerHeadObj();
     }
 
     public void InitCharacterController()

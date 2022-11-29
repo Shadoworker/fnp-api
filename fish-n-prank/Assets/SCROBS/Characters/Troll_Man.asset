@@ -22,7 +22,7 @@ MonoBehaviour:
   m_rotationSpeed: 0.33
   m_playerHeadObjName: Armature/Bone/Bone.001/Bone.002/Bone.019/Bone.020/Bone.021/Head
   m_specialIdleRepeatRate: 20
-  m_jumpForce: 17
+  m_jumpForce: 15
   m_underwaterJumpForce: 23
   m_minJumpInterval: 1
   m_jumpInput: 0
@@ -40,3 +40,8 @@ MonoBehaviour:
   m_waterHeight: 3.4
   m_isBackstrokeSwim: 0
   m_fishingRodObjName: Armature/Bone/Bone.001/Bone.002/Bone.006/Bone.007/Bone.008/Bone.027/FishingTrollMan
+  m_headParentPath: Armature/Bone/Bone.001/Bone.002/Bone.019/Bone.020/Bone.021
+  m_headLocalPos: {x: 0, y: 0, z: 0}
+  m_headLocalRot: {x: 78.42, y: 0, z: 0}
+  m_fishingRay: {x: 1, y: 5, z: 1.5}
+  m_jumpingRay: {x: 0, y: 1.2, z: -3}

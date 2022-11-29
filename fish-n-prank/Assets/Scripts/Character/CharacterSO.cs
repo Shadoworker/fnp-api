@@ -47,8 +47,14 @@ public class CharacterSO : ScriptableObject
     [BoxGroup("Buoyancy")] public bool m_isUnderwater;
     [BoxGroup("Buoyancy")] public float m_waterHeight;
     [BoxGroup("Buoyancy")] public bool m_isBackstrokeSwim;
-
     [BoxGroup("Fishing Controller")] public string m_fishingRodObjName;
+
+    [BoxGroup("Head transform")] public string m_headParentPath;
+    [BoxGroup("Head transform")] public Vector3 m_headLocalPos;
+    [BoxGroup("Head transform")] public Vector3 m_headLocalRot;
+    [BoxGroup("Head transform")] public Vector3 m_fishingRay;
+    [BoxGroup("Head transform")] public Vector3 m_jumpingRay;
+
 
     public bool GetJumpInput()
     {
