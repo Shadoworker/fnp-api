@@ -409,7 +409,7 @@ MonoBehaviour:
       - m_Target: {fileID: 111560788375421775}
         m_TargetAssemblyTypeName: FishingRodController, Assembly-CSharp
         m_MethodName: ToggleFishingRod
-        m_Mode: 1
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

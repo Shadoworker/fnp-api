@@ -1417,7 +1417,7 @@ MonoBehaviour:
       - m_Target: {fileID: 5195278815082732898}
         m_TargetAssemblyTypeName: FishingRodController, Assembly-CSharp
         m_MethodName: ToggleFishingRod
-        m_Mode: 1
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2422,43 +2422,43 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 86425bb6ef781034f8e0b01da085afbb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.0013
+      value: 0.004
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 86425bb6ef781034f8e0b01da085afbb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0051
+      value: 0.00439
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 86425bb6ef781034f8e0b01da085afbb, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.0014
+      value: -0.00112
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 86425bb6ef781034f8e0b01da085afbb, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.06353509
+      value: 0.24373502
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 86425bb6ef781034f8e0b01da085afbb, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.7561256
+      value: -0.17763907
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 86425bb6ef781034f8e0b01da085afbb, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.12571251
+      value: 0.27972502
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 86425bb6ef781034f8e0b01da085afbb, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.6390882
+      value: 0.9114777
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 86425bb6ef781034f8e0b01da085afbb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -36.621
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 86425bb6ef781034f8e0b01da085afbb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -13.508
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 86425bb6ef781034f8e0b01da085afbb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 154.547
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 86425bb6ef781034f8e0b01da085afbb, type: 3}
       propertyPath: m_Name
