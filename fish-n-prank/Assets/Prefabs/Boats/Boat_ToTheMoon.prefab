@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 1772469358819383544}
   - component: {fileID: 919132149612285475}
   m_Layer: 6
-  m_Name: Boat
+  m_Name: Boat_ToTheMoon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class FishingRodController : MonoBehaviour
 {
@@ -27,14 +24,17 @@ public class FishingRodController : MonoBehaviour
     {
         if (!m_initialized) return;
 
+        if (!transform.parent.GetComponent<NetworkPlayer>().isLocalPlayer)
+            return;
+
         if (m_fishingRod.activeInHierarchy && !FishingController.Instance.m_isFishing 
-            && !m_characterData.m_buoyancyController.IsUnderwater())
+            && !m_characterData.m_buoyancyController.IsUnderwater()) // TODO: do you mean IsSwimming?
         {
             Vector3 fwd = m_playerHead.TransformDirection(new Vector3(1, 5f, 1.5f));
             Debug.DrawRay(m_playerHead.position, fwd, Color.red);
             if (Physics.Raycast(m_playerHead.position, fwd, out RaycastHit objectHit, 40))
             {
-                if (objectHit.transform.gameObject.name == "Water")
+                if (objectHit.transform.gameObject.name == "Water") // TODO: use const
                 {
                     FishingController.Instance.m_characterController = m_characterController;
                     FishingController.Instance.m_isNearFishingSpot.Raise("true");
@@ -52,10 +52,6 @@ public class FishingRodController : MonoBehaviour
         }
     }
 
-    public Transform GetPlayerHead()
-    {
-        return m_playerHead;
-    }
     public void ToggleFishingRod()
     {
         if (!transform.parent.GetComponent<NetworkPlayer>().isLocalPlayer)
@@ -63,12 +59,12 @@ public class FishingRodController : MonoBehaviour
 
         if(!m_fishingRod.activeInHierarchy && !m_characterData.m_characterSO.IsUnderWater())
         {
-            m_animator.SetTrigger("GrabRod");
+            m_animator.SetTrigger("GrabRod"); // TODO: const
             m_fishingRod.SetActive(true);
         }
         else
         {
-            m_animator.SetTrigger("DropRod");
+            m_animator.SetTrigger("DropRod"); // TODO: const
             m_fishingRod.SetActive(false);
         }
     }
