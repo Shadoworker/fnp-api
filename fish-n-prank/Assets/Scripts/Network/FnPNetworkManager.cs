@@ -6,15 +6,15 @@ using Mirror;
 public class FnPNetworkManager : NetworkManager
 {
     #region SERVER
-    public override void OnServerAddPlayer(NetworkConnectionToClient conn)
+    public override void OnServerAddPlayer(NetworkConnectionToClient _conn) // TODO: try remove conn
     {
-        base.OnServerAddPlayer(conn);
+        base.OnServerAddPlayer(_conn);
         Debug.Log($"A new player was added! There an now {numPlayers} connected players.");
 
         // Server choses a random player skin
         //GameStateManager.CharactersManager.SetPlayerSkin(conn.identity.gameObject, CHARACTER.RANDOM.ToString());
 
-        conn.identity.gameObject.GetComponent<NetworkPlayer>().SetUseCharacter(CHARACTER.RANDOM.ToString());
+        _conn.identity.gameObject.GetComponent<NetworkPlayer>().SetUseCharacter(CHARACTER.RANDOM.ToString());
 
         // Hack: force Grumpycat skin (for harcoded prefab NetworkdAnimator)
         //GameStateManager.CharactersManager.SetPlayerSkin(conn.identity.gameObject, "GRUMPY_CAT");

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
@@ -16,25 +14,98 @@ public class BoatController : NetworkBehaviour
 
     //used Components
     protected Rigidbody m_rigidbody;
-    protected Quaternion StartRotation;
-    protected ParticleSystem ParticleSystem;
+    protected Quaternion StartRotation; // TODO: naming!
+    protected ParticleSystem ParticleSystem; // TODO: naming!
 
     //internal Properties
-    protected Vector3 CamVel;
+    protected Vector3 CamVel; // TODO: naming!
     private VariableJoystick m_joystick = null;
     public Transform m_facingDirection;
-    private Vector3 m_moveVector { set; get; }
+    private Vector3 m_moveVector { set; get; } // TODO: unused
+    [SerializeField]
+    private DriveBoatTrigger m_driveBoatTrigger;
+
+    GameObject m_boatOwner = null;
 
     public void Awake()
     {
         ParticleSystem = GetComponentInChildren<ParticleSystem>();
         m_rigidbody = GetComponent<Rigidbody>();
         StartRotation = m_motor.localRotation;
-        m_joystick = GameObject.Find("JoystickContainer").GetComponent<VariableJoystick>(); // TODO: get from NetworkPlayer.LocalPlayer
+        m_joystick = GameObject.Find("JoystickContainer").GetComponent<VariableJoystick>(); // TODO: better get from NetworkPlayer.LocalPlayer
+    }
+
+    #region SERVER
+    [Command(requiresAuthority = false)]
+    public void CmdStartSailing(GameObject _newBoatOwner)
+    {
+        // Deny if some other player is sailing
+        if (m_boatOwner != null)
+        {
+            Debug.Log($"Player {_newBoatOwner} can't sail this boat, player {m_boatOwner} is already sailing it.");
+            return;
+        }
+
+        m_boatOwner = _newBoatOwner;
+        netIdentity.AssignClientAuthority(m_boatOwner.GetComponent<NetworkIdentity>().connectionToClient);
+
+        Debug.Log($"Boat {gameObject.name} authority transfered to client {connectionToClient}");
+        DoStartSailing();
+    }
+
+    [Command(requiresAuthority = false)]
+    public void CmdStopSailing(GameObject _requesterPlayer)
+    {
+        if (m_boatOwner != _requesterPlayer)
+        {
+            Debug.LogWarning($"Player {_requesterPlayer} is trying to release bot owned by player {m_boatOwner}.");
+            return;
+        }
+
+        DoStopSailing();
+
+        m_boatOwner = null;
+        netIdentity.RemoveClientAuthority();
+
+        Debug.Log($"Boat {gameObject.name} authority transfered back to server");
+    }
+    #endregion
+
+    #region CLIENT
+    public void RequestStartSailing()
+    {
+        // TODO: improve that test
+        if (GameStateManager.CharactersManager.LocalPlayer.GetComponent<CharacterController>().State == CharacterController.CharacterControlState.Walking)
+        {
+            CmdStartSailing(GameStateManager.CharactersManager.LocalPlayer);
+        }
+    }
+
+    [TargetRpc]
+    public void DoStartSailing()
+    {
+        m_driveBoatTrigger.OnStartSailing();
+    }
+
+    public void RequestStopSailing()
+    {
+        // TODO: improve that test
+        if (GameStateManager.CharactersManager.LocalPlayer.GetComponent<CharacterController>().State == CharacterController.CharacterControlState.Sailing)
+        {
+            CmdStopSailing(GameStateManager.CharactersManager.LocalPlayer);
+        }
+    }
+
+    [TargetRpc]
+    public void DoStopSailing()
+    {
+        m_driveBoatTrigger.OnStopSailing();
     }
 
     public void FixedUpdate()
     {
+        // TODO: check that local character is sailing
+
         float steer = 0;
         if (Input.GetAxis("Horizontal") != 0 || m_joystick.m_horizontal != 0)
         {
@@ -79,4 +150,5 @@ public class BoatController : NetworkBehaviour
         //move in direction
         m_rigidbody.velocity = Quaternion.AngleAxis(Vector3.SignedAngle(m_rigidbody.velocity, (movingForward ? 1f : 0f) * transform.forward, Vector3.up) * m_drag, Vector3.up) * m_rigidbody.velocity;
     }
+    #endregion
 }

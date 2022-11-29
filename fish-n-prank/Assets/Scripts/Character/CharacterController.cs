@@ -5,6 +5,9 @@ using Mirror;
 
 public class CharacterController : NetworkBehaviour
 {
+    private const float SOLID_SURFACE_COLLISION_REF = 0.001f;
+    private const string NAVIGATE_ANIM_PARAM = "Navigate"; // Centralize characters animations
+
     public CharacterData m_characterData;
     private float m_moveSpeed = 1;
     public Animator m_animator = null;
@@ -17,9 +20,17 @@ public class CharacterController : NetworkBehaviour
     private float m_jumpTimeStamp;
     public float m_cameraRotationScale = 0.6f;
     public bool m_triggerJump;
-    private const float SOLID_SURFACE_COLLISION_REF = 0.001f;
     public CapsuleCollider m_capsuleCollider;
-    RaycastHit m_objectHit;
+    RaycastHit m_objectHit; // never used, make it local?
+    Transform m_boatSeatTransform = null;
+
+    public CharacterControlState State { get; private set; }  = CharacterControlState.Walking;
+
+    public enum CharacterControlState
+    {
+        Walking, // TODO: add state for Swimming
+        Sailing,
+    }
 
     public void InitCharacterControllerValues()
     {
@@ -50,6 +61,31 @@ public class CharacterController : NetworkBehaviour
         m_capsuleCollider.center = _copy.center;
         m_capsuleCollider.radius = _copy.radius;
         _copy.enabled = false;
+    }
+
+    public void SetIsWalking()
+    {
+        GameStateManager.CameraManager.SetTarget(gameObject);
+        m_characterData.m_animator.SetBool(NAVIGATE_ANIM_PARAM, false);
+        //transform.SetParent(null);
+        GetComponent<Rigidbody>().isKinematic = false;
+        m_boatSeatTransform = null;
+
+        State = CharacterControlState.Walking;
+    }
+
+    public void SetIsSailing(BoatController _boatController, Transform _boatSeatTransform)
+    {
+        transform.LookAt(_boatController.m_facingDirection);
+        //transform.SetParent(_boatController.transform);
+        transform.localPosition = _boatSeatTransform.localPosition;
+        transform.rotation = _boatSeatTransform.rotation;
+        m_characterData.m_animator.SetBool(NAVIGATE_ANIM_PARAM, true);
+        GameStateManager.CameraManager.SetTarget(_boatController.gameObject, false, _boatController.transform);
+        GetComponent<Rigidbody>().isKinematic = true;
+        m_boatSeatTransform = _boatSeatTransform;
+
+        State = CharacterControlState.Sailing;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -96,17 +132,24 @@ public class CharacterController : NetworkBehaviour
             {
                 m_collisions.Remove(collision.collider);
             }
-            if (m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && !Physics.Raycast(transform.position, Vector3.down, out m_objectHit, m_characterData.m_characterSO.m_rayCollisionRef)) { m_characterData.m_characterSO.SetGroundedValue(false);}
+            if (m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && !Physics.Raycast(transform.position, Vector3.down, out m_objectHit, m_characterData.m_characterSO.m_rayCollisionRef))
+            {
+                m_characterData.m_characterSO.SetGroundedValue(false);
+            }
         }
     }
 
+    // TODO: same code as above? factorize?
     private void OnCollisionExit(Collision collision)
     {
         if (m_collisions.Contains(collision.collider))
         {
             m_collisions.Remove(collision.collider);
         }
-        if (m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && !Physics.Raycast(transform.position, Vector3.down, out m_objectHit, m_characterData.m_characterSO.m_rayCollisionRef)) { m_characterData.m_characterSO.SetGroundedValue(false);}
+        if (m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && !Physics.Raycast(transform.position, Vector3.down, out m_objectHit, m_characterData.m_characterSO.m_rayCollisionRef))
+        {
+            m_characterData.m_characterSO.SetGroundedValue(false);
+        }
     }
 
     private void FixedUpdate()
@@ -115,7 +158,17 @@ public class CharacterController : NetworkBehaviour
         if (!isLocalPlayer)
             return;
 
-        if (m_characterData.m_characterSO != null) // TODO: test still necessary?
+        // Just follow the boat if sailing
+        if (State == CharacterControlState.Sailing)
+        {
+            transform.position = m_boatSeatTransform.position;
+            transform.rotation = m_boatSeatTransform.rotation;
+
+            return;
+        }
+
+        // Character is walking / jumping or swimming
+        if (m_characterData.m_characterSO != null) // TODO: is this test still necessary?
         {
             if (!m_characterData.m_characterSO.GetJumpInput() && (Input.GetKey(KeyCode.Space) || m_triggerJump))
             {
@@ -138,6 +191,7 @@ public class CharacterController : NetworkBehaviour
             Debug.LogWarning("CharacterController.DirectUpdate: Joystick not ready yet");
             return;
         }
+
 
         if (m_joystick.m_vertical != 0 || m_joystick.m_horizontal != 0)
         {
