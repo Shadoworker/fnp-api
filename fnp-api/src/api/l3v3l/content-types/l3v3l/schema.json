@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "fnps",
+  "collectionName": "l3v3ls",
   "info": {
-    "singularName": "fnp",
-    "pluralName": "fnps",
-    "displayName": "fnp",
+    "singularName": "l3v3l",
+    "pluralName": "l3v3ls",
+    "displayName": "l3v3l",
     "description": ""
   },
   "options": {

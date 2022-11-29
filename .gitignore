@@ -164,3 +164,5 @@ exports
 dist
 build
 .strapi-updater.json
+fish-n-prank/Packages/manifest.json
+fish-n-prank/ProjectSettings/ProjectVersion.txt
