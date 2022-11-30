@@ -507,6 +507,10 @@ PrefabInstance:
       propertyPath: _assetId
       value: 1858354796
       objectReference: {fileID: 0}
+    - target: {fileID: 8346861431796784595, guid: 409203985caf28542bebcd00561d1773, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8346861433036559578, guid: 409203985caf28542bebcd00561d1773, type: 3}
       propertyPath: m_Name
       value: Character-Grumpy-Cat

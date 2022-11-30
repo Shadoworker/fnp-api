@@ -6,7 +6,13 @@ public class NetworkPlayer : NetworkBehaviour
 
     [SyncVar(hook = nameof(OnChangeSkin))]
     private string m_currentSkinName;
+    private GameObject m_activeSkin = null;
 
+    [SyncVar(hook = nameof(OnChangeFishingRodState))]
+    private bool m_fishingRodEnabled = false;
+
+    #region SERVER
+    [Server]
     public void SetUseCharacter(string _characterName)
     {
         if (_characterName == CHARACTER.RANDOM.ToString())
@@ -28,8 +34,20 @@ public class NetworkPlayer : NetworkBehaviour
                 GetComponent<NetworkAnimator>().animator = characterSkin.gameObject.GetComponent<Animator>();
             }
         }
+
+        // TODO: handle the skin not found case, with an error message
     }
 
+    [Command]
+    public void RequestChangeFishingRodState(bool _newState)
+    {
+        m_fishingRodEnabled = _newState;
+    }
+    #endregion
+
+
+    #region CLIENT
+    [Client]
     void OnChangeSkin(string _oldSkinName, string _newSkinName)
     {
         CharacterSO characterSO = GameStateManager.CharactersManager.GetCharacterSO(_newSkinName);
@@ -42,9 +60,10 @@ public class NetworkPlayer : NetworkBehaviour
             {
                 characterGO = characterSkin.gameObject;
                 characterSkin.gameObject.SetActive(true);
+                m_activeSkin = characterSkin.gameObject;
                 //if (isOwned)
                 //{
-                    GetComponent<NetworkAnimator>().animator = characterSkin.gameObject.GetComponent<Animator>();
+                GetComponent<NetworkAnimator>().animator = characterSkin.gameObject.GetComponent<Animator>();
                 //}
             }
             else
@@ -65,4 +84,16 @@ public class NetworkPlayer : NetworkBehaviour
         GetComponent<CharacterData>().InitCharacterData(characterSO);
     }
 
+    [Client]
+    public void SetFishingRodEnabled(bool _rodeEnabled)
+    {
+        RequestChangeFishingRodState(_rodeEnabled);
+    }
+
+    [Client]
+    void OnChangeFishingRodState(bool _oldFishingRodState, bool _newFishingRodState)
+    {
+        m_activeSkin.GetComponent<FishingRodController>().OnFishingRodStateChange(_newFishingRodState);
+    }
+    #endregion
 }

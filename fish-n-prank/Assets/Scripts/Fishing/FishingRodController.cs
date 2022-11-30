@@ -59,12 +59,24 @@ public class FishingRodController : MonoBehaviour
 
         if(!m_fishingRod.activeInHierarchy && !m_characterData.m_characterSO.IsUnderWater())
         {
-            m_animator.SetTrigger("GrabRod"); // TODO: const
+            transform.parent.GetComponent<NetworkPlayer>().SetFishingRodEnabled(true);
+        }
+        else
+        {
+            transform.parent.GetComponent<NetworkPlayer>().SetFishingRodEnabled(false);
+        }
+    }
+
+    public void OnFishingRodStateChange(bool _fishingRodEnabled)
+    {
+        if (_fishingRodEnabled)
+        {
+            if (m_animator) m_animator.SetTrigger("GrabRod"); // TODO: const + fix animator not set
             m_fishingRod.SetActive(true);
         }
         else
         {
-            m_animator.SetTrigger("DropRod"); // TODO: const
+            if (m_animator) m_animator.SetTrigger("DropRod"); // TODO: const + fix animator not set
             m_fishingRod.SetActive(false);
         }
     }

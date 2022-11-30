@@ -4,19 +4,20 @@ using PathCreation;
 
 public class FishingController : MonoBehaviour
 {
+    private const float MIN_SAFE_ZONE = 15837;
+    private const float MAX_SAFE_ZONE = 73594;
+    private const float INDICATOR_DEFAULT_POS = 43536;
+    private const string NUMBER_OF_CAUGHT_FISHES = "CAUGHT_FISH";
+
     public PathCreator m_pathCreator;
     public Transform m_indicator;
     public float m_pullingPower;
     public float m_speed = 5;
     public float m_battleDuration;
     public bool m_isFishing;
-    private const float MIN_SAFE_ZONE = 15837;
-    private const float MAX_SAFE_ZONE = 73594;
-    private const float INDICATOR_DEFAULT_POS = 43536;
     float m_distanceTravelled;
     public TextMeshProUGUI m_numberOfCaughtFishesText;
     public GameObject m_fishingUI, m_fishBtn, m_jumpBtn;
-    private const string NUMBER_OF_CAUGHT_FISHES = "CAUGHT_FISH";
     public StringEvent m_isNearFishingSpot;
     public CharacterController m_characterController;
     public Vector3 m_fishingUILocalPos;
