@@ -20,6 +20,10 @@ public class APIManager : MonoBehaviour
         
         // Test Login to local api
         // StartCoroutine(Post("auth/local" , JsonUtility.ToJson(credentials) ));
+
+
+        // Test getting page content
+        StartCoroutine(Get("https://www.example.com"));
         
     }
 
@@ -29,7 +33,7 @@ public class APIManager : MonoBehaviour
         Application.OpenURL("https://kayfo.games/");
     }
 
-
+ 
     IEnumerator Post(string _path, string _bodyJsonString)
     {
         var request = new UnityWebRequest(BASE_URL+_path, "POST");
