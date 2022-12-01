@@ -39,7 +39,6 @@ public class DriveBoatTrigger : MonoBehaviour // TODO: change script name
     {
         GameStateManager.CameraManager.m_isCameraCentered = false;
         m_character.SetIsSailing(m_boat, m_playerSeatPos);
-        //m_character.enabled = false;
         m_boat.enabled = true;
         m_driveBtn.SetActive(false);
     }

@@ -16,6 +16,9 @@ public class BoatController : NetworkBehaviour
     protected Rigidbody m_rigidbody;
     protected Quaternion StartRotation; // TODO: naming!
     protected ParticleSystem ParticleSystem; // TODO: naming!
+    [SerializeField]
+    [Tooltip("An hideable mesh for the boat, to unblock the view of the local player only.")]
+    private GameObject m_hideableMesh = null;
 
     //internal Properties
     protected Vector3 CamVel; // TODO: naming!
@@ -85,6 +88,10 @@ public class BoatController : NetworkBehaviour
     public void DoStartSailing()
     {
         m_driveBoatTrigger.OnStartSailing();
+        if (m_hideableMesh != null)
+        {
+            m_hideableMesh.SetActive(false);
+        }
     }
 
     public void RequestStopSailing()
@@ -100,6 +107,10 @@ public class BoatController : NetworkBehaviour
     public void DoStopSailing()
     {
         m_driveBoatTrigger.OnStopSailing();
+        if (m_hideableMesh != null)
+        {
+            m_hideableMesh.SetActive(true);
+        }
     }
 
     public void FixedUpdate()
