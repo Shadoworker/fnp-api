@@ -21,6 +21,7 @@ public class CharacterSO : ScriptableObject
     [BoxGroup("Movement Controller")] private bool m_isRunning;
     [BoxGroup("Movement Controller")] public  MovementMode m_movementMode;
     [BoxGroup("Movement Controller")] public float m_runSpeed;
+    [BoxGroup("Movement Controller")] public float m_swimSpeed;
     [BoxGroup("Movement Controller")] public float m_walkSpeed;
     [BoxGroup("Movement Controller")] public float m_maxSpeed;
     [BoxGroup("Movement Controller")] public float m_rotationSpeed;

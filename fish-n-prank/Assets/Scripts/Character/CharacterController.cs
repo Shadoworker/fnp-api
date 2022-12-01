@@ -6,11 +6,13 @@ using UnityEngine.UI;
 public class CharacterController : MonoBehaviour
 {
     private const float MAX_RAY_DISTANCE = 40f;
+    private const float MIN_JOYSTICK_OFFSET = 0.6f;
+    private const float MAX_JOYSTICK_OFFSET = 1f;
     public CharacterData m_characterData;
     [HideInInspector]public GameObject m_playerHeadObj;
     private float m_moveSpeed = 1;
     public Animator m_animator = null;
-    private Rigidbody m_rigidBody = null;
+    [HideInInspector] public Rigidbody m_rigidBody = null;
     private VariableJoystick m_joystick = null;
     private List<Collider> m_collisions = new List<Collider>();
     Vector3 m_movement;
@@ -23,6 +25,7 @@ public class CharacterController : MonoBehaviour
     public CapsuleCollider m_capsuleCollider;
     RaycastHit m_objectHit;
     Vector3 m_oldPosition;
+    private float m_joystickOffset;
 
     public void InitCharacterControllerValues()
     {
@@ -33,6 +36,7 @@ public class CharacterController : MonoBehaviour
         m_rigidBody = rigidbody;
         m_characterData.m_characterSO.SetGroundedValue(true);
         InvokeRepeating("PlaySpecialIdle", 1.0f, m_characterData.m_characterSO.m_specialIdleRepeatRate);
+        m_joystickOffset = MAX_JOYSTICK_OFFSET;
         StartCoroutine(GeneratePlayerHeadObj());
     }
 
@@ -63,12 +67,12 @@ public class CharacterController : MonoBehaviour
         m_triggerJump = false;
         m_characterData.m_characterSO.SetJumpInput(false);
         GetSpeed();
-        if (collision.gameObject.tag != "Ground" && Mathf.Abs(m_movement.z) >= GameStateManager.CharactersManager.m_zJoystickOffset && !m_animator.GetBool("Land")
-            && !m_characterData.m_characterSO.m_isUnderwater)
+        if (collision.gameObject.tag != "Ground" && Mathf.Abs(m_movement.z) >= GameStateManager.CharactersManager.m_zJoystickOffset && !m_animator.GetBool("Land"))
         {
             Vector3 fwd = m_characterData.m_characterController.m_playerHeadObj.transform.TransformDirection(m_characterData.m_characterSO.m_jumpingRay);
             Debug.DrawRay(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, Color.yellow);
-            if (!Physics.Raycast(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, out m_objectHit, MAX_RAY_DISTANCE) && GetSpeed() <= SOLID_SURFACE_COLLISION_REF)
+            Debug.Log("Enter collider");
+            if ((!Physics.Raycast(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, out m_objectHit, MAX_RAY_DISTANCE) && GetSpeed() <= SOLID_SURFACE_COLLISION_REF) || m_characterData.m_buoyancyController.IsUnderwater())
             {
                 SetJumpInput();
                 m_movement = Vector3.zero;
@@ -190,6 +194,7 @@ public class CharacterController : MonoBehaviour
 
         if (!m_wasGrounded && m_characterData.m_characterSO.IsGrounded())
         {
+            m_joystickOffset = MAX_JOYSTICK_OFFSET;
             m_animator.SetTrigger("Land");
             StartCoroutine(ResetJumpTrigger());
         }
@@ -197,6 +202,7 @@ public class CharacterController : MonoBehaviour
         if (!m_characterData.m_characterSO.IsGrounded() && m_wasGrounded)
         {
             m_animator.SetTrigger("Jump");
+            m_joystickOffset = MIN_JOYSTICK_OFFSET;
         }
     }
 
@@ -227,21 +233,21 @@ public class CharacterController : MonoBehaviour
     public Vector3 PoolInput()
     {
         Vector3 dir = Vector3.zero;
-        if(m_characterData.m_characterSO.m_movementMode == MovementMode.CONSTANT)
+        if (m_characterData.m_characterSO.m_isUnderwater)
+            m_moveSpeed = m_characterData.m_characterSO.m_swimSpeed;
+        else
+            m_moveSpeed = m_characterData.m_characterSO.m_runSpeed;
+        if(m_characterData.m_characterSO.m_jumpInput)
         {
-            if (m_movement.magnitude < 1)
-                m_moveSpeed = m_characterData.m_characterSO.m_walkSpeed;
-            else
-                m_moveSpeed = m_characterData.m_characterSO.m_runSpeed;
-            dir.x = -m_joystick.m_horizontal;
-            dir.z = -m_joystick.m_vertical;
+            dir.x = -Mathf.Clamp(m_joystick.m_horizontal, -m_joystickOffset, Mathf.Sign(m_joystick.m_horizontal) * m_joystickOffset);
+            dir.z = -Mathf.Clamp(m_joystick.m_vertical, -m_joystickOffset, Mathf.Sign(m_joystick.m_vertical) * m_joystickOffset);
         }
         else
         {
-            m_moveSpeed = m_characterData.m_characterSO.m_runSpeed;
             dir.x = -m_joystick.m_horizontal;
             dir.z = -m_joystick.m_vertical;
         }
+
         if (dir.magnitude > 1)
             dir.Normalize();
         return dir;

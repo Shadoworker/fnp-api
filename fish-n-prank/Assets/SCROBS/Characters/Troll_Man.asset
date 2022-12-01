@@ -17,6 +17,7 @@ MonoBehaviour:
   m_animator: {fileID: 22100000, guid: aae844d669ab7894e8d5badc1fb751fb, type: 2}
   m_movementMode: 1
   m_runSpeed: 8
+  m_swimSpeed: 6.3
   m_walkSpeed: 0.3
   m_maxSpeed: 10
   m_rotationSpeed: 0.33
@@ -39,7 +40,7 @@ MonoBehaviour:
   m_isUnderwater: 0
   m_waterHeight: 3.4
   m_isBackstrokeSwim: 0
-  m_fishingRodObjName: Armature/Bone/Bone.001/Bone.002/Bone.006/Bone.007/Bone.008/Bone.027/FishingTrollMan
+  m_fishingRodObjName: Armature/FishingRod
   m_headParentPath: Armature/Bone/Bone.001/Bone.002/Bone.019/Bone.020/Bone.021
   m_headLocalPos: {x: 0, y: 0, z: 0}
   m_headLocalRot: {x: 78.42, y: 0, z: 0}
