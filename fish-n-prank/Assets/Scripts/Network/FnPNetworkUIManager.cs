@@ -1,8 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Mirror;
-using UnityEngine.Events;
-using System;
+using TMPro;
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(NetworkManager))]
@@ -30,7 +29,9 @@ public class FnPNetworkUIManager : MonoBehaviour
     [SerializeField]
     Button m_hostAndClientButton = null;
     [SerializeField]
-    Button m_disconnectButton = null;
+    Button m_quitButton = null;
+    [SerializeField]
+    TMP_Text m_quitButtonText = null;
 
     void Awake()
     {
@@ -59,27 +60,33 @@ public class FnPNetworkUIManager : MonoBehaviour
 
         m_joinLocalButton.onClick.AddListener(StartLocalClient);
         m_joinRemoteButton.onClick.AddListener(StartRemoteClient);
+
+        m_quitButton.onClick.AddListener(QuitSession);
     }
 
     private void StartLocalClient()
     {
+        m_quitButtonText.text = "Quit Session";
         m_networkManager.networkAddress = "localhost";
         m_networkManager.StartClient();
     }
 
     private void StartRemoteClient()
     {
+        m_quitButtonText.text = "Quit Session";
         m_networkManager.networkAddress = "mango.confiote.com";
         m_networkManager.StartClient();
     }
 
     private void StartHost()
     {
+        m_quitButtonText.text = "Stop Host";
         m_networkManager.StartHost();
     }
 
     private void StartServer()
     {
+        m_quitButtonText.text = "Stop Server";
         m_networkManager.StartServer();
     }
 
@@ -93,15 +100,12 @@ public class FnPNetworkUIManager : MonoBehaviour
         {
             StatusLabels();
         }
-
-        StopButtons();
     }
 
     void StartButtons()
     {
         m_connectionUI.SetActive(true);
         m_ingameUI.SetActive(false);
-        m_disconnectButton.gameObject.SetActive(false);
 
         if (!NetworkClient.active)
         {
@@ -124,7 +128,6 @@ public class FnPNetworkUIManager : MonoBehaviour
     {
         m_connectionUI.SetActive(false);
         m_ingameUI.SetActive(true);
-        m_disconnectButton.gameObject.SetActive(true);
 
         GUILayout.BeginArea(new Rect(10 + m_offsetX, 40 + m_offsetY, 215, 9999));
 
@@ -150,31 +153,19 @@ public class FnPNetworkUIManager : MonoBehaviour
 
     }
 
-    void StopButtons()
+    void QuitSession()
     {
-        // stop host if host mode
         if (NetworkServer.active && NetworkClient.isConnected)
         {
-            if (GUILayout.Button("Stop Host"))
-            {
-                m_networkManager.StopHost();
-            }
+            m_networkManager.StopHost();
         }
-        // stop client if client-only
         else if (NetworkClient.isConnected)
         {
-            if (GUILayout.Button("Stop Client"))
-            {
-                m_networkManager.StopClient();
-            }
+            m_networkManager.StopClient();
         }
-        // stop server if server-only
         else if (NetworkServer.active)
         {
-            if (GUILayout.Button("Stop Server"))
-            {
-                m_networkManager.StopServer();
-            }
+            m_networkManager.StopServer();
         }
     }
 }
