@@ -23,7 +23,7 @@ public class FishingController : MonoBehaviour
     public Vector3 m_fishingUILocalPos;
 
     #region Singleton
-    public static FishingController Instance { get; private set; }
+    public static FishingController Instance { get; private set; } // TODO: use Kayfo.Singleton !!
     private void Awake()
     {
         if (Instance != null && Instance != this)

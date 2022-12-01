@@ -37,7 +37,7 @@ public class CharacterController : NetworkBehaviour
         Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
         InitCapsuleCollider(m_animator.gameObject.GetComponent<CapsuleCollider>());
         InitRigidbody(rigidbody);
-        m_joystick = GameObject.Find("JoystickContainer").GetComponent<VariableJoystick>(); // TODO: get it from LocalPlayer
+        m_joystick = InputManager.Instance.MovementJoystick;
         m_rigidBody = rigidbody;
         m_characterData.m_characterSO.SetGroundedValue(true);
         InvokeRepeating("PlaySpecialIdle", 1.0f, m_characterData.m_characterSO.m_specialIdleRepeatRate);
@@ -186,13 +186,6 @@ public class CharacterController : NetworkBehaviour
     [ClientCallback]
     private void DirectUpdate()
     {
-        if (m_joystick == null)
-        {
-            Debug.LogWarning("CharacterController.DirectUpdate: Joystick not ready yet");
-            return;
-        }
-
-
         if (m_joystick.m_vertical != 0 || m_joystick.m_horizontal != 0)
         {
             m_movement = new Vector3(-m_joystick.m_horizontal, 0, -m_joystick.m_vertical);

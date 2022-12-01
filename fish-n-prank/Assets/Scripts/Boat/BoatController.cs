@@ -35,7 +35,7 @@ public class BoatController : NetworkBehaviour
         ParticleSystem = GetComponentInChildren<ParticleSystem>();
         m_rigidbody = GetComponent<Rigidbody>();
         StartRotation = m_motor.localRotation;
-        m_joystick = GameObject.Find("JoystickContainer").GetComponent<VariableJoystick>(); // TODO: better get from NetworkPlayer.LocalPlayer
+        m_joystick = InputManager.Instance.MovementJoystick;
     }
 
     #region SERVER
