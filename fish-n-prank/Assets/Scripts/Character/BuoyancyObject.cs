@@ -106,7 +106,8 @@ public class BuoyancyObject : MonoBehaviour
         {
             m_rigidBody.drag = m_airDragForce;
             m_rigidBody.angularDrag = m_airAngularDrag;
-            m_characterData.m_characterController.m_capsuleCollider.direction = 1;
+            if (m_characterData != null)
+                m_characterData.m_characterController.m_capsuleCollider.direction = 1;
         }
     }
 
