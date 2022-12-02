@@ -63,7 +63,6 @@ public class CharacterController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        m_characterData.m_characterSO.SetGroundedValue(true);
         m_triggerJump = false;
         m_characterData.m_characterSO.SetJumpInput(false);
         GetSpeed();
@@ -71,7 +70,6 @@ public class CharacterController : MonoBehaviour
         {
             Vector3 fwd = m_characterData.m_characterController.m_playerHeadObj.transform.TransformDirection(m_characterData.m_characterSO.m_jumpingRay);
             Debug.DrawRay(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, Color.yellow);
-            Debug.Log("Enter collider");
             if ((!Physics.Raycast(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, out m_objectHit, MAX_RAY_DISTANCE) && GetSpeed() <= SOLID_SURFACE_COLLISION_REF) || m_characterData.m_buoyancyController.IsUnderwater())
             {
                 SetJumpInput();
@@ -280,6 +278,7 @@ public class CharacterController : MonoBehaviour
         float delay = 1.5f;
         yield return new WaitForSeconds(delay);
         m_animator.ResetTrigger("Land");
+        m_animator.ResetTrigger("Jump");
     }
 
     public IEnumerator GeneratePlayerHeadObj()
