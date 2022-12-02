@@ -23,28 +23,53 @@ export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =
         // ctx.body = 'ok';
         const { data } = await axios.get(`https://api.github.com/users?since=0&per_page=2`);
         // ctx.body = data;
+        var claims = "Vroooom";
         ctx.body = `
           <html>
           <head>
-          <meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+          <meta http-equiv=Content-Type content="text/html; charset=utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+
           </head>
+          <style>
+            .box
+            {
+              display:flex; 
+              width:100%;
+              align-items:center;
+              justify-content:center;
+              flex-direction : column;
+            }
+            .title
+            {
+              font-family : Arial;
+            }
+            .btn {
+              display: block;
+              height: 25px;
+              background: #4E9CAF;
+              padding: 10px;
+              text-align: center;
+              border-radius: 5px;
+              color: white;
+              font-weight: bold;
+              line-height: 25px;
+              text-decoration:none;
+              font-family:Arial;
+              font-size:14px;
+              padding:8px 20px;
+            }
+          </style>
           <body >
-          <h1>My Deep Link Test page</h1>
-          <h2 >
-          <a href="unitydl://mylink">Launch</a>
-          </h2>
-          <h2 >
-          <a href="unitydl://mylink?parameter">Launch with Parameter</a>
-          </h2>
+          <div class="box">
+          <h3 class="title" >Connexion établie !</h3>
+          <a class="btn" href="unitydl://mylink?${claims}">RETOURNER AU JEU</a>
+          </div>
 
           </body>
           </html>
         `
-        // setTimeout(async() => {
-          
-        //   await open('unitydl://mylink?parameter');
-
-        // }, 3000);
+    
       } catch (err) {
         ctx.body = err;
       }
@@ -96,7 +121,53 @@ export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =
 
               // console.log(jwt)
               // Return values
-              ctx.body = jwt.claims;
+              var claims = jwt.claims;
+
+              ctx.body = `
+                <html>
+                <head>
+                <meta http-equiv=Content-Type content="text/html; charset=utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+                </head>
+                <style>
+                  .box
+                  {
+                    display:flex; 
+                    width:100%;
+                    align-items:center;
+                    justify-content:center;
+                    flex-direction : column;
+                  }
+                  .title
+                  {
+                    font-family : Arial;
+                  }
+                  .btn {
+                    display: block;
+                    height: 25px;
+                    background: #4E9CAF;
+                    padding: 10px;
+                    text-align: center;
+                    border-radius: 5px;
+                    color: white;
+                    font-weight: bold;
+                    line-height: 25px;
+                    text-decoration:none;
+                    font-family:Arial;
+                    font-size:14px;
+                    padding:8px 20px;
+                  }
+                </style>
+                <body >
+                <div class="box">
+                <h3 class="title" >Connexion établie !</h3>
+                <a class="btn" href="unitydl://mylink?${claims}">RETOURNER AU JEU</a>
+                </div>
+
+                </body>
+                </html>
+              `;
   
             } catch (err) {
               ctx.body = err;
