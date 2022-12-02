@@ -2,7 +2,7 @@ using UnityEngine;
 using TMPro;
 using PathCreation;
 
-public class FishingController : MonoBehaviour
+public class FishingController : Singleton<FishingController>
 {
     private const float MIN_SAFE_ZONE = 15837;
     private const float MAX_SAFE_ZONE = 73594;
@@ -21,21 +21,6 @@ public class FishingController : MonoBehaviour
     public StringEvent m_isNearFishingSpot;
     public CharacterController m_characterController;
     public Vector3 m_fishingUILocalPos;
-
-    #region Singleton
-    public static FishingController Instance { get; private set; } // TODO: use Kayfo.Singleton !!
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
-        }
-    }
-    #endregion
 
     private void Start()
     {

@@ -11,9 +11,9 @@ public class FnPNetworkUIManager : MonoBehaviour
     FnPNetworkManager m_networkManager;
 
     [SerializeField]
-    int m_offsetX;
+    int m_netStatusOffsetX;
     [SerializeField]
-    int m_offsetY;
+    int m_netStatusOffsetY;
 
     [SerializeField]
     GameObject m_connectionUI = null;
@@ -129,7 +129,7 @@ public class FnPNetworkUIManager : MonoBehaviour
         m_connectionUI.SetActive(false);
         m_ingameUI.SetActive(true);
 
-        GUILayout.BeginArea(new Rect(10 + m_offsetX, 40 + m_offsetY, 215, 9999));
+        GUILayout.BeginArea(new Rect(10 + m_netStatusOffsetX, 40 + m_netStatusOffsetY, 215, 9999));
 
         // host mode
         // display separately because this always confused people:

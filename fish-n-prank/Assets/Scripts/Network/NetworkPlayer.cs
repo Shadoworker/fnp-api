@@ -61,10 +61,7 @@ public class NetworkPlayer : NetworkBehaviour
                 characterGO = characterSkin.gameObject;
                 characterSkin.gameObject.SetActive(true);
                 m_activeSkin = characterSkin.gameObject;
-                //if (isOwned)
-                //{
                 GetComponent<NetworkAnimator>().animator = characterSkin.gameObject.GetComponent<Animator>();
-                //}
             }
             else
             {
@@ -76,8 +73,6 @@ public class NetworkPlayer : NetworkBehaviour
         {
             Debug.LogWarning($"NetworkPlayer.OnChangeSkin: character {lookupName} not found");
         }
-
-        //m_currentSkin.transform.localPosition = Vector3.zero;
 
         GetComponent<CharacterData>().m_animator = characterGO.GetComponent<Animator>();
         GetComponent<CharacterData>().m_fishingRodController = characterGO.GetComponent<FishingRodController>();

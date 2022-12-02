@@ -12,8 +12,8 @@ public class FnPFishingNetworkInterface : NetworkBehaviour
         FishSO fishSO = GameStateManager.FishesManager.GetRandomFish();
 
         Debug.Log($"CmdStartFishing: Server chose fish {fishSO.name}");
-        NetworkIdentity opponentIdentity = GetComponent<NetworkIdentity>();
-        TargetSetBitingFish(opponentIdentity.connectionToClient, fishSO);
+        NetworkIdentity clientIdentity = GetComponent<NetworkIdentity>();
+        TargetSetBitingFish(clientIdentity.connectionToClient, fishSO);
     }
     #endregion
 
