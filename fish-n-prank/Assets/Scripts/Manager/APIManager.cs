@@ -5,11 +5,58 @@ using System.Net;
 using UnityEngine.Networking;
 using System;
 using System.IO;
- using System.Text;
+using System.Text;
+using TMPro;
 
 public class APIManager : MonoBehaviour
 {
     private const string BASE_URL = "http://localhost:1337/api/";
+
+    public static APIManager instance { get; private set; }
+	public string m_deeplinkURL;
+	
+    public TextMeshProUGUI m_dataText;
+
+    private void Awake()
+	{
+    	if (instance == null)
+    	{
+        	instance = this;
+        	Application.deepLinkActivated += onDeepLinkActivated;
+        	if (!String.IsNullOrEmpty(Application.absoluteURL))
+        	{
+            	// Cold start and Application.absoluteURL not null so process Deep Link.
+                onDeepLinkActivated(Application.absoluteURL);
+        	}
+        	// Initialize DeepLink Manager global variable.
+        	else m_deeplinkURL = "[none]";
+        	DontDestroyOnLoad(gameObject);
+    	}
+    	else
+    	{
+        	Destroy(gameObject);
+    	}
+	}
+
+	private void onDeepLinkActivated(string url)
+	{
+    	// Update DeepLink Manager global variable, so URL can be accessed from anywhere.
+    	m_deeplinkURL = url;
+
+        // Decode the URL to determine action.
+        // In this example, the app expects a link formatted like this:
+        // unitydl://mylink?scene1
+        string urlDecoded = WWW.UnEscapeURL(url);
+
+    	string data = urlDecoded.Split("?"[0])[1];
+    	
+        m_dataText.text = data;
+
+        // Debug.Log(output);
+
+	}
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,43 +68,15 @@ public class APIManager : MonoBehaviour
         // Test Login to local api
         // StartCoroutine(Post("auth/local" , JsonUtility.ToJson(credentials) ));
 
-
-        // Test getting page content
-        StartCoroutine(GetRequest("https://www.example.com"));
-        
     }
+
 
 
     public void OpenLoginWindow()
     {
-        Application.OpenURL("https://kayfo.games/");
+        Application.OpenURL("https://connect.playtix.team/oauth2/aus7e5j3kfGHKetdl5d7/v1/authorize?client_id=0oa7e5jz4w9xy416F5d7&response_type=code&scope=openid&redirect_uri=http%3A%2F%2F192.168.1.12:1337%2Fapi%2Fl3v3l%2Fcallback&state=abc123");
     }
-
-    IEnumerator GetRequest(string uri)
-    {
-        using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
-        {
-            // Request and wait for the desired page.
-            yield return webRequest.SendWebRequest();
-
-            string[] pages = uri.Split('/');
-            int page = pages.Length - 1;
-
-            switch (webRequest.result)
-            {
-                case UnityWebRequest.Result.ConnectionError:
-                case UnityWebRequest.Result.DataProcessingError:
-                    Debug.LogError(pages[page] + ": Error: " + webRequest.error);
-                    break;
-                case UnityWebRequest.Result.ProtocolError:
-                    Debug.LogError(pages[page] + ": HTTP Error: " + webRequest.error);
-                    break;
-                case UnityWebRequest.Result.Success:
-                    Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
-                    break;
-            }
-        }
-    }
+ 
  
     IEnumerator Post(string _path, string _bodyJsonString)
     {
@@ -99,32 +118,8 @@ public class APIManager : MonoBehaviour
         }
     }
 
-    private IEnumerator ProcessRequest(string uri)
-    {
-        using (UnityWebRequest request = UnityWebRequest.Get(uri))
-        { 
 
-            request.SetRequestHeader("Content-Type", "application/json");
-
-            yield return request.SendWebRequest();
-
-            if (request.isNetworkError)
-            {
-                Debug.Log("Error: " + request.error);
-            }
-            else
-            {
-                Debug.Log("Received: " + request.downloadHandler.text);
-            }
-        }
-    }
  
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
 
 

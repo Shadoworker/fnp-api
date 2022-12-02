@@ -28,8 +28,7 @@ export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =
           <html>
           <head>
           <meta http-equiv=Content-Type content="text/html; charset=utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-
+          <meta name="viewport" content="width=device-width, initial-scale=1" /> 
           </head>
           <style>
             .box
@@ -63,9 +62,15 @@ export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =
           <body >
           <div class="box">
           <h3 class="title" >Connexion établie !</h3>
-          <a class="btn" href="unitydl://mylink?${claims}">RETOURNER AU JEU</a>
+          <a id="fnpBtn" class="btn" href="http://www.example.com">RETOURNER AU JEU</a>
           </div>
+            <script nonce='a9f04fd1-06cf-4948-9d66-ea306e581896'>
 
+              setTimeout(()=>{
+                document.getElementById("fnpBtn").click();
+              },1500)
+               
+            </script> 
           </body>
           </html>
         `
@@ -79,7 +84,7 @@ export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =
     async callback(ctx) { // l3v3l MAIN CALLBACK : called by GET /callback
 
  
-        var url_string = "http://localhost:1337/"+ ctx.originalUrl;
+        var url_string = "http://192.168.1.12:1337/"+ ctx.originalUrl;
 
         var url = new URL(url_string);
         var code = url.searchParams.get("code");
@@ -100,7 +105,7 @@ export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =
           }
          }
 
-        var body = "grant_type=authorization_code&redirect_uri=http%3A%2F%2Flocalhost%3A1337%2Fapi%2Fl3v3l%2Fcallback&code="+code;
+        var body = "grant_type=authorization_code&redirect_uri=http%3A%2F%2F192.168.1.12%3A1337%2Fapi%2Fl3v3l%2Fcallback&code="+code;
 
 
         // Get Token
@@ -121,7 +126,8 @@ export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =
 
               // console.log(jwt)
               // Return values
-              var claims = jwt.claims;
+              var claims = JSON.stringify(jwt.claims);
+              console.log(claims)
 
               ctx.body = `
                 <html>
@@ -162,9 +168,9 @@ export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =
                 <body >
                 <div class="box">
                 <h3 class="title" >Connexion établie !</h3>
-                <a class="btn" href="unitydl://mylink?${claims}">RETOURNER AU JEU</a>
+                <a id="btn" class="btn" href='unitydl://mylink?${claims}'>RETOURNER AU JEU</a>
                 </div>
-
+ 
                 </body>
                 </html>
               `;
