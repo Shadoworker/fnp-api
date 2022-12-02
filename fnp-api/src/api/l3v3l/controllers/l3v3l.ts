@@ -7,6 +7,8 @@ import axios from 'axios';
 
 import {btoa} from 'buffer';
 
+const open = require("open")
+
 const OktaJwtVerifier = require('@okta/jwt-verifier');
 
 
@@ -20,7 +22,29 @@ export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =
       try {
         // ctx.body = 'ok';
         const { data } = await axios.get(`https://api.github.com/users?since=0&per_page=2`);
-        ctx.body = data;
+        // ctx.body = data;
+        ctx.body = `
+          <html>
+          <head>
+          <meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+          </head>
+          <body >
+          <h1>My Deep Link Test page</h1>
+          <h2 >
+          <a href="unitydl://mylink">Launch</a>
+          </h2>
+          <h2 >
+          <a href="unitydl://mylink?parameter">Launch with Parameter</a>
+          </h2>
+
+          </body>
+          </html>
+        `
+        // setTimeout(async() => {
+          
+        //   await open('unitydl://mylink?parameter');
+
+        // }, 3000);
       } catch (err) {
         ctx.body = err;
       }

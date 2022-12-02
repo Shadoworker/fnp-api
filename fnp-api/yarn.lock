@@ -3975,9 +3975,9 @@
     "ms" "2.1.2"
 
 "decode-uri-component@^0.2.0":
-  "integrity" "sha512-hjf+xovcEn31w/EUYdTXQh/8smFL/dzYjohQGEIgjyNavaJfBY2p5F527Bo1VPATxv0VYTUC2bOcXvqFwk78Og=="
-  "resolved" "https://registry.npmjs.org/decode-uri-component/-/decode-uri-component-0.2.0.tgz"
-  "version" "0.2.0"
+  "integrity" "sha512-FqUYQ+8o158GyGTrMFJms9qh3CqTKvAqgqsTnkLI8sKu0028orqBhxNMFkFen0zGyg6epACD32pjVk58ngIErQ=="
+  "resolved" "https://registry.npmjs.org/decode-uri-component/-/decode-uri-component-0.2.2.tgz"
+  "version" "0.2.2"
 
 "decompress-response@^6.0.0":
   "integrity" "sha512-aW35yZM6Bb/4oJlZncMH2LCoZtJXTRxES17vE3hoRiowU2kWHaJKFkSBDnDR+cm9J+9QhXmREyIfv0pji9ejCQ=="
@@ -7479,7 +7479,7 @@
   "resolved" "https://registry.npmjs.org/only/-/only-0.0.2.tgz"
   "version" "0.0.2"
 
-"open@^8.0.9", "open@8.4.0":
+"open@^8.0.9", "open@^8.4.0", "open@8.4.0":
   "integrity" "sha512-XgFPPM+B28FtCCgSb9I+s9szOC1vZRSwgWsRUA5ylIxRTgKozqjOCrVOqGsYABPYK5qnfqClxZTFBa8PKt2v6Q=="
   "resolved" "https://registry.npmjs.org/open/-/open-8.4.0.tgz"
   "version" "8.4.0"
