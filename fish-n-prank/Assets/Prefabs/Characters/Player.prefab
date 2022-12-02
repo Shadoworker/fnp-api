@@ -131,7 +131,9 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   m_characterData: {fileID: 5209425152053978026}
+  m_playerHeadObj: {fileID: 0}
   m_animator: {fileID: 1529960207907236706}
+  m_rigidBody: {fileID: 0}
   m_cameraRotationScale: 0.6
   m_triggerJump: 0
   m_capsuleCollider: {fileID: 0}
@@ -509,7 +511,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8346861431796784595, guid: 409203985caf28542bebcd00561d1773, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8346861433036559578, guid: 409203985caf28542bebcd00561d1773, type: 3}
       propertyPath: m_Name

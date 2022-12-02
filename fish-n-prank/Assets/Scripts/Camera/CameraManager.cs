@@ -55,6 +55,7 @@ public class CameraManager : ScriptableObject
         m_cameraFollow.transform.localEulerAngles = new Vector3(14f, m_cameraFollow.transform.localEulerAngles.y, m_cameraFollow.transform.localEulerAngles.z);
         var direction = (Camera.main.transform.position - _target.position).normalized;
         m_cameraFollow.SetCurrentYValue(m_initBoatCamPos.y);
+        Debug.Log(Mathf.Abs(Vector3.Dot(-_target.forward, direction) - BOAT_CENTER_CAM_REF));
         if (Mathf.Abs(Vector3.Dot(-_target.forward, direction) - BOAT_CENTER_CAM_REF) > BOAT_CAM_DELTA_REF && !IsCameraRotating())
         {
             if ((Mathf.Sign(Vector3.Dot(-_target.right, direction)) == 1 && !m_isRightDamping) || m_isLeftDamping)

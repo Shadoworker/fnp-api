@@ -17,12 +17,13 @@ MonoBehaviour:
   m_animator: {fileID: 22100000, guid: 45d460ec89be9754db1fc21cdb3602de, type: 2}
   m_movementMode: 1
   m_runSpeed: 9
+  m_swimSpeed: 6.3
   m_walkSpeed: 0.3
   m_maxSpeed: 10
   m_rotationSpeed: 0.33
   m_playerHeadObjName: Shiba/B_Hips/B_Torso/B_Neck/B_Head
   m_specialIdleRepeatRate: 20
-  m_jumpForce: 17
+  m_jumpForce: 15
   m_underwaterJumpForce: 23
   m_minJumpInterval: 0.5
   m_jumpInput: 0
@@ -33,10 +34,15 @@ MonoBehaviour:
   m_underWaterAngularDragForce: 1
   m_airDragForce: 0
   m_airAngularDrag: 5
-  m_rayCollisionRef: 0.2
+  m_rayCollisionRef: 0.00001
   m_floatingPower: 126
   m_diveForce: 10
   m_isUnderwater: 0
   m_waterHeight: 3.6
   m_isBackstrokeSwim: 0
-  m_fishingRodObjName: Shiba/B_Hips/B_Torso/B_Shoulder_r/B_Arm_r/B_Forearm_r/B_Hand_r/FishingRodShiba
+  m_fishingRodObjName: FishingRod
+  m_headParentPath: Shiba/B_Hips/B_Torso/B_Neck
+  m_headLocalPos: {x: 0, y: 0, z: 0}
+  m_headLocalRot: {x: 67.95, y: 3.31, z: 12.95}
+  m_fishingRay: {x: 1, y: 5, z: 1.5}
+  m_jumpingRay: {x: 0, y: 1.2, z: -3}

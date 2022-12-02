@@ -29,6 +29,7 @@ public class CharacterData : NetworkBehaviour
         InitCharacterController();
         AddFishingRodController();
         m_animator.runtimeAnimatorController = m_characterSO.m_animator;
+        m_characterController.GeneratePlayerHeadObj();
     }
 
     public void InitCharacterController()

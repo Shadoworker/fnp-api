@@ -17,12 +17,13 @@ MonoBehaviour:
   m_animator: {fileID: 22100000, guid: 2f5e08b04d188b5459a7b3137c65af84, type: 2}
   m_movementMode: 1
   m_runSpeed: 8
+  m_swimSpeed: 6.3
   m_walkSpeed: 0.3
   m_maxSpeed: 10
   m_rotationSpeed: 0.33
   m_playerHeadObjName: Armature/Bone/Head
   m_specialIdleRepeatRate: 20
-  m_jumpForce: 17
+  m_jumpForce: 15
   m_underwaterJumpForce: 23
   m_minJumpInterval: 1
   m_jumpInput: 0
@@ -39,4 +40,9 @@ MonoBehaviour:
   m_isUnderwater: 0
   m_waterHeight: 3.2
   m_isBackstrokeSwim: 0
-  m_fishingRodObjName: Armature/Bone/Bone.001/Bone.002/Bone.009/Bone.010/Bone.011/Bone.038/FishingRodGrumpycat
+  m_fishingRodObjName: Armature/FishingRod
+  m_headParentPath: Armature/Bone
+  m_headLocalPos: {x: 0, y: 0.01, z: 0}
+  m_headLocalRot: {x: 83.06, y: 180, z: 180}
+  m_fishingRay: {x: 1, y: 5, z: 1.5}
+  m_jumpingRay: {x: 0, y: 1.2, z: -1.45}

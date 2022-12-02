@@ -99,8 +99,10 @@ public class BuoyancyObject : MonoBehaviour
             m_rigidBody.drag = m_underWaterDragForce;
             m_rigidBody.angularDrag = m_underWaterAngularDragForce;
             if(m_characterData != null)
+            {
                 m_characterData.m_fishingRodController.DeactivateFishingRod();
-            m_characterData.m_characterController.m_capsuleCollider.direction = 2;
+                m_characterData.m_characterController.m_capsuleCollider.direction = 2;
+            }
         }
         else
         {

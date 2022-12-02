@@ -2,11 +2,14 @@ using UnityEngine;
 
 public class FishingRodController : MonoBehaviour
 {
+    private const float MAX_RAY_DISTANCE = 40f;
     public CharacterData m_characterData;
     private GameObject m_fishingRod;
     private Transform m_playerHead;
     private CharacterController m_characterController;
     private Animator m_animator;
+    private bool m_isOnFishingSpot;
+    RaycastHit objectHit;
 
     private bool m_initialized = false;
 
@@ -16,7 +19,6 @@ public class FishingRodController : MonoBehaviour
         m_fishingRod = transform.Find(m_characterData.m_characterSO.m_fishingRodObjName).gameObject;
         m_characterController = GetComponent<CharacterController>();
         m_animator = GetComponent<Animator>();
-
         m_initialized = true;
     }
 
@@ -27,21 +29,25 @@ public class FishingRodController : MonoBehaviour
         if (!transform.parent.GetComponent<NetworkPlayer>().isLocalPlayer)
             return;
 
-        if (m_fishingRod.activeInHierarchy && !FishingController.Instance.m_isFishing 
-            && !m_characterData.m_buoyancyController.IsUnderwater()) // TODO: do you mean IsSwimming?
+        if (!FishingController.Instance.m_isFishing
+            && !m_characterData.m_buoyancyController.IsUnderwater() && m_characterData.m_characterController.m_playerHeadObj != null) // TODO: do you mean IsSwimming?
         {
-            Vector3 fwd = m_playerHead.TransformDirection(new Vector3(1, 5f, 1.5f));
-            Debug.DrawRay(m_playerHead.position, fwd, Color.red);
-            if (Physics.Raycast(m_playerHead.position, fwd, out RaycastHit objectHit, 40))
+            Vector3 fwd = m_characterData.m_characterController.m_playerHeadObj.transform.TransformDirection(m_characterData.m_characterSO.m_fishingRay);
+            Debug.DrawRay(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, Color.red);
+            if (Physics.Raycast(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, out objectHit, MAX_RAY_DISTANCE))
             {
                 if (objectHit.transform.gameObject.name == "Water") // TODO: use const
                 {
                     FishingController.Instance.m_characterController = m_characterController;
                     FishingController.Instance.m_isNearFishingSpot.Raise("true");
+                    m_isOnFishingSpot = true;
                 }
                 else
                 {
                     FishingController.Instance.m_isNearFishingSpot.Raise("false");
+                    m_isOnFishingSpot = false;
+                    if (m_fishingRod.activeInHierarchy)
+                        ToggleFishingRod();
                 }
             }
         }
@@ -61,7 +67,7 @@ public class FishingRodController : MonoBehaviour
         {
             transform.parent.GetComponent<NetworkPlayer>().SetFishingRodEnabled(true);
         }
-        else
+        else if(!FishingController.Instance.m_isFishing)
         {
             transform.parent.GetComponent<NetworkPlayer>().SetFishingRodEnabled(false);
         }
@@ -69,12 +75,12 @@ public class FishingRodController : MonoBehaviour
 
     public void OnFishingRodStateChange(bool _fishingRodEnabled)
     {
-        if (_fishingRodEnabled)
+        if ((!m_fishingRod.activeInHierarchy && !m_characterData.m_characterSO.IsUnderWater() && m_isOnFishingSpot) || (_fishingRodEnabled && !m_fishingRod.activeInHierarchy))
         {
             if (m_animator) m_animator.SetTrigger("GrabRod"); // TODO: const + fix animator not set
             m_fishingRod.SetActive(true);
         }
-        else
+        else if((m_isOnFishingSpot || m_fishingRod.activeInHierarchy) && !_fishingRodEnabled)
         {
             if (m_animator) m_animator.SetTrigger("DropRod"); // TODO: const + fix animator not set
             m_fishingRod.SetActive(false);

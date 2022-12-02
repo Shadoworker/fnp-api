@@ -1,17 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Mirror;
 
 public class CharacterController : NetworkBehaviour
 {
+    private const float MAX_RAY_DISTANCE = 40f;
+    private const float MIN_JOYSTICK_OFFSET = 0.6f;
+    private const float MAX_JOYSTICK_OFFSET = 1f;
     private const float SOLID_SURFACE_COLLISION_REF = 0.001f;
     private const string NAVIGATE_ANIM_PARAM = "Navigate"; // Centralize characters animations
 
     public CharacterData m_characterData;
+    [HideInInspector]public GameObject m_playerHeadObj;
     private float m_moveSpeed = 1;
     public Animator m_animator = null;
-    private Rigidbody m_rigidBody = null;
+    [HideInInspector] public Rigidbody m_rigidBody = null;
     private VariableJoystick m_joystick = null;
     private List<Collider> m_collisions = new List<Collider>();
     Vector3 m_movement;
@@ -21,6 +26,8 @@ public class CharacterController : NetworkBehaviour
     public float m_cameraRotationScale = 0.6f;
     public bool m_triggerJump;
     public CapsuleCollider m_capsuleCollider;
+    Vector3 m_oldPosition;
+    private float m_joystickOffset;
     RaycastHit m_objectHit; // never used, make it local?
     Transform m_boatSeatTransform = null;
 
@@ -41,6 +48,8 @@ public class CharacterController : NetworkBehaviour
         m_rigidBody = rigidbody;
         m_characterData.m_characterSO.SetGroundedValue(true);
         InvokeRepeating("PlaySpecialIdle", 1.0f, m_characterData.m_characterSO.m_specialIdleRepeatRate);
+        m_joystickOffset = MAX_JOYSTICK_OFFSET;
+        StartCoroutine(GeneratePlayerHeadObj());
     }
 
     public void InitRigidbody(Rigidbody _rigidbody)
@@ -60,6 +69,7 @@ public class CharacterController : NetworkBehaviour
         m_capsuleCollider.height = _copy.height;
         m_capsuleCollider.center = _copy.center;
         m_capsuleCollider.radius = _copy.radius;
+        m_capsuleCollider.material = _copy.material;
         _copy.enabled = false;
     }
 
@@ -90,9 +100,19 @@ public class CharacterController : NetworkBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        m_characterData.m_characterSO.SetGroundedValue(true);
         m_triggerJump = false;
         m_characterData.m_characterSO.SetJumpInput(false);
+        GetSpeed();
+        if (collision.gameObject.tag != "Ground" && Mathf.Abs(m_movement.z) >= GameStateManager.CharactersManager.m_zJoystickOffset && !m_animator.GetBool("Land"))
+        {
+            Vector3 fwd = m_characterData.m_characterController.m_playerHeadObj.transform.TransformDirection(m_characterData.m_characterSO.m_jumpingRay);
+            Debug.DrawRay(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, Color.yellow);
+            if ((!Physics.Raycast(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, out m_objectHit, MAX_RAY_DISTANCE) && GetSpeed() <= SOLID_SURFACE_COLLISION_REF) || m_characterData.m_buoyancyController.IsUnderwater())
+            {
+                SetJumpInput();
+                m_movement = Vector3.zero;
+            }
+        }
     }
 
     public float GetYDistanceBetweenColliders(float _y1, float _y2)
@@ -222,7 +242,9 @@ public class CharacterController : NetworkBehaviour
         {
            m_jumpTimeStamp = Time.time;
             if(!m_characterData.m_buoyancyController.IsUnderwater())
-                m_rigidBody.AddForce(((Vector3.up * m_characterData.m_characterSO.m_jumpForce) + m_moveVector), ForceMode.Impulse);
+            {
+                m_rigidBody.AddForce(Vector3.up * m_characterData.m_characterSO.m_jumpForce, ForceMode.Impulse);
+            }
             else
                 m_rigidBody.AddForce(((Vector3.up * m_characterData.m_characterSO.m_underwaterJumpForce) + m_moveVector), ForceMode.Impulse);
             m_characterData.m_characterSO.SetGroundedValue(false);
@@ -231,12 +253,15 @@ public class CharacterController : NetworkBehaviour
 
         if (m_animator && !m_wasGrounded && m_characterData.m_characterSO.IsGrounded())
         {
+            m_joystickOffset = MAX_JOYSTICK_OFFSET;
             m_animator.SetTrigger("Land");
+            StartCoroutine(ResetJumpTrigger());
         }
 
         if (m_animator && !m_characterData.m_characterSO.IsGrounded() && m_wasGrounded)
         {
             m_animator.SetTrigger("Jump");
+            m_joystickOffset = MIN_JOYSTICK_OFFSET;
         }
     }
 
@@ -267,21 +292,21 @@ public class CharacterController : NetworkBehaviour
     public Vector3 PoolInput()
     {
         Vector3 dir = Vector3.zero;
-        if(m_characterData.m_characterSO.m_movementMode == MovementMode.CONSTANT)
+        if (m_characterData.m_characterSO.m_isUnderwater)
+            m_moveSpeed = m_characterData.m_characterSO.m_swimSpeed;
+        else
+            m_moveSpeed = m_characterData.m_characterSO.m_runSpeed;
+        if(m_characterData.m_characterSO.m_jumpInput)
         {
-            if (m_movement.magnitude < 1)
-                m_moveSpeed = m_characterData.m_characterSO.m_walkSpeed;
-            else
-                m_moveSpeed = m_characterData.m_characterSO.m_runSpeed;
-            dir.x = -m_joystick.m_horizontal;
-            dir.z = -m_joystick.m_vertical;
+            dir.x = -Mathf.Clamp(m_joystick.m_horizontal, -m_joystickOffset, Mathf.Sign(m_joystick.m_horizontal) * m_joystickOffset);
+            dir.z = -Mathf.Clamp(m_joystick.m_vertical, -m_joystickOffset, Mathf.Sign(m_joystick.m_vertical) * m_joystickOffset);
         }
         else
         {
-            m_moveSpeed = m_characterData.m_characterSO.m_runSpeed;
             dir.x = -m_joystick.m_horizontal;
             dir.z = -m_joystick.m_vertical;
         }
+
         if (dir.magnitude > 1)
             dir.Normalize();
         return dir;
@@ -300,5 +325,32 @@ public class CharacterController : NetworkBehaviour
             GameStateManager.CameraManager.m_cameraFollow = Camera.main.transform.GetComponent<CameraFollow>();
             return m_moveVector;
         }
+    }
+
+    public float GetSpeed()
+    {
+        float speedPerSec = Vector3.Distance(m_oldPosition, transform.position) / Time.deltaTime;
+        m_oldPosition = transform.position;
+        return speedPerSec;
+    }
+
+    public IEnumerator ResetJumpTrigger()
+    {
+        float delay = 1.5f;
+        yield return new WaitForSeconds(delay);
+        m_animator.ResetTrigger("Land");
+        m_animator.ResetTrigger("Jump");
+    }
+
+    public IEnumerator GeneratePlayerHeadObj()
+    {
+        float delay = 0.3f;
+        yield return new WaitForSeconds(delay);
+        GameObject head = new GameObject("Head");
+        Transform parent = m_characterData.m_fishingRodController.transform.Find(m_characterData.m_characterSO.m_headParentPath);
+        head.transform.SetParent(parent);
+        head.transform.localPosition = m_characterData.m_characterSO.m_headLocalPos;
+        head.transform.localEulerAngles = m_characterData.m_characterSO.m_headLocalRot;
+        m_playerHeadObj = head;
     }
 }

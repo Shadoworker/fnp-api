@@ -73,6 +73,7 @@ public class FishingController : Singleton<FishingController>
         {
             CharacterController characterController = GameStateManager.CharactersManager.LocalPlayer.GetComponent<CharacterController>();
             characterController.enabled = true;
+            characterController.m_rigidBody.isKinematic = false;
             characterController.m_animator.SetBool("Fish", false);
         }
     }
@@ -96,6 +97,7 @@ public class FishingController : Singleton<FishingController>
         Debug.Log($"ShouldStartFishingGameplay: received fish from Server: {_fishSO.name}");
 
         // initialize rode settings
+        m_isFishing = true;
         m_distanceTravelled = INDICATOR_DEFAULT_POS;
         m_speed = _fishSO.m_speed;
         m_battleDuration = _fishSO.m_battleDuration;
@@ -104,14 +106,14 @@ public class FishingController : Singleton<FishingController>
         // setup character
         CharacterController characterController = GameStateManager.CharactersManager.LocalPlayer.GetComponent<CharacterController>();
         characterController.enabled = false;
+        characterController.m_rigidBody.isKinematic = true;
         characterController.m_animator.SetBool("Fish", true);
+        characterController.m_characterData.m_fishingRodController.ToggleFishingRod();
 
         // refresh UI
         // TODO: extract those commands to UIManager.StartFishingGameplay()
         m_fishingUI.SetActive(true);
         m_jumpBtn.SetActive(false);
         m_fishBtn.SetActive(false);
-
-        m_isFishing = true;
     }
 }
