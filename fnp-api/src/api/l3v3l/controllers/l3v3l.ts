@@ -15,72 +15,6 @@ const OktaJwtVerifier = require('@okta/jwt-verifier');
 export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =>  ({
 
 
- 
-
-    // Method 1: Creating an entirely custom action
-    async sample(ctx) {
-      try {
-        // ctx.body = 'ok';
-        const { data } = await axios.get(`https://api.github.com/users?since=0&per_page=2`);
-        // ctx.body = data;
-        var claims = "Vroooom";
-        ctx.body = `
-          <html>
-          <head>
-          <meta http-equiv=Content-Type content="text/html; charset=utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1" /> 
-          </head>
-          <style>
-            .box
-            {
-              display:flex; 
-              width:100%;
-              align-items:center;
-              justify-content:center;
-              flex-direction : column;
-            }
-            .title
-            {
-              font-family : Arial;
-            }
-            .btn {
-              display: block;
-              height: 25px;
-              background: #4E9CAF;
-              padding: 10px;
-              text-align: center;
-              border-radius: 5px;
-              color: white;
-              font-weight: bold;
-              line-height: 25px;
-              text-decoration:none;
-              font-family:Arial;
-              font-size:14px;
-              padding:8px 20px;
-            }
-          </style>
-          <body >
-          <div class="box">
-          <h3 class="title" >Connexion établie !</h3>
-          <a id="fnpBtn" class="btn" href="http://www.example.com">RETOURNER AU JEU</a>
-          </div>
-            <script nonce='a9f04fd1-06cf-4948-9d66-ea306e581896'>
-
-              setTimeout(()=>{
-                document.getElementById("fnpBtn").click();
-              },1500)
-               
-            </script> 
-          </body>
-          </html>
-        `
-    
-      } catch (err) {
-        ctx.body = err;
-      }
- 
-    },
-  
     async callback(ctx) { // l3v3l MAIN CALLBACK : called by GET /callback
 
  
@@ -168,7 +102,8 @@ export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =
                 <body >
                 <div class="box">
                 <h3 class="title" >Connexion établie !</h3>
-                <a id="btn" class="btn" href='unitydl://mylink?${claims}'>RETOURNER AU JEU</a>
+                <span>Votre token : <span style="font-weight:bold"> ${accessTokenString} </span> </span>
+                <a id="btn" class="btn" href='fnpdl://signinLink?${claims}'>RETOURNER AU JEU</a>
                 </div>
  
                 </body>
@@ -183,6 +118,40 @@ export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =
         } catch (err) {
           ctx.body = err;
         }
+ 
+
+
+      },
+
+    
+      async getUserData(ctx) { // User data using token
+
+ 
+        var url_string = "http://192.168.1.12:1337/"+ ctx.originalUrl;
+
+        var url = new URL(url_string);
+        var accessTokenString = url.searchParams.get("id_token");
+      
+ 
+        const oktaJwtVerifier = new OktaJwtVerifier({
+          issuer: 'https://connect.playtix.team/oauth2/aus7e5j3kfGHKetdl5d7' // required
+        });
+
+        // Get Player_ID
+        try {
+          
+            let jwt = await oktaJwtVerifier.verifyAccessToken(accessTokenString, "0oa7e5jz4w9xy416F5d7")
+
+            // console.log(jwt)
+            // Return values
+            var claims = JSON.stringify(jwt.claims);
+            console.log(claims)
+
+            ctx.body = claims;
+
+          } catch (err) {
+            ctx.body = err;
+          }
  
 
 
