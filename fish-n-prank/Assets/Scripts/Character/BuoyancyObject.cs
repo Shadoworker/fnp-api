@@ -52,7 +52,7 @@ public class BuoyancyObject : MonoBehaviour
                         {
                             m_characterData.m_animator.SetBool("Swim", true);
                             if (m_characterData.m_characterSO.m_isBackstrokeSwim)
-                                transform.GetChild(0).localEulerAngles = new Vector3(transform.GetChild(0).localEulerAngles.x, BACKSTROKE_SWIM_ROT, 0f);
+                                m_characterData.m_characterSkin.transform.localEulerAngles = new Vector3(transform.GetChild(0).localEulerAngles.x, BACKSTROKE_SWIM_ROT, 0f);
                         }
                         SwitchState(true);
                     }
@@ -65,7 +65,7 @@ public class BuoyancyObject : MonoBehaviour
                     {
                         m_characterData.m_animator.SetBool("Swim", false);
                         if (m_characterData.m_characterSO.m_isBackstrokeSwim)
-                            transform.GetChild(0).localEulerAngles = new Vector3(transform.GetChild(0).localEulerAngles.x, 0f, 0f);
+                            m_characterData.m_characterSkin.transform.localEulerAngles = new Vector3(transform.GetChild(0).localEulerAngles.x, 0f, 0f);
                     }
                     m_characterData.m_characterSO.SetUnderWaterValue(false);
                     SwitchState(false);

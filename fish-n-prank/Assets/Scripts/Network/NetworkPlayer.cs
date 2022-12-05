@@ -76,6 +76,7 @@ public class NetworkPlayer : NetworkBehaviour
 
         GetComponent<CharacterData>().m_animator = characterGO.GetComponent<Animator>();
         GetComponent<CharacterData>().m_fishingRodController = characterGO.GetComponent<FishingRodController>();
+        GetComponent<CharacterData>().m_characterSkin = characterGO;
         GetComponent<CharacterData>().InitCharacterData(characterSO);
     }
 

@@ -11,6 +11,7 @@ public class CharacterData : NetworkBehaviour
     public CharacterController m_characterController;
     public BuoyancyObject m_buoyancyController;
     public FishingRodController m_fishingRodController;
+    public GameObject m_characterSkin;
     public Animator m_animator;
 
 
