@@ -8,7 +8,7 @@ public class BuoyancyObject : MonoBehaviour
     public CharacterData m_characterData;
     public BoatSO m_boatSO;
     public Transform[] m_floaters;
-
+    public LayerMask m_waterLayer = 4;
     Rigidbody m_rigidBody;
     int m_floatersUnderWater;
 
@@ -66,6 +66,7 @@ public class BuoyancyObject : MonoBehaviour
                     if (gameObject.tag == "Player")
                     {
                         m_characterData.m_animator.SetBool("Swim", false);
+                        m_characterData.m_characterSO.SetGroundedValue(true);
                         if (m_characterData.m_characterSO.m_isBackstrokeSwim)
                             m_characterData.m_characterSkin.transform.localEulerAngles = new Vector3(transform.GetChild(0).localEulerAngles.x, 0f, 0f);
                     }
@@ -84,13 +85,14 @@ public class BuoyancyObject : MonoBehaviour
         {
             RaycastHit objectHit; // never used, make it local?
             Vector3 fwd = m_characterData.m_characterController.m_playerHeadObj.transform.TransformDirection(m_characterData.m_characterSO.m_boatDetectionRay);
-            Debug.DrawRay(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, Color.red);
-            if (Physics.Raycast(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, out objectHit, m_characterData.m_characterSO.m_maxRayDistance) && objectHit.transform != null && objectHit.transform.gameObject.tag == "Boat"
-                && !m_characterData.m_characterController.m_triggerJump)
+            //Debug.DrawRay(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd * m_characterData.m_characterSO.m_maxRayDistance, Color.red);
+            if (Physics.Raycast(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, out objectHit, m_characterData.m_characterSO.m_maxRayDistance) && !m_characterData.m_characterController.m_triggerJump)
             {
-                Debug.Log("Hit boat collider");
-                m_characterData.m_characterController.SetJumpInput();
-                m_characterData.m_characterController.m_moveVector = Vector3.zero;
+                if(objectHit.transform.gameObject.tag == "Boat")
+                {
+                    m_characterData.m_characterController.SetJumpInput();
+                    m_characterData.m_characterController.m_moveVector = Vector3.zero;
+                }
             }
         }
     }

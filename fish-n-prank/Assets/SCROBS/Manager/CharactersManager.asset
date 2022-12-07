@@ -21,8 +21,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8ad00e3d74a898048b99581e62e8b83b, type: 2}
   - {fileID: 11400000, guid: 4d233d20369e23e489342033750eeeab, type: 2}
   m_jumpEvent: {fileID: 11400000, guid: 6703276f8dc3b3e47936435529d46091, type: 2}
+  m_fishEvent: {fileID: 0}
   m_toggleFishingRodEvent: {fileID: 11400000, guid: ba28f1532bca2de4393826c3022bedaf, type: 2}
   m_xAxisSensitivity: 1.5
   m_zAxisSensitivity: 1
   m_characterSpawnPosition: {x: -3.84, y: -1.34, z: 0}
+  m_xJoystickOffset: 0.2
+  m_zJoystickOffset: 0.2
   m_waterHeight: 3.6
