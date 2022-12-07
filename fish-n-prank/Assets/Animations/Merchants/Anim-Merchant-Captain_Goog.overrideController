@@ -6,10 +6,10 @@ AnimatorOverrideController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Anim-Merchant-Roxye
+  m_Name: Anim-Merchant-Captain_Goog
   m_Controller: {fileID: 9100000, guid: 9a10a027195375f48a06b4fb8be5e3b1, type: 2}
   m_Clips:
   - m_OriginalClip: {fileID: -4262909063569532636, guid: f65efbc3de1796c4789135838da6a8d2, type: 3}
-    m_OverrideClip: {fileID: 802644185248649847, guid: 355468c82405c954a83c86a7ce3c1603, type: 3}
+    m_OverrideClip: {fileID: -777007433134601202, guid: de3f35ea821f94ea78d4654d4283589f, type: 3}
   - m_OriginalClip: {fileID: -7239889037535295928, guid: f65efbc3de1796c4789135838da6a8d2, type: 3}
-    m_OverrideClip: {fileID: -5280275936988947034, guid: 355468c82405c954a83c86a7ce3c1603, type: 3}
+    m_OverrideClip: {fileID: -8747565882034502066, guid: de3f35ea821f94ea78d4654d4283589f, type: 3}
