@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Anim-Merchant-Foxy
+  m_Controller: {fileID: 9100000, guid: 9a10a027195375f48a06b4fb8be5e3b1, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: -4262909063569532636, guid: f65efbc3de1796c4789135838da6a8d2, type: 3}
+    m_OverrideClip: {fileID: 9067493629310452469, guid: 87431c4f3591047c588e709ab927e927, type: 3}
+  - m_OriginalClip: {fileID: -7239889037535295928, guid: f65efbc3de1796c4789135838da6a8d2, type: 3}
+    m_OverrideClip: {fileID: 2858393460665237228, guid: 87431c4f3591047c588e709ab927e927, type: 3}
