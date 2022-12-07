@@ -141,11 +141,15 @@ PrefabInstance:
     - target: {fileID: 1772469358819383539, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_boatSO
       value: 
-      objectReference: {fileID: 11400000, guid: dac615b79716aed4fb11781e760d57b6, type: 2}
+      objectReference: {fileID: 11400000, guid: 4a45e6812cb7ffa47b4c356807361e7c, type: 2}
     - target: {fileID: 1772469358819383545, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: sceneId
       value: 3216428718
       objectReference: {fileID: 0}
+    - target: {fileID: 1772469358819383548, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 4a45e6812cb7ffa47b4c356807361e7c, type: 2}
     - target: {fileID: 2239320360284389148, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -394,10 +398,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 509787556265502704, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 1346b287d7bf3e44d88f97c82efe4bdd, type: 2}
     - target: {fileID: 509787556265502709, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
       propertyPath: sceneId
       value: 2722779762
       objectReference: {fileID: 0}
+    - target: {fileID: 509787556265502719, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 1346b287d7bf3e44d88f97c82efe4bdd, type: 2}
     - target: {fileID: 851823291513674410, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
       propertyPath: m_Name
       value: Boat_Canoe (2)
@@ -666,11 +678,15 @@ PrefabInstance:
     - target: {fileID: 1772469358819383539, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_boatSO
       value: 
-      objectReference: {fileID: 11400000, guid: dac615b79716aed4fb11781e760d57b6, type: 2}
+      objectReference: {fileID: 11400000, guid: 4a45e6812cb7ffa47b4c356807361e7c, type: 2}
     - target: {fileID: 1772469358819383545, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: sceneId
       value: 3061077550
       objectReference: {fileID: 0}
+    - target: {fileID: 1772469358819383548, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 4a45e6812cb7ffa47b4c356807361e7c, type: 2}
     - target: {fileID: 2239320360284389148, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -933,10 +949,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5763521812429533409, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 39b2328a4ea67c749ae0bee41a95c606, type: 2}
     - target: {fileID: 5763521812429533412, guid: b824dcb902b76436db992abfc3278591, type: 3}
       propertyPath: sceneId
       value: 3629961020
       objectReference: {fileID: 0}
+    - target: {fileID: 5763521812429533422, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 39b2328a4ea67c749ae0bee41a95c606, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b824dcb902b76436db992abfc3278591, type: 3}
 --- !u!4 &447144030 stripped
@@ -995,10 +1019,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 509787556265502704, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 1346b287d7bf3e44d88f97c82efe4bdd, type: 2}
     - target: {fileID: 509787556265502709, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
       propertyPath: sceneId
       value: 2950620941
       objectReference: {fileID: 0}
+    - target: {fileID: 509787556265502719, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 1346b287d7bf3e44d88f97c82efe4bdd, type: 2}
     - target: {fileID: 851823291513674410, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
       propertyPath: m_Name
       value: Boat_Canoe (1)
@@ -1115,11 +1147,15 @@ PrefabInstance:
     - target: {fileID: 1772469358819383539, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_boatSO
       value: 
-      objectReference: {fileID: 11400000, guid: dac615b79716aed4fb11781e760d57b6, type: 2}
+      objectReference: {fileID: 11400000, guid: 4a45e6812cb7ffa47b4c356807361e7c, type: 2}
     - target: {fileID: 1772469358819383545, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: sceneId
       value: 3039522551
       objectReference: {fileID: 0}
+    - target: {fileID: 1772469358819383548, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 4a45e6812cb7ffa47b4c356807361e7c, type: 2}
     - target: {fileID: 2239320360284389148, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_RootOrder
       value: 14
@@ -1335,10 +1371,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5763521812429533409, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 39b2328a4ea67c749ae0bee41a95c606, type: 2}
     - target: {fileID: 5763521812429533412, guid: b824dcb902b76436db992abfc3278591, type: 3}
       propertyPath: sceneId
       value: 3109522432
       objectReference: {fileID: 0}
+    - target: {fileID: 5763521812429533422, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 39b2328a4ea67c749ae0bee41a95c606, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b824dcb902b76436db992abfc3278591, type: 3}
 --- !u!4 &788007155 stripped
@@ -1835,10 +1879,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 509787556265502704, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 1346b287d7bf3e44d88f97c82efe4bdd, type: 2}
     - target: {fileID: 509787556265502709, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
       propertyPath: sceneId
       value: 4273216617
       objectReference: {fileID: 0}
+    - target: {fileID: 509787556265502719, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 1346b287d7bf3e44d88f97c82efe4bdd, type: 2}
     - target: {fileID: 851823291513674410, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
       propertyPath: m_Name
       value: Boat_Canoe (5)
@@ -2045,11 +2097,15 @@ PrefabInstance:
     - target: {fileID: 1772469358819383539, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_boatSO
       value: 
-      objectReference: {fileID: 11400000, guid: dac615b79716aed4fb11781e760d57b6, type: 2}
+      objectReference: {fileID: 11400000, guid: 4a45e6812cb7ffa47b4c356807361e7c, type: 2}
     - target: {fileID: 1772469358819383545, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: sceneId
       value: 479761665
       objectReference: {fileID: 0}
+    - target: {fileID: 1772469358819383548, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 4a45e6812cb7ffa47b4c356807361e7c, type: 2}
     - target: {fileID: 2239320360284389148, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -2144,11 +2200,15 @@ PrefabInstance:
     - target: {fileID: 1772469358819383539, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_boatSO
       value: 
-      objectReference: {fileID: 11400000, guid: dac615b79716aed4fb11781e760d57b6, type: 2}
+      objectReference: {fileID: 11400000, guid: 4a45e6812cb7ffa47b4c356807361e7c, type: 2}
     - target: {fileID: 1772469358819383545, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: sceneId
       value: 2090637739
       objectReference: {fileID: 0}
+    - target: {fileID: 1772469358819383548, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 4a45e6812cb7ffa47b4c356807361e7c, type: 2}
     - target: {fileID: 2239320360284389148, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -2258,10 +2318,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 509787556265502704, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 1346b287d7bf3e44d88f97c82efe4bdd, type: 2}
     - target: {fileID: 509787556265502709, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
       propertyPath: sceneId
       value: 437254947
       objectReference: {fileID: 0}
+    - target: {fileID: 509787556265502719, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 1346b287d7bf3e44d88f97c82efe4bdd, type: 2}
     - target: {fileID: 851823291513674410, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
       propertyPath: m_Name
       value: Boat_Canoe (6)
@@ -2444,10 +2512,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5763521812429533409, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 39b2328a4ea67c749ae0bee41a95c606, type: 2}
     - target: {fileID: 5763521812429533412, guid: b824dcb902b76436db992abfc3278591, type: 3}
       propertyPath: sceneId
       value: 41712935
       objectReference: {fileID: 0}
+    - target: {fileID: 5763521812429533422, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 39b2328a4ea67c749ae0bee41a95c606, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b824dcb902b76436db992abfc3278591, type: 3}
 --- !u!1 &1680377191
@@ -2604,10 +2680,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5763521812429533409, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 39b2328a4ea67c749ae0bee41a95c606, type: 2}
     - target: {fileID: 5763521812429533412, guid: b824dcb902b76436db992abfc3278591, type: 3}
       propertyPath: sceneId
       value: 102801620
       objectReference: {fileID: 0}
+    - target: {fileID: 5763521812429533422, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 39b2328a4ea67c749ae0bee41a95c606, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b824dcb902b76436db992abfc3278591, type: 3}
 --- !u!4 &1693171169 stripped
@@ -2666,10 +2750,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 509787556265502704, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 1346b287d7bf3e44d88f97c82efe4bdd, type: 2}
     - target: {fileID: 509787556265502709, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
       propertyPath: sceneId
       value: 2199924599
       objectReference: {fileID: 0}
+    - target: {fileID: 509787556265502719, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 1346b287d7bf3e44d88f97c82efe4bdd, type: 2}
     - target: {fileID: 851823291513674410, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
       propertyPath: m_Name
       value: Boat_Canoe (4)
@@ -2707,11 +2799,15 @@ PrefabInstance:
     - target: {fileID: 1772469358819383539, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_boatSO
       value: 
-      objectReference: {fileID: 11400000, guid: dac615b79716aed4fb11781e760d57b6, type: 2}
+      objectReference: {fileID: 11400000, guid: 4a45e6812cb7ffa47b4c356807361e7c, type: 2}
     - target: {fileID: 1772469358819383545, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: sceneId
       value: 966992755
       objectReference: {fileID: 0}
+    - target: {fileID: 1772469358819383548, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 4a45e6812cb7ffa47b4c356807361e7c, type: 2}
     - target: {fileID: 2239320360284389148, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_RootOrder
       value: 17
@@ -3579,10 +3675,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 509787556265502704, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 1346b287d7bf3e44d88f97c82efe4bdd, type: 2}
     - target: {fileID: 509787556265502709, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
       propertyPath: sceneId
       value: 2581713874
       objectReference: {fileID: 0}
+    - target: {fileID: 509787556265502719, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 1346b287d7bf3e44d88f97c82efe4bdd, type: 2}
     - target: {fileID: 851823291513674410, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
       propertyPath: m_Name
       value: Boat_Canoe (3)
@@ -3955,10 +4059,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5763521812429533409, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 39b2328a4ea67c749ae0bee41a95c606, type: 2}
     - target: {fileID: 5763521812429533412, guid: b824dcb902b76436db992abfc3278591, type: 3}
       propertyPath: sceneId
       value: 2357426880
       objectReference: {fileID: 0}
+    - target: {fileID: 5763521812429533422, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 39b2328a4ea67c749ae0bee41a95c606, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b824dcb902b76436db992abfc3278591, type: 3}
 --- !u!4 &8888897144529752740 stripped
@@ -4075,9 +4187,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5763521812429533409, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 39b2328a4ea67c749ae0bee41a95c606, type: 2}
     - target: {fileID: 5763521812429533412, guid: b824dcb902b76436db992abfc3278591, type: 3}
       propertyPath: sceneId
       value: 2780344166
       objectReference: {fileID: 0}
+    - target: {fileID: 5763521812429533422, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_boatSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 39b2328a4ea67c749ae0bee41a95c606, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b824dcb902b76436db992abfc3278591, type: 3}

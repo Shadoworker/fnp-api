@@ -8,16 +8,16 @@ public class BuoyancyObject : MonoBehaviour
     public CharacterData m_characterData;
     public BoatSO m_boatSO;
     public Transform[] m_floaters;
-    public LayerMask m_waterLayer = 4;
+    private LayerMask m_waterLayer = 4;
     Rigidbody m_rigidBody;
     int m_floatersUnderWater;
 
-    public float m_waterHeight;
-    public float m_floatingPower;
-    public float m_underWaterDragForce;
-    public float m_underWaterAngularDragForce;
-    public float m_airDragForce;
-    public float m_airAngularDrag;
+    private float m_waterHeight;
+    private float m_floatingPower;
+    private float m_underWaterDragForce;
+    private float m_underWaterAngularDragForce;
+    private float m_airDragForce;
+    private float m_airAngularDrag;
     private const float BACKSTROKE_SWIM_ROT = 180f;
 
     private void Start()

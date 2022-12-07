@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9818d172165f2341a3b5f78c236fe4e, type: 3}
+  m_Name: Boat-Canoe-SO
+  m_EditorClassIdentifier: 
+  m_floatingPower: 500
+  m_waterHeight: 6
+  m_mass: 30
+  m_underWaterDragForce: 0.5
+  m_underWaterAngularDragForce: 3
+  m_airDragForce: 2.5
+  m_airAngularDrag: 5
+  m_steermPower: 50000
+  m_power: 30
+  m_maxSpeed: 50
+  m_reverseSpeed: 5
+  m_drag: 0.1
+  m_steerPower: 10000
