@@ -9,17 +9,16 @@ public class BoatController : NetworkBehaviour
 
     //used Components
     protected Rigidbody m_rigidbody;
-    protected Quaternion StartRotation; // TODO: naming!
-    protected ParticleSystem ParticleSystem; // TODO: naming!
+    protected Quaternion m_startRotation;
+    protected ParticleSystem m_particleSystem;
     [SerializeField]
     [Tooltip("An hideable mesh for the boat, to unblock the view of the local player only.")]
     private GameObject m_hideableMesh = null;
 
     //internal Properties
-    protected Vector3 CamVel; // TODO: naming!
     private VariableJoystick m_joystick = null;
     public Transform m_facingDirection;
-    private Vector3 m_moveVector { set; get; } // TODO: unused
+
     [SerializeField]
     private DriveBoatTrigger m_driveBoatTrigger;
 
@@ -27,9 +26,9 @@ public class BoatController : NetworkBehaviour
 
     public void Awake()
     {
-        ParticleSystem = GetComponentInChildren<ParticleSystem>();
+        m_particleSystem = GetComponentInChildren<ParticleSystem>();
         m_rigidbody = GetComponent<Rigidbody>();
-        StartRotation = m_motor.localRotation;
+        m_startRotation = m_motor.localRotation;
         m_joystick = InputManager.Instance.MovementJoystick;
     }
 
@@ -143,13 +142,13 @@ public class BoatController : NetworkBehaviour
             m_rigidbody.velocity = -forward * m_boatSO.m_reverseSpeed;
 
         //m_motor Animation // Particle system
-        m_motor.SetPositionAndRotation(m_motor.position, transform.rotation * StartRotation * Quaternion.Euler(0, m_boatSO.m_steerPower * steer, 0));
-        if (ParticleSystem != null)
+        m_motor.SetPositionAndRotation(m_motor.position, transform.rotation * m_startRotation * Quaternion.Euler(0, m_boatSO.m_steerPower * steer, 0));
+        if (m_particleSystem != null)
         {
             if (Input.GetAxis("Vertical") > 0 || m_joystick.m_vertical > 0 || Input.GetAxis("Vertical") < 0 || m_joystick.m_vertical < 0)
-                ParticleSystem.Play();
+                m_particleSystem.Play();
             else
-                ParticleSystem.Pause();
+                m_particleSystem.Pause();
         }
 
         //moving forward
