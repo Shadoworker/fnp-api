@@ -114,29 +114,66 @@ export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =
 
       },
 
-    // Method 2: Wrapping a core action (leaves core logic in place)
-    async find(ctx) {
-      // some custom logic here
-      ctx.query = { ...ctx.query, local: 'en' }
-      
-      // Calling the default core action
-      const { data, meta } = await super.find(ctx);
+ 
+
+      async getGames(ctx) { // l3v3l: get games list
+
+        let client_id = CONSTANTS.requests_client_id;
+        let client_secret = CONSTANTS.requests_client_secret;
+
+        const auth_header = btoa(`${client_id}:${client_secret}`);
+
+        let config = {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Authorization: 'Basic '+ auth_header
+          }
+         }
+
+        var body = null;
+        
+        // Get Token
+        try {
+
+          let _url = CONSTANTS.playtix_request_base_url+'/v1/token?grant_type=client_credentials';
+          const { data } = await axios.post(_url, undefined, config)
+
+          var accessTokenString = data.access_token;
+ 
+          // ctx.body = accessTokenString;
+          // Get games ...
+          let config2 = {
+            headers: {
+              'Accept-Encoding' : 'application/json',
+              'Accept': 'application/json',
+              'Content-Type': 'application/json;charset=utf-8',
+              Authorization: 'Bearer '+ accessTokenString
+            }
+           }
+          try {
+
+            let _url2 = CONSTANTS.playtix_api_base_url+'games';
+            
+            const { data } = await axios.get(_url2, config2);
+
+            console.log(data);
+            ctx.body = data;
+              
   
-      // some more custom logic
-      meta.date = Date.now()
-  
-      return { data, meta };
-    },
-  
-    // Method 3: Replacing a core action
-    async findOne(ctx) {
-      const { id } = ctx.params;
-      const { query } = ctx;
-  
-      const entity = await strapi.service('api::l3v3l.l3v3l').findOne(id, query);
-      const sanitizedEntity = await this.sanitizeOutput(entity, ctx);
-  
-      return this.transformResponse(sanitizedEntity);
-    }
+          } catch (err) {
+            ctx.body = err;
+          }
+         
+
+        } catch (err) {
+          ctx.body = err;
+        }
+ 
+
+
+      },
+
+
   }));
    

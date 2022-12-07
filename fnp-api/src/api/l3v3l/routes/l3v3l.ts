@@ -16,6 +16,12 @@ export default {
       method: 'GET',
       path: '/l3v3l/who',
       handler: 'l3v3l.getUserData',
+    },
+
+    {
+      method: 'GET',
+      path: '/l3v3l/games',
+      handler: 'l3v3l.getGames',
     }
   ]
 }
