@@ -281,7 +281,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0.1
-  m_boatSO: {fileID: 0}
+  m_boatSO: {fileID: 11400000, guid: dac615b79716aed4fb11781e760d57b6, type: 2}
   m_motor: {fileID: 5763521812512500889}
   m_hideableMesh: {fileID: 0}
   m_facingDirection: {fileID: 5763521811717742775}
