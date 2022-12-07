@@ -24,7 +24,7 @@ MonoBehaviour:
   m_playerHeadObjName: Armature/Bone/Bone.001/Bone.002/Bone.015/Bone.016/Head
   m_specialIdleRepeatRate: 20
   m_jumpForce: 15
-  m_underwaterJumpForce: 23
+  m_underwaterJumpForce: 25
   m_minJumpInterval: 1
   m_jumpInput: 0
   m_isGrounded: 1

@@ -134,6 +134,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boat_ToTheMoon (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1466056559199823270, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
     - target: {fileID: 1772469358819383539, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_boatSO
       value: 
@@ -193,6 +197,10 @@ PrefabInstance:
     - target: {fileID: 2239320360284389148, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7626196484104379775, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
+      propertyPath: m_TagString
+      value: Boat
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
@@ -393,6 +401,14 @@ PrefabInstance:
     - target: {fileID: 851823291513674410, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
       propertyPath: m_Name
       value: Boat_Canoe (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 851823291513674410, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
+    - target: {fileID: 4610223028812233878, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_TagString
+      value: Boat
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
@@ -643,6 +659,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boat_ToTheMoon (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 1466056559199823270, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
     - target: {fileID: 1685364624821702212, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3
@@ -710,6 +730,10 @@ PrefabInstance:
     - target: {fileID: 2239320360284389148, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7626196484104379775, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
+      propertyPath: m_TagString
+      value: Boat
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
@@ -861,9 +885,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 244987442}
     m_Modifications:
+    - target: {fileID: 3182914907978148963, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
     - target: {fileID: 4845113834490219963, guid: b824dcb902b76436db992abfc3278591, type: 3}
       propertyPath: m_Name
       value: Boat_Illuminati (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4845113834490219963, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_TagString
+      value: Boat
       objectReference: {fileID: 0}
     - target: {fileID: 5221534472967460609, guid: b824dcb902b76436db992abfc3278591, type: 3}
       propertyPath: m_RootOrder
@@ -979,6 +1011,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boat_Canoe (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 851823291513674410, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
+    - target: {fileID: 4610223028812233878, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
 --- !u!4 &470339390 stripped
@@ -1076,6 +1116,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boat_ToTheMoon (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 1466056559199823270, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
     - target: {fileID: 1772469358819383539, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_boatSO
       value: 
@@ -1135,6 +1179,10 @@ PrefabInstance:
     - target: {fileID: 2239320360284389148, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7626196484104379775, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
+      propertyPath: m_TagString
+      value: Boat
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
@@ -1239,9 +1287,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 244987442}
     m_Modifications:
+    - target: {fileID: 3182914907978148963, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
     - target: {fileID: 4845113834490219963, guid: b824dcb902b76436db992abfc3278591, type: 3}
       propertyPath: m_Name
       value: Boat_Illuminati (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4845113834490219963, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_TagString
+      value: Boat
       objectReference: {fileID: 0}
     - target: {fileID: 5221534472967460609, guid: b824dcb902b76436db992abfc3278591, type: 3}
       propertyPath: m_RootOrder
@@ -1311,7 +1367,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 747105698723576229, guid: 5376f2bf5bc27ac44838e2fb0d887e04, type: 3}
       propertyPath: m_Layer
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 747105698723576229, guid: 5376f2bf5bc27ac44838e2fb0d887e04, type: 3}
       propertyPath: m_TagString
@@ -1795,6 +1851,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boat_Canoe (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 851823291513674410, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
+    - target: {fileID: 4610223028812233878, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
 --- !u!4 &1043252091 stripped
@@ -1982,6 +2046,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boat_ToTheMoon (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 1466056559199823270, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
     - target: {fileID: 1772469358819383539, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_boatSO
       value: 
@@ -2042,6 +2110,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7626196484104379775, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
 --- !u!1 &1377830586 stripped
@@ -2072,6 +2144,10 @@ PrefabInstance:
     - target: {fileID: 1466056559199823270, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_Name
       value: Boat_ToTheMoon (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1466056559199823270, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
+      propertyPath: m_TagString
+      value: Boat
       objectReference: {fileID: 0}
     - target: {fileID: 1772469358819383539, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_boatSO
@@ -2133,6 +2209,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7626196484104379775, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
 --- !u!1001 &1494861402
@@ -2193,6 +2273,14 @@ PrefabInstance:
     - target: {fileID: 851823291513674410, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
       propertyPath: m_Name
       value: Boat_Canoe (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 851823291513674410, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
+    - target: {fileID: 4610223028812233878, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_TagString
+      value: Boat
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
@@ -2308,9 +2396,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 244987442}
     m_Modifications:
+    - target: {fileID: 3182914907978148963, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
     - target: {fileID: 4845113834490219963, guid: b824dcb902b76436db992abfc3278591, type: 3}
       propertyPath: m_Name
       value: Boat_Illuminati (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4845113834490219963, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_TagString
+      value: Boat
       objectReference: {fileID: 0}
     - target: {fileID: 5221534472967460609, guid: b824dcb902b76436db992abfc3278591, type: 3}
       propertyPath: m_RootOrder
@@ -2460,9 +2556,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 244987442}
     m_Modifications:
+    - target: {fileID: 3182914907978148963, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
     - target: {fileID: 4845113834490219963, guid: b824dcb902b76436db992abfc3278591, type: 3}
       propertyPath: m_Name
       value: Boat_Illuminati (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4845113834490219963, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_TagString
+      value: Boat
       objectReference: {fileID: 0}
     - target: {fileID: 5221534472967460609, guid: b824dcb902b76436db992abfc3278591, type: 3}
       propertyPath: m_RootOrder
@@ -2578,6 +2682,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boat_Canoe (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 851823291513674410, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
+    - target: {fileID: 4610223028812233878, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
 --- !u!4 &1739541917 stripped
@@ -2595,6 +2707,10 @@ PrefabInstance:
     - target: {fileID: 1466056559199823270, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_Name
       value: Boat_ToTheMoon (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1466056559199823270, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
+      propertyPath: m_TagString
+      value: Boat
       objectReference: {fileID: 0}
     - target: {fileID: 1772469358819383539, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_boatSO
@@ -2655,6 +2771,10 @@ PrefabInstance:
     - target: {fileID: 2239320360284389148, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7626196484104379775, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
+      propertyPath: m_TagString
+      value: Boat
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 07a51c7043b8b44a0913d39ec657fc0d, type: 3}
@@ -3475,6 +3595,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boat_Canoe (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 851823291513674410, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
+    - target: {fileID: 4610223028812233878, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}
 --- !u!1001 &5485137179467405754
@@ -3779,9 +3907,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 244987442}
     m_Modifications:
+    - target: {fileID: 3182914907978148963, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
     - target: {fileID: 4845113834490219963, guid: b824dcb902b76436db992abfc3278591, type: 3}
       propertyPath: m_Name
       value: Boat_Illuminati (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4845113834490219963, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_TagString
+      value: Boat
       objectReference: {fileID: 0}
     - target: {fileID: 5221534472967460609, guid: b824dcb902b76436db992abfc3278591, type: 3}
       propertyPath: m_RootOrder
@@ -3891,9 +4027,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 244987442}
     m_Modifications:
+    - target: {fileID: 3182914907978148963, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_TagString
+      value: Boat
+      objectReference: {fileID: 0}
     - target: {fileID: 4845113834490219963, guid: b824dcb902b76436db992abfc3278591, type: 3}
       propertyPath: m_Name
       value: Boat_Illuminati (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4845113834490219963, guid: b824dcb902b76436db992abfc3278591, type: 3}
+      propertyPath: m_TagString
+      value: Boat
       objectReference: {fileID: 0}
     - target: {fileID: 5221534472967460609, guid: b824dcb902b76436db992abfc3278591, type: 3}
       propertyPath: m_RootOrder
