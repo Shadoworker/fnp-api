@@ -1,13 +1,13 @@
 using UnityEngine;
 using TMPro;
 using PathCreation;
+using Kayfo;
 
 public class FishingManager : Singleton<FishingManager>
 {
     private const float MIN_SAFE_ZONE = 15837;
     private const float MAX_SAFE_ZONE = 73594;
     private const float INDICATOR_DEFAULT_POS = 43536;
-    private const string NUMBER_OF_CAUGHT_FISHES = "CAUGHT_FISH";
 
     public PathCreator m_pathCreator;
     public Transform m_indicator;
@@ -22,10 +22,11 @@ public class FishingManager : Singleton<FishingManager>
     public CharacterController m_characterController;
     public Vector3 m_fishingUILocalPos;
 
+    private PersistentInt m_caughtFishes = new PersistentInt("CAUGHT_FISH", 0);
+
     private void Start()
     {
-        // TODO: that data should come from a cloud save in the future
-        m_numberOfCaughtFishesText.text = PlayerPrefs.GetInt(NUMBER_OF_CAUGHT_FISHES).ToString(); // TODO: use a PersistenInt
+        RefeshCaughtFishesUI();
     }
 
     void Update()
@@ -45,11 +46,16 @@ public class FishingManager : Singleton<FishingManager>
                 EndFishing();
             if (m_battleDuration <= 0)
             {
-                PlayerPrefs.SetInt(NUMBER_OF_CAUGHT_FISHES, PlayerPrefs.GetInt(NUMBER_OF_CAUGHT_FISHES) + 1);
-                m_numberOfCaughtFishesText.text = PlayerPrefs.GetInt(NUMBER_OF_CAUGHT_FISHES).ToString();
+                m_caughtFishes.Set(m_caughtFishes.Get() + 1);
+                RefeshCaughtFishesUI();
                 EndFishing();
             }
         }
+    }
+
+    private void RefeshCaughtFishesUI()
+    {
+        m_numberOfCaughtFishesText.text = m_caughtFishes.Get().ToString();
     }
 
     private void FixedUpdate()
