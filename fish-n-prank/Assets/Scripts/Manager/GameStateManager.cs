@@ -17,8 +17,6 @@ public class GameStateManager : SingletonScriptableObject<GameStateManager>
     [HideInInspector] public string m_loadingTxt;
     [HideInInspector] public bool m_loadingDone = false;
 
-    [SerializeField] private ApplicationManager m_applicationManager;
-
     [SerializeField] private CharactersManager m_charactersManager;
 
     [SerializeField] private CameraManager m_cameraManager;
@@ -38,10 +36,6 @@ public class GameStateManager : SingletonScriptableObject<GameStateManager>
     public static CameraManager CameraManager
     {
         get { return Instance.m_cameraManager; }
-    }
-    public static ApplicationManager ApplicationManager
-    {
-        get { return Instance.m_applicationManager; }
     }
 
     public void Init()
