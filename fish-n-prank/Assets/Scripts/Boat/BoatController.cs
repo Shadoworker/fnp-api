@@ -46,6 +46,7 @@ public class BoatController : NetworkBehaviour
 
         m_boatOwner = _newBoatOwner;
         netIdentity.AssignClientAuthority(m_boatOwner.GetComponent<NetworkIdentity>().connectionToClient);
+        GetComponent<NetworkTransform>().syncDirection = SyncDirection.ClientToServer;
 
         Debug.Log($"Boat {gameObject.name} authority transfered to client {connectionToClient}");
         DoStartSailing();
@@ -64,6 +65,7 @@ public class BoatController : NetworkBehaviour
 
         m_boatOwner = null;
         netIdentity.RemoveClientAuthority();
+        GetComponent<NetworkTransform>().syncDirection = SyncDirection.ServerToClient;
 
         Debug.Log($"Boat {gameObject.name} authority transfered back to server");
     }
@@ -92,7 +94,7 @@ public class BoatController : NetworkBehaviour
     public void RequestStopSailing()
     {
         // TODO: improve that test
-        if (GameStateManager.CharactersManager.LocalPlayer.GetComponent<CharacterController>().State == CharacterController.CharacterControlState.Sailing)
+        if (isOwned && GameStateManager.CharactersManager.LocalPlayer.GetComponent<CharacterController>().State == CharacterController.CharacterControlState.Sailing)
         {
             CmdStopSailing(GameStateManager.CharactersManager.LocalPlayer);
         }
