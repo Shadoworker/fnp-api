@@ -157,7 +157,7 @@ public class CharacterController : NetworkBehaviour
                 m_collisions.Remove(collision.collider);
             }
             //Debug.DrawRay(m_playerHeadObj.transform.position, Vector3.down * m_characterData.m_characterSO.m_rayCollisionRef, Color.red);
-            if ((m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && !Physics.Raycast(m_playerHeadObj.transform.position, Vector3.down, out objectHit, m_characterData.m_characterSO.m_rayCollisionRef)) /*|| (m_triggerJump && !m_characterData.m_characterSO.IsUnderWater())*/)
+            if ((m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && m_playerHeadObj != null && !Physics.Raycast(m_playerHeadObj.transform.position, Vector3.down, out objectHit, m_characterData.m_characterSO.m_rayCollisionRef)) /*|| (m_triggerJump && !m_characterData.m_characterSO.IsUnderWater())*/)
             {
                 m_characterData.m_characterSO.SetGroundedValue(false);
             }
@@ -173,7 +173,7 @@ public class CharacterController : NetworkBehaviour
         }
         //Debug.DrawRay(m_playerHeadObj.transform.position, Vector3.down * m_characterData.m_characterSO.m_rayCollisionRef, Color.red);
         RaycastHit objectHit; // never used, make it local?
-        if ((m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && !Physics.Raycast(m_playerHeadObj.transform.position, Vector3.down, out objectHit, m_characterData.m_characterSO.m_rayCollisionRef)) /*|| (m_triggerJump && !m_characterData.m_characterSO.IsUnderWater())*/)
+        if ((m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && m_playerHeadObj != null && !Physics.Raycast(m_playerHeadObj.transform.position, Vector3.down, out objectHit, m_characterData.m_characterSO.m_rayCollisionRef)) /*|| (m_triggerJump && !m_characterData.m_characterSO.IsUnderWater())*/)
         {
             m_characterData.m_characterSO.SetGroundedValue(false);
         }
