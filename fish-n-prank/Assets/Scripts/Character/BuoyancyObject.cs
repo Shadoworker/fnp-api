@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BuoyancyObject : MonoBehaviour
 {
+    private const float MAX_RAY_DISTANCE = 4f;
     public CharacterData m_characterData;
     public BoatSO m_boatSO;
     public Transform[] m_floaters;
@@ -37,6 +38,7 @@ public class BuoyancyObject : MonoBehaviour
         if(m_characterData != null || m_boatSO != null)
         {
             m_floatersUnderWater = 0;
+            AutoJump();
             for (int i = 0; i < m_floaters.Length; i++)
             {
                 float difference = m_floaters[i].position.y - m_waterHeight;
@@ -72,6 +74,23 @@ public class BuoyancyObject : MonoBehaviour
                 }
                 else if(m_boatSO != null && m_floatersUnderWater == 0)
                     SwitchState(false);
+            }
+        }
+    }
+
+    public void AutoJump()
+    {
+        if (m_characterData != null && m_characterData.m_characterSO.IsUnderWater() && m_characterData.m_characterController.m_playerHeadObj != null)
+        {
+            RaycastHit objectHit; // never used, make it local?
+            Vector3 fwd = m_characterData.m_characterController.m_playerHeadObj.transform.TransformDirection(m_characterData.m_characterSO.m_boatDetectionRay);
+            Debug.DrawRay(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, Color.red);
+            if (Physics.Raycast(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, out objectHit, m_characterData.m_characterSO.m_maxRayDistance) && objectHit.transform != null && objectHit.transform.gameObject.tag == "Boat"
+                && !m_characterData.m_characterController.m_triggerJump)
+            {
+                Debug.Log("Hit boat collider");
+                m_characterData.m_characterController.SetJumpInput();
+                m_characterData.m_characterController.m_moveVector = Vector3.zero;
             }
         }
     }

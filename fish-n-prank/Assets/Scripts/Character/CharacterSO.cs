@@ -55,6 +55,8 @@ public class CharacterSO : ScriptableObject
     [BoxGroup("Head transform")] public Vector3 m_headLocalRot;
     [BoxGroup("Head transform")] public Vector3 m_fishingRay;
     [BoxGroup("Head transform")] public Vector3 m_jumpingRay;
+    [BoxGroup("Head transform")] public Vector3 m_boatDetectionRay;
+    [BoxGroup("Head transform")] public float m_maxRayDistance;
 
 
     public bool GetJumpInput()

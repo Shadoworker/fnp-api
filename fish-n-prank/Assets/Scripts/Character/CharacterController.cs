@@ -28,8 +28,8 @@ public class CharacterController : NetworkBehaviour
     public CapsuleCollider m_capsuleCollider;
     Vector3 m_oldPosition;
     private float m_joystickOffset;
-    RaycastHit m_objectHit; // never used, make it local?
     Transform m_boatSeatTransform = null;
+    bool m_isDolphinJump;
 
     public CharacterControlState State { get; private set; }  = CharacterControlState.Walking;
 
@@ -103,16 +103,19 @@ public class CharacterController : NetworkBehaviour
         m_triggerJump = false;
         m_characterData.m_characterSO.SetJumpInput(false);
         GetSpeed();
-        if (collision.gameObject.tag != "Ground" && Mathf.Abs(m_movement.z) >= GameStateManager.CharactersManager.m_zJoystickOffset && !m_animator.GetBool("Land"))
+        if (collision.gameObject.tag != "Ground" && Mathf.Abs(m_movement.z) >= GameStateManager.CharactersManager.m_zJoystickOffset && !m_animator.GetBool("Land") && !m_characterData.m_characterSO.IsUnderWater() && !m_isDolphinJump)
         {
-            Vector3 fwd = m_characterData.m_characterController.m_playerHeadObj.transform.TransformDirection(m_characterData.m_characterSO.m_jumpingRay);
-            Debug.DrawRay(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, Color.yellow);
-            if ((!Physics.Raycast(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, out m_objectHit, MAX_RAY_DISTANCE) && GetSpeed() <= SOLID_SURFACE_COLLISION_REF) || m_characterData.m_buoyancyController.IsUnderwater())
+            Vector3 fwd = m_playerHeadObj.transform.TransformDirection(m_characterData.m_characterSO.m_jumpingRay);
+            RaycastHit objectHit; // never used, make it local?
+            Debug.DrawRay(m_playerHeadObj.transform.position, fwd, Color.yellow);
+            if ((!Physics.Raycast(m_playerHeadObj.transform.position, fwd, out objectHit, MAX_RAY_DISTANCE) && GetSpeed() <= SOLID_SURFACE_COLLISION_REF) /*|| (m_characterData.m_buoyancyController.IsUnderwater() && collision.gameObject.tag == "Boat")*/)
             {
+                Debug.Log("Jump");
                 SetJumpInput();
                 m_movement = Vector3.zero;
             }
         }
+        m_isDolphinJump = false;
     }
 
     public float GetYDistanceBetweenColliders(float _y1, float _y2)
@@ -129,6 +132,7 @@ public class CharacterController : NetworkBehaviour
     private void OnCollisionStay(Collision collision)
     {
         ContactPoint[] contactPoints = collision.contacts;
+        RaycastHit objectHit;
         bool validSurfaceNormal = false;
         for (int i = 0; i < contactPoints.Length; i++)
         {
@@ -152,7 +156,7 @@ public class CharacterController : NetworkBehaviour
             {
                 m_collisions.Remove(collision.collider);
             }
-            if (m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && !Physics.Raycast(transform.position, Vector3.down, out m_objectHit, m_characterData.m_characterSO.m_rayCollisionRef))
+            if (m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && !Physics.Raycast(transform.position, Vector3.down, out objectHit, m_characterData.m_characterSO.m_rayCollisionRef))
             {
                 m_characterData.m_characterSO.SetGroundedValue(false);
             }
@@ -166,7 +170,8 @@ public class CharacterController : NetworkBehaviour
         {
             m_collisions.Remove(collision.collider);
         }
-        if (m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && !Physics.Raycast(transform.position, Vector3.down, out m_objectHit, m_characterData.m_characterSO.m_rayCollisionRef))
+        RaycastHit objectHit; // never used, make it local?
+        if (m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && !Physics.Raycast(transform.position, Vector3.down, out objectHit, m_characterData.m_characterSO.m_rayCollisionRef))
         {
             m_characterData.m_characterSO.SetGroundedValue(false);
         }
@@ -246,7 +251,11 @@ public class CharacterController : NetworkBehaviour
                 m_rigidBody.AddForce(Vector3.up * m_characterData.m_characterSO.m_jumpForce, ForceMode.Impulse);
             }
             else
+            {
+                Debug.Log("Water jump");
+                m_isDolphinJump = true;
                 m_rigidBody.AddForce(((Vector3.up * m_characterData.m_characterSO.m_underwaterJumpForce) + m_moveVector), ForceMode.Impulse);
+            }
             m_characterData.m_characterSO.SetGroundedValue(false);
             m_characterData.m_characterSO.SetJumpInput(false);
         }
@@ -254,6 +263,7 @@ public class CharacterController : NetworkBehaviour
         if (m_animator && !m_wasGrounded && m_characterData.m_characterSO.IsGrounded())
         {
             m_joystickOffset = MAX_JOYSTICK_OFFSET;
+            m_capsuleCollider.enabled = true;
             m_animator.SetTrigger("Land");
             StartCoroutine(ResetJumpTrigger());
         }

@@ -37,7 +37,7 @@ MonoBehaviour:
   m_rayCollisionRef: 0.1
   m_floatingPower: 126
   m_diveForce: 0
-  m_isUnderwater: 0
+  m_isUnderwater: 1
   m_waterHeight: 3.2
   m_isBackstrokeSwim: 0
   m_fishingRodObjName: Armature/FishingRod
@@ -46,3 +46,5 @@ MonoBehaviour:
   m_headLocalRot: {x: 83.06, y: 180, z: 180}
   m_fishingRay: {x: 1, y: 5, z: 1.5}
   m_jumpingRay: {x: 0, y: 1.2, z: -1.45}
+  m_boatDetectionRay: {x: 0, y: 0.5, z: -1.5}
+  m_maxRayDistance: 4
