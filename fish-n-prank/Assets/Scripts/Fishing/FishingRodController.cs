@@ -29,7 +29,7 @@ public class FishingRodController : MonoBehaviour
         if (!transform.parent.GetComponent<NetworkPlayer>().isLocalPlayer)
             return;
 
-        if (!FishingController.Instance.m_isFishing
+        if (!FishingManager.Instance.m_isFishing
             && !m_characterData.m_buoyancyController.IsUnderwater() && m_characterData.m_characterController.m_playerHeadObj != null) // TODO: do you mean IsSwimming?
         {
             Vector3 fwd = m_characterData.m_characterController.m_playerHeadObj.transform.TransformDirection(m_characterData.m_characterSO.m_fishingRay);
@@ -38,13 +38,13 @@ public class FishingRodController : MonoBehaviour
             {
                 if (objectHit.transform.gameObject.name == "Water") // TODO: use const
                 {
-                    FishingController.Instance.m_characterController = m_characterController;
-                    FishingController.Instance.m_isNearFishingSpot.Raise("true");
+                    FishingManager.Instance.m_characterController = m_characterController;
+                    FishingManager.Instance.m_isNearFishingSpot.Raise("true");
                     m_isOnFishingSpot = true;
                 }
                 else
                 {
-                    FishingController.Instance.m_isNearFishingSpot.Raise("false");
+                    FishingManager.Instance.m_isNearFishingSpot.Raise("false");
                     m_isOnFishingSpot = false;
                     if (m_fishingRod.activeInHierarchy)
                         ToggleFishingRod();
@@ -53,8 +53,8 @@ public class FishingRodController : MonoBehaviour
         }
         else
         {
-            if (FishingController.Instance.m_isNearFishingSpot.m_previousValue.Equals("true"))
-                FishingController.Instance.m_isNearFishingSpot.Raise("false");
+            if (FishingManager.Instance.m_isNearFishingSpot.m_previousValue.Equals("true"))
+                FishingManager.Instance.m_isNearFishingSpot.Raise("false");
         }
     }
 
@@ -67,7 +67,7 @@ public class FishingRodController : MonoBehaviour
         {
             transform.parent.GetComponent<NetworkPlayer>().SetFishingRodEnabled(true);
         }
-        else if(!FishingController.Instance.m_isFishing)
+        else if(!FishingManager.Instance.m_isFishing)
         {
             transform.parent.GetComponent<NetworkPlayer>().SetFishingRodEnabled(false);
         }

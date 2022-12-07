@@ -27,7 +27,7 @@ public class FnPFishingNetworkInterface : NetworkBehaviour
     [TargetRpc]
     private void TargetSetBitingFish(NetworkConnection target, FishSO _fishSO)
     {
-        FishingController.Instance.StartFishingGameplay(_fishSO);
+        FishingManager.Instance.StartFishingGameplay(_fishSO);
     }
     #endregion
 

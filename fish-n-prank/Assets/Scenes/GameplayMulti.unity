@@ -1714,7 +1714,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1011918605}
-  - component: {fileID: 1011918607}
+  - component: {fileID: 1011918609}
   - component: {fileID: 1011918606}
   - component: {fileID: 1011918608}
   m_Layer: 0
@@ -1756,7 +1756,7 @@ MonoBehaviour:
   Response:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1011918607}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: FishingController, Assembly-CSharp
         m_MethodName: VerifiedFishingState
         m_Mode: 1
@@ -1771,31 +1771,6 @@ MonoBehaviour:
   invokeCheckOnEnable: 0
   m_disableFirstEvent: 0
   realTime: 0
---- !u!114 &1011918607
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1011918604}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6da17b38da5566f4eb8d2302a63d34cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_pathCreator: {fileID: 151884011}
-  m_indicator: {fileID: 949383080}
-  m_pullingPower: 20000
-  m_speed: 10
-  m_battleDuration: 10
-  m_isFishing: 0
-  m_numberOfCaughtFishesText: {fileID: 1647641977}
-  m_fishingUI: {fileID: 263217948}
-  m_fishBtn: {fileID: 315935925}
-  m_jumpBtn: {fileID: 1814962025}
-  m_isNearFishingSpot: {fileID: 11400000, guid: b019311c77cf6f44c9f54d692fccff6a, type: 2}
-  m_characterController: {fileID: 0}
-  m_fishingUILocalPos: {x: 0.4, y: 34, z: 26}
 --- !u!114 &1011918608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1813,7 +1788,7 @@ MonoBehaviour:
   Response:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1011918607}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: FishingController, Assembly-CSharp
         m_MethodName: RequestStartFishingGameplay
         m_Mode: 1
@@ -1828,6 +1803,31 @@ MonoBehaviour:
   invokeCheckOnEnable: 0
   m_disableFirstEvent: 0
   realTime: 0
+--- !u!114 &1011918609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011918604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0e7ff899d8ed8a40bb8f4f9d991b3a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_pathCreator: {fileID: 151884011}
+  m_indicator: {fileID: 949383080}
+  m_pullingPower: 20000
+  m_speed: 10
+  m_battleDuration: 10
+  m_isFishing: 0
+  m_numberOfCaughtFishesText: {fileID: 1647641977}
+  m_fishingUI: {fileID: 263217948}
+  m_fishBtn: {fileID: 315935925}
+  m_jumpBtn: {fileID: 1814962025}
+  m_isNearFishingSpot: {fileID: 11400000, guid: b019311c77cf6f44c9f54d692fccff6a, type: 2}
+  m_characterController: {fileID: 0}
+  m_fishingUILocalPos: {x: 0.4, y: 34, z: 26}
 --- !u!1001 &1043252090
 PrefabInstance:
   m_ObjectHideFlags: 0
