@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 2273657928815149355}
   - component: {fileID: 3333356180886509633}
   - component: {fileID: -4811455882678506728}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: NetworkPlayer
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -82,6 +82,7 @@ MonoBehaviour:
   m_characterController: {fileID: 0}
   m_buoyancyController: {fileID: 0}
   m_fishingRodController: {fileID: 1529960207907236708}
+  m_characterSkin: {fileID: 0}
   m_animator: {fileID: 1529960207907236706}
 --- !u!114 &5209425152053978027
 MonoBehaviour:
@@ -152,12 +153,6 @@ MonoBehaviour:
   m_characterData: {fileID: 0}
   m_boatSO: {fileID: 0}
   m_floaters: []
-  m_waterHeight: 0
-  m_floatingPower: 0
-  m_underWaterDragForce: 0
-  m_underWaterAngularDragForce: 0
-  m_airDragForce: 0
-  m_airAngularDrag: 0
 --- !u!136 &-3382164787783883288
 CapsuleCollider:
   m_ObjectHideFlags: 0
