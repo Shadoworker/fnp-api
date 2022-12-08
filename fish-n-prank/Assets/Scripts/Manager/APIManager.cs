@@ -7,9 +7,11 @@ using System;
 using System.IO;
 using System.Text;
 using TMPro;
+using Kayfo;
 
 public class APIManager : MonoBehaviour
 {
+
     private const string BASE_URL = "http://localhost:1337/api/";
 
     public static APIManager instance { get; private set; }
@@ -55,6 +57,8 @@ public class APIManager : MonoBehaviour
     	string data = urlDecoded.Split("?"[0])[1];
     	
         m_dataText.text = data;
+
+        SavePlayerID(data);
 
         // Debug.Log(output);
 
@@ -158,9 +162,28 @@ public class APIManager : MonoBehaviour
         else
         {
             m_dataText.text = request.downloadHandler.text;
+            
+            SavePlayerID(request.downloadHandler.text);
         }
     }
 
+
+    void SavePlayerID(string _jsonString)
+    {
+        
+        l3v3lPlayerInfo _l3v3lPlayerInfo = JsonUtility.FromJson<l3v3lPlayerInfo>(_jsonString);
+        
+        string playerID = _l3v3lPlayerInfo.idp;
+
+        StateManager.Instance.m_persistentPlayerID.Set(playerID);
+
+        GrantAccess();
+    }
+
+    void GrantAccess()
+    {
+        StateManager.Instance.GrantAccess();
+    }
 
  
 }
@@ -173,5 +196,20 @@ public class Credentials
     public string password;
 }
 
+[System.Serializable]
+public class l3v3lPlayerInfo
+{
+    public string   sub;
+    public int      ver;
+    public string   iss;
+    public string   aud;
+    public int      iat;
+    public int      exp;
+    public string   jti;
+    public string[] amr;
+    public string   idp;
+    public int      auth_time;
+    public string   at_bash;
+}
  
 
