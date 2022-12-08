@@ -13,7 +13,8 @@ using UnityEngine.SceneManagement;
 public class SceneLoaderManager : MonoBehaviour
 { 
     
- 
+    public float SCENE_LOADER_DELAY = 0.10f;
+
     void Start()
     {
         StartCoroutine(ILoad());
@@ -35,7 +36,7 @@ public class SceneLoaderManager : MonoBehaviour
 
     IEnumerator ILoad()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(SCENE_LOADER_DELAY);
         Load();
     }
 
