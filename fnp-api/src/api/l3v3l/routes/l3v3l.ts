@@ -11,10 +11,17 @@ export default {
       path: '/l3v3l/callback',
       handler: 'l3v3l.callback',
     },
+
     {
       method: 'GET',
-      path: '/l3v3l/sample',
-      handler: 'l3v3l.sample',
+      path: '/l3v3l/who',
+      handler: 'l3v3l.getUserData',
+    },
+
+    {
+      method: 'GET',
+      path: '/l3v3l/games',
+      handler: 'l3v3l.getGames',
     }
   ]
 }

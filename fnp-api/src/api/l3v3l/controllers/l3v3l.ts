@@ -6,6 +6,8 @@ import { factories } from '@strapi/strapi'
 import axios from 'axios'; 
 
 import {btoa} from 'buffer';
+import CONSTANTS from '../content-types/constants';
+import view from '../content-types/view';
 
 const open = require("open")
 
@@ -15,54 +17,18 @@ const OktaJwtVerifier = require('@okta/jwt-verifier');
 export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =>  ({
 
 
- 
-
-    // Method 1: Creating an entirely custom action
-    async sample(ctx) {
-      try {
-        // ctx.body = 'ok';
-        const { data } = await axios.get(`https://api.github.com/users?since=0&per_page=2`);
-        // ctx.body = data;
-        ctx.body = `
-          <html>
-          <head>
-          <meta http-equiv=Content-Type content="text/html; charset=windows-1252">
-          </head>
-          <body >
-          <h1>My Deep Link Test page</h1>
-          <h2 >
-          <a href="unitydl://mylink">Launch</a>
-          </h2>
-          <h2 >
-          <a href="unitydl://mylink?parameter">Launch with Parameter</a>
-          </h2>
-
-          </body>
-          </html>
-        `
-        // setTimeout(async() => {
-          
-        //   await open('unitydl://mylink?parameter');
-
-        // }, 3000);
-      } catch (err) {
-        ctx.body = err;
-      }
- 
-    },
-  
     async callback(ctx) { // l3v3l MAIN CALLBACK : called by GET /callback
 
  
-        var url_string = "http://localhost:1337/"+ ctx.originalUrl;
+        var url_string = CONSTANTS.api_url+ ctx.originalUrl;
 
         var url = new URL(url_string);
         var code = url.searchParams.get("code");
 
         // console.log(code);
 
-        let client_id = '0oa7e5jz4w9xy416F5d7';
-        let client_secret = 'tPHsuPBU_q3E9SQkEjV37q2wZZgQ8vf8jnRAVkpk';
+        let client_id = CONSTANTS.client_id;
+        let client_secret = CONSTANTS.client_secret;
 
         const auth_header = btoa(`${client_id}:${client_secret}`);
 
@@ -75,28 +41,31 @@ export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =
           }
          }
 
-        var body = "grant_type=authorization_code&redirect_uri=http%3A%2F%2Flocalhost%3A1337%2Fapi%2Fl3v3l%2Fcallback&code="+code;
-
-
+        var body = CONSTANTS.grant_url(CONSTANTS.api_url, CONSTANTS.api_path, code);
+        
         // Get Token
         try {
 
-          const { data } = await axios.post(`https://connect.playtix.team/oauth2/aus7e5j3kfGHKetdl5d7/v1/token`, body, config)
+          let _url = CONSTANTS.playtix_base_url+'/v1/token';
+          const { data } = await axios.post(_url, body, config)
 
           var accessTokenString = data.id_token;
 
           const oktaJwtVerifier = new OktaJwtVerifier({
-            issuer: 'https://connect.playtix.team/oauth2/aus7e5j3kfGHKetdl5d7' // required
+            issuer: CONSTANTS.playtix_base_url // required
           });
 
           // Get Player_ID
           try {
             
-              let jwt = await oktaJwtVerifier.verifyAccessToken(accessTokenString, "0oa7e5jz4w9xy416F5d7")
+              let jwt = await oktaJwtVerifier.verifyAccessToken(accessTokenString, CONSTANTS.client_id)
 
               // console.log(jwt)
               // Return values
-              ctx.body = jwt.claims;
+              var claims = JSON.stringify(jwt.claims);
+              console.log(claims)
+
+              ctx.body = view(accessTokenString, claims);
   
             } catch (err) {
               ctx.body = err;
@@ -111,29 +80,100 @@ export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =
 
       },
 
-    // Method 2: Wrapping a core action (leaves core logic in place)
-    async find(ctx) {
-      // some custom logic here
-      ctx.query = { ...ctx.query, local: 'en' }
+    
+      async getUserData(ctx) { // User data using token
+
+ 
+        var url_string = CONSTANTS.api_url+ ctx.originalUrl;
+
+        var url = new URL(url_string);
+        var accessTokenString = url.searchParams.get("id_token");
       
-      // Calling the default core action
-      const { data, meta } = await super.find(ctx);
+ 
+        const oktaJwtVerifier = new OktaJwtVerifier({
+          issuer: CONSTANTS.playtix_base_url // required
+        });
+
+        // Get Player_ID
+        try {
+          
+            let jwt = await oktaJwtVerifier.verifyAccessToken(accessTokenString, CONSTANTS.client_id)
+
+            // console.log(jwt)
+            // Return values
+            var claims = JSON.stringify(jwt.claims);
+            console.log(claims)
+
+            ctx.body = claims;
+
+          } catch (err) {
+            ctx.body = err;
+          }
+ 
+
+
+      },
+
+ 
+
+      async getGames(ctx) { // l3v3l: get games list
+
+        let client_id = CONSTANTS.requests_client_id;
+        let client_secret = CONSTANTS.requests_client_secret;
+
+        const auth_header = btoa(`${client_id}:${client_secret}`);
+
+        let config = {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Authorization: 'Basic '+ auth_header
+          }
+         }
+
+        var body = null;
+        
+        // Get Token
+        try {
+
+          let _url = CONSTANTS.playtix_request_base_url+'/v1/token?grant_type=client_credentials';
+          const { data } = await axios.post(_url, undefined, config)
+
+          var accessTokenString = data.access_token;
+ 
+          // ctx.body = accessTokenString;
+          // Get games ...
+          let config2 = {
+            headers: {
+              'Accept-Encoding' : 'application/json',
+              'Accept': 'application/json',
+              'Content-Type': 'application/json;charset=utf-8',
+              Authorization: 'Bearer '+ accessTokenString
+            }
+           }
+          try {
+
+            let _url2 = CONSTANTS.playtix_api_base_url+'games';
+            
+            const { data } = await axios.get(_url2, config2);
+
+            console.log(data);
+            ctx.body = data;
+              
   
-      // some more custom logic
-      meta.date = Date.now()
-  
-      return { data, meta };
-    },
-  
-    // Method 3: Replacing a core action
-    async findOne(ctx) {
-      const { id } = ctx.params;
-      const { query } = ctx;
-  
-      const entity = await strapi.service('api::l3v3l.l3v3l').findOne(id, query);
-      const sanitizedEntity = await this.sanitizeOutput(entity, ctx);
-  
-      return this.transformResponse(sanitizedEntity);
-    }
+          } catch (err) {
+            ctx.body = err;
+          }
+         
+
+        } catch (err) {
+          ctx.body = err;
+        }
+ 
+
+
+      },
+
+
   }));
    
