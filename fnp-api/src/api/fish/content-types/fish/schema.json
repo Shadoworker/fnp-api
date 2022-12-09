@@ -12,17 +12,23 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "name": {
-      "type": "string"
+    "espece": {
+      "type": "component",
+      "repeatable": false,
+      "component": "fish.espece",
+      "required": true
     },
-    "weight": {
-      "type": "decimal"
-    },
-    "user": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "fish"
+    "size": {
+      "type": "enumeration",
+      "enum": [
+        "baby",
+        "little",
+        "normal",
+        "big",
+        "geant"
+      ],
+      "default": "normal",
+      "required": true
     }
   }
 }

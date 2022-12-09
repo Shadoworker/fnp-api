@@ -22,6 +22,12 @@ export default {
       method: 'GET',
       path: '/l3v3l/games',
       handler: 'l3v3l.getGames',
+    },
+    
+    {
+      method: 'GET',
+      path: '/l3v3l/get-a-fish',
+      handler: 'l3v3l.getAFish',
     }
   ]
 }

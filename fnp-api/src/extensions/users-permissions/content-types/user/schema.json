@@ -61,12 +61,6 @@
       "target": "plugin::users-permissions.role",
       "inversedBy": "users",
       "configurable": false
-    },
-    "fish": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::fish.fish",
-      "mappedBy": "user"
     }
   }
 }

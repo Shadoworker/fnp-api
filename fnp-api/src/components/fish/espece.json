@@ -1,0 +1,49 @@
+{
+  "collectionName": "components_fish_especes",
+  "info": {
+    "displayName": "espece",
+    "icon": "fish",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "enumeration",
+      "enum": [
+        "conger",
+        "discus",
+        "carp"
+      ],
+      "required": true
+    },
+    "offshore": {
+      "type": "component",
+      "repeatable": false,
+      "component": "fish.offshore",
+      "required": true
+    },
+    "normal_weight": {
+      "type": "decimal",
+      "required": true
+    },
+    "area": {
+      "displayName": "area",
+      "type": "component",
+      "repeatable": true,
+      "component": "fish.area",
+      "required": true
+    },
+    "rod": {
+      "displayName": "rod",
+      "type": "component",
+      "repeatable": true,
+      "component": "tool.rod",
+      "required": true
+    },
+    "id_mapping": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utils.mapping"
+    }
+  }
+}

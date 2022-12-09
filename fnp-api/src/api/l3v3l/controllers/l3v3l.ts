@@ -5,7 +5,8 @@
 import { factories } from '@strapi/strapi'
 import axios from 'axios'; 
 
-import {btoa} from 'buffer';
+import {btoa} from 'buffer'; 
+import fish from '../../fish/services/fish';
 import CONSTANTS from '../content-types/constants';
 import view from '../content-types/view';
 
@@ -170,6 +171,79 @@ export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =
           ctx.body = err;
         }
  
+
+
+      },
+
+
+      
+      async getAFish(ctx) { // get a random fish : with sent specs
+
+            
+          var url_string = CONSTANTS.api_url+ ctx.originalUrl;
+
+          var url = new URL(url_string);
+
+          var areas = JSON.parse(url.searchParams.get("areas"));
+          var rods = JSON.parse(url.searchParams.get("rods"));
+
+          // console.log(areas[0]);
+          // console.log(rods);
+
+
+          const query = 
+          {
+            where:
+            {
+            },
+            populate: {
+              espece: {
+                populate: {
+                  id_mapping: true,
+                },
+              },
+            }
+          }
+        
+          const entity = await strapi.service('api::fish.fish').find(query);
+
+          var fishes :object[] = entity["results"];
+
+          var r = Math.floor(Math.random() * fishes.length);
+
+          if(fishes.length == 0){
+          
+            const query = 
+            {
+              where:
+              {
+              },
+              populate: {
+                espece: {
+                  populate: {
+                    id_mapping: true,
+                  },
+                },
+              }
+            }
+            const entity = await strapi.service('api::fish.fish').find(query);
+
+            fishes = entity["results"];
+            r = Math.floor(Math.random() * fishes.length);
+
+          }
+
+        var selected_fish = fishes[r];
+
+          // Getting fish sizes
+        var sizes = strapi.getModel('api::fish.fish').attributes.size.enum;
+        var r_size = Math.floor(Math.random() * sizes.length);
+        var size = sizes[r_size];
+
+        selected_fish["size"] = size;
+
+
+        ctx.body = selected_fish;
 
 
       },

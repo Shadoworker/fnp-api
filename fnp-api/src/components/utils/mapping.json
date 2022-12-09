@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_utils_mappings",
+  "info": {
+    "displayName": "mapping",
+    "icon": "exchange-alt"
+  },
+  "options": {},
+  "attributes": {
+    "staging": {
+      "type": "string"
+    },
+    "prod": {
+      "type": "string"
+    }
+  }
+}

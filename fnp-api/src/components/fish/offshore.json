@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_fish_offshores",
+  "info": {
+    "displayName": "offshore",
+    "icon": "map-pin",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "min": {
+      "type": "decimal",
+      "required": true,
+      "default": 0
+    },
+    "max": {
+      "type": "decimal",
+      "required": true,
+      "default": 500
+    }
+  }
+}
