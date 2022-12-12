@@ -8,7 +8,7 @@ public class BuoyancyObject : MonoBehaviour
     public CharacterData m_characterData;
     public BoatSO m_boatSO;
     public Transform[] m_floaters;
-    private LayerMask m_waterLayer = 4;
+    public LayerMask m_waterLayer;
     Rigidbody m_rigidBody;
     int m_floatersUnderWater;
 
@@ -86,9 +86,9 @@ public class BuoyancyObject : MonoBehaviour
             RaycastHit objectHit; // never used, make it local?
             Vector3 fwd = m_characterData.m_characterController.m_playerHeadObj.transform.TransformDirection(m_characterData.m_characterSO.m_boatDetectionRay);
             //Debug.DrawRay(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd * m_characterData.m_characterSO.m_maxRayDistance, Color.red);
-            if (Physics.Raycast(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, out objectHit, m_characterData.m_characterSO.m_maxRayDistance) && !m_characterData.m_characterController.m_triggerJump)
+            if (Physics.Raycast(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, out objectHit, m_characterData.m_characterSO.m_maxRayDistance, ~m_waterLayer) && !m_characterData.m_characterController.m_triggerJump)
             {
-                if(objectHit.transform.gameObject.tag == "Boat")
+                if (objectHit.transform.gameObject.tag == "Boat")
                 {
                     m_characterData.m_characterController.SetJumpInput();
                     m_characterData.m_characterController.m_moveVector = Vector3.zero;

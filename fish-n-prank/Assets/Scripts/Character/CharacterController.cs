@@ -7,9 +7,9 @@ using Mirror;
 public class CharacterController : NetworkBehaviour
 {
     private const float MAX_RAY_DISTANCE = 40f;
-    private const float MIN_JOYSTICK_OFFSET = 0.6f;
+    private const float MIN_JOYSTICK_OFFSET = 0.4f;
     private const float MAX_JOYSTICK_OFFSET = 1f;
-    private const float SOLID_SURFACE_COLLISION_REF = 5f;
+    private const float SOLID_SURFACE_COLLISION_REF = 8f;
     private const string NAVIGATE_ANIM_PARAM = "Navigate"; // Centralize characters animations
 
     public CharacterData m_characterData;
@@ -142,10 +142,9 @@ public class CharacterController : NetworkBehaviour
         }
 
         //Debug.DrawRay(m_playerHeadObj.transform.position, Vector3.down * m_characterData.m_characterSO.m_rayCollisionRef, Color.red);
-        if (validSurfaceNormal || (m_playerHeadObj != null && Physics.Raycast(m_playerHeadObj.transform.position, Vector3.down, out objectHit, m_characterData.m_characterSO.m_rayCollisionRef) && !m_triggerJump))
+        if ((validSurfaceNormal || (m_playerHeadObj != null && Physics.Raycast(m_playerHeadObj.transform.position, Vector3.down, out objectHit, m_characterData.m_characterSO.m_rayCollisionRef)) && !m_characterData.m_characterSO.GetJumpInput()))
         {
             m_characterData.m_characterSO.SetGroundedValue(true);
-            m_triggerJump = false;
             if (!m_collisions.Contains(collision.collider))
             {
                 m_collisions.Add(collision.collider);
@@ -157,7 +156,7 @@ public class CharacterController : NetworkBehaviour
             {
                 m_collisions.Remove(collision.collider);
             }
-            if ((m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && m_playerHeadObj != null && !Physics.Raycast(m_playerHeadObj.transform.position, Vector3.down, out objectHit, m_characterData.m_characterSO.m_rayCollisionRef)) /*|| (m_triggerJump && !m_characterData.m_characterSO.IsUnderWater())*/)
+            if ((m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && m_playerHeadObj != null && !Physics.Raycast(m_playerHeadObj.transform.position, Vector3.down, out objectHit, m_characterData.m_characterSO.m_rayCollisionRef)) || (m_characterData.m_characterSO.GetJumpInput() && !m_characterData.m_characterSO.IsUnderWater()))
             {
                 m_characterData.m_characterSO.SetGroundedValue(false);
             }
@@ -171,9 +170,9 @@ public class CharacterController : NetworkBehaviour
         {
             m_collisions.Remove(collision.collider);
         }
-        //Debug.DrawRay(m_playerHeadObj.transform.position, Vector3.down * m_characterData.m_characterSO.m_rayCollisionRef, Color.red);
-        RaycastHit objectHit; // never used, make it local?
-        if ((m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && m_playerHeadObj != null && !Physics.Raycast(m_playerHeadObj.transform.position, Vector3.down, out objectHit, m_characterData.m_characterSO.m_rayCollisionRef)) /*|| (m_triggerJump && !m_characterData.m_characterSO.IsUnderWater())*/)
+        Debug.DrawRay(m_playerHeadObj.transform.position, Vector3.down * m_characterData.m_characterSO.m_rayCollisionRef, Color.red);
+        RaycastHit objectHit;
+        if ((m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && m_playerHeadObj != null && !Physics.Raycast(m_playerHeadObj.transform.position, Vector3.down, out objectHit, m_characterData.m_characterSO.m_rayCollisionRef)) || (m_characterData.m_characterSO.GetJumpInput() && !m_characterData.m_characterSO.IsUnderWater()))
         {
             m_characterData.m_characterSO.SetGroundedValue(false);
         }
@@ -195,14 +194,11 @@ public class CharacterController : NetworkBehaviour
         }
 
         // Character is walking / jumping or swimming
-        if (m_characterData.m_characterSO != null) // TODO: is this test still necessary?
+        if (!m_characterData.m_characterSO.GetJumpInput() && (Input.GetKey(KeyCode.Space) || m_triggerJump))
         {
-            if (!m_characterData.m_characterSO.GetJumpInput() && (Input.GetKey(KeyCode.Space) || m_triggerJump))
-            {
-                m_characterData.m_characterSO.SetJumpInput(true);
-            }
-            DirectUpdate();
+            m_characterData.m_characterSO.SetJumpInput(true);
         }
+        DirectUpdate();
         JumpingAndLanding();
         m_moveVector = Vector3.zero;
         if (m_characterData.m_characterSO != null && m_animator != null)

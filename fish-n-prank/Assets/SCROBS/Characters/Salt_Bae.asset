@@ -47,4 +47,4 @@ MonoBehaviour:
   m_fishingRay: {x: 1, y: 5, z: 1.5}
   m_jumpingRay: {x: 0, y: 1.2, z: -3}
   m_boatDetectionRay: {x: 0, y: 0.5, z: -1.5}
-  m_maxRayDistance: 3
+  m_maxRayDistance: 2
