@@ -24,7 +24,7 @@ MonoBehaviour:
   m_playerHeadObjName: Shiba/B_Hips/B_Torso/B_Neck/B_Head
   m_specialIdleRepeatRate: 20
   m_jumpForce: 15
-  m_underwaterJumpForce: 23
+  m_underwaterJumpForce: 22.5
   m_minJumpInterval: 0.5
   m_jumpInput: 0
   m_isGrounded: 1
