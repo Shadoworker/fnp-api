@@ -1,68 +1,14 @@
 fileFormatVersion: 2
-guid: 38ed6b63a33211d4ba714ec8d47bf68b
+guid: 22607f0fcd251644082b4ceb709ca094
 ModelImporter:
   serializedVersion: 21300
-  internalIDToNameTable:
-  - first:
-      74: -4273618947492972533
-    second: A_KhabyLane_Drop_Rode
-  - first:
-      74: -415481643663928452
-    second: A_KhabyLane_Fish
-  - first:
-      74: -1799365183119973917
-    second: A_KhabyLane_Grab_Rode
-  - first:
-      74: -8774179122094138222
-    second: A_KhabyLane_Idle
-  - first:
-      74: -5069016197827690030
-    second: A_KhabyLane_Idle2
-  - first:
-      74: 507690553946978308
-    second: A_KhabyLane_Jump
-  - first:
-      74: -6024849645114469117
-    second: A_KhabyLane_Jump._Climb
-  - first:
-      74: 1876835662084309940
-    second: A_KhabyLane_Jump._Climb.2
-  - first:
-      74: -2674384104304296753
-    second: A_KhabyLane_Jump._Climb1
-  - first:
-      74: 3959523530611254456
-    second: A_KhabyLane_Jump._Climb3
-  - first:
-      74: -5068409198802379670
-    second: A_KhabyLane_Jump1
-  - first:
-      74: -289783622555363678
-    second: A_KhabyLane_Jump2
-  - first:
-      74: -2936368119675560579
-    second: A_KhabyLane_Jump3
-  - first:
-      74: 6796011425424164580
-    second: A_KhabyLane_Navigate
-  - first:
-      74: 7287995488130763355
-    second: A_KhabyLane_Run
-  - first:
-      74: -8440446890042520215
-    second: A_KhabyLane_Swim
-  - first:
-      74: -8509341800793926385
-    second: A_KhabyLane_Swim_Idle
-  - first:
-      74: 2477125088235531432
-    second: A_KhabyLane_Walk
+  internalIDToNameTable: []
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: defaultMat
-    second: {fileID: 2100000, guid: 5806f020f431ee24db8b6688774fc9d5, type: 2}
+    second: {fileID: 2100000, guid: 4884c9b222fe96a4ea39c588b2547df0, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -92,38 +38,9 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: A_KhabyLane_Drop_Rode
-      takeName: Armature|A_KhabyLane_Drop_Rode
-      internalID: 0
-      firstFrame: 0
-      lastFrame: 1
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: A_KhabyLane_Fish
-      takeName: Armature|A_KhabyLane_Fish
-      internalID: 0
+      name: A_KhabyLame_Fish
+      takeName: Armature|A_KhabyLame_Fish
+      internalID: -2518761728079628808
       firstFrame: 0
       lastFrame: 40
       wrapMode: 0
@@ -150,9 +67,9 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_KhabyLane_Grab_Rode
-      takeName: Armature|A_KhabyLane_Grab_Rode
-      internalID: 0
+      name: A_KhabyLame_Grab_Rode
+      takeName: Armature|A_KhabyLame_Grab_Rode
+      internalID: 6193317621254724967
       firstFrame: 0
       lastFrame: 50
       wrapMode: 0
@@ -179,9 +96,9 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_KhabyLane_Idle
-      takeName: Armature|A_KhabyLane_Idle
-      internalID: 0
+      name: A_KhabyLame_Idle
+      takeName: Armature|A_KhabyLame_Idle
+      internalID: 6436715168775465816
       firstFrame: 0
       lastFrame: 89
       wrapMode: 0
@@ -208,9 +125,38 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_KhabyLane_Idle2
-      takeName: Armature|A_KhabyLane_Idle2
-      internalID: 0
+      name: A_KhabyLame_Idle.001
+      takeName: Armature|A_KhabyLame_Idle.001
+      internalID: -3702353237314091774
+      firstFrame: 0
+      lastFrame: 89
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: A_KhabyLame_Idle2
+      takeName: Armature|A_KhabyLame_Idle2
+      internalID: -56444585912704674
       firstFrame: 0
       lastFrame: 60
       wrapMode: 0
@@ -237,38 +183,9 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_KhabyLane_Jump
-      takeName: Armature|A_KhabyLane_Jump
-      internalID: 0
-      firstFrame: 0
-      lastFrame: 49
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: A_KhabyLane_Jump._Climb
-      takeName: Armature|A_KhabyLane_Jump._Climb
-      internalID: 0
+      name: A_KhabyLame_Jump Dauphin
+      takeName: Armature|A_KhabyLame_Jump Dauphin
+      internalID: -4647515953383748724
       firstFrame: 0
       lastFrame: 57
       wrapMode: 0
@@ -295,38 +212,9 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_KhabyLane_Jump._Climb.2
-      takeName: Armature|A_KhabyLane_Jump._Climb.2
-      internalID: 0
-      firstFrame: 0
-      lastFrame: 24
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: A_KhabyLane_Jump._Climb1
-      takeName: Armature|A_KhabyLane_Jump._Climb1
-      internalID: 0
+      name: A_KhabyLame_Jump dauphin1_
+      takeName: Armature|A_KhabyLame_Jump dauphin1_
+      internalID: 6454974981704328484
       firstFrame: 0
       lastFrame: 7
       wrapMode: 0
@@ -353,9 +241,9 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_KhabyLane_Jump._Climb3
-      takeName: Armature|A_KhabyLane_Jump._Climb3
-      internalID: 0
+      name: A_KhabyLame_Jump Dauphin3
+      takeName: Armature|A_KhabyLame_Jump Dauphin3
+      internalID: -7580228783393189361
       firstFrame: 0
       lastFrame: 18
       wrapMode: 0
@@ -382,9 +270,9 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_KhabyLane_Jump1
-      takeName: Armature|A_KhabyLane_Jump1
-      internalID: 0
+      name: A_KhabyLame_Jump1
+      takeName: Armature|A_KhabyLame_Jump1
+      internalID: -4439031930082454547
       firstFrame: 0
       lastFrame: 7
       wrapMode: 0
@@ -411,38 +299,9 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_KhabyLane_Jump2
-      takeName: Armature|A_KhabyLane_Jump2
-      internalID: 0
-      firstFrame: 0
-      lastFrame: 8
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: A_KhabyLane_Jump3
-      takeName: Armature|A_KhabyLane_Jump3
-      internalID: 0
+      name: A_KhabyLame_Jump3
+      takeName: Armature|A_KhabyLame_Jump3
+      internalID: 2590178434102572868
       firstFrame: 0
       lastFrame: 27
       wrapMode: 0
@@ -469,11 +328,98 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_KhabyLane_Navigate
-      takeName: Armature|A_KhabyLane_Navigate
-      internalID: 0
+      name: A_KhabyLame_Jump_Daulphin2
+      takeName: Armature|A_KhabyLame_Jump_Daulphin2
+      internalID: -1179659286023624165
       firstFrame: 0
-      lastFrame: 45
+      lastFrame: 24
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: A_KhabyLame_Jump2
+      takeName: Armature|A_KhabyLamee_Jump2
+      internalID: 6410482045744677062
+      firstFrame: 0
+      lastFrame: 8
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: A_KhabyLame_Jump
+      takeName: Armature|A_KhabyLane_Jump
+      internalID: 507690553946978308
+      firstFrame: 0
+      lastFrame: 49
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: A_KhabyLame_Navigate
+      takeName: Armature|A_KhabyLane_Navigate
+      internalID: 6796011425424164580
+      firstFrame: 0
+      lastFrame: 35
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -498,9 +444,9 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_KhabyLane_Run
+      name: A_KhabyLame_Run
       takeName: Armature|A_KhabyLane_Run
-      internalID: 0
+      internalID: 7287995488130763355
       firstFrame: 0
       lastFrame: 20
       wrapMode: 0
@@ -527,9 +473,9 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_KhabyLane_Swim
+      name: A_KhabyLame_Swim
       takeName: Armature|A_KhabyLane_Swim
-      internalID: 0
+      internalID: -8440446890042520215
       firstFrame: 0
       lastFrame: 25
       wrapMode: 0
@@ -556,9 +502,9 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_KhabyLane_Swim_Idle
+      name: A_KhabyLame_Swim_Idle
       takeName: Armature|A_KhabyLane_Swim_Idle
-      internalID: 0
+      internalID: -8509341800793926385
       firstFrame: 0
       lastFrame: 60
       wrapMode: 0
@@ -585,9 +531,9 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_KhabyLane_Walk
+      name: A_KhabyLame_Walk
       takeName: Armature|A_KhabyLane_Walk
-      internalID: 0
+      internalID: 2477125088235531432
       firstFrame: 0
       lastFrame: 30
       wrapMode: 0
@@ -616,7 +562,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.012
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -669,7 +615,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.012
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
@@ -680,7 +626,7 @@ ModelImporter:
   humanoidOversampling: 1
   avatarSetup: 0
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
-  remapMaterialsIfMaterialImportModeIsNone: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0
   userData: 
   assetBundleName: 
