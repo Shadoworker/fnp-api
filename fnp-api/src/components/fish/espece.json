@@ -1,7 +1,7 @@
 {
   "collectionName": "components_fish_especes",
   "info": {
-    "displayName": "espece",
+    "displayName": "species",
     "icon": "fish",
     "description": ""
   },
@@ -22,18 +22,18 @@
       "component": "fish.offshore",
       "required": true
     },
-    "normal_weight": {
+    "base_weight": {
       "type": "decimal",
       "required": true
     },
-    "area": {
+    "availability_area": {
       "displayName": "area",
       "type": "component",
       "repeatable": true,
       "component": "fish.area",
       "required": true
     },
-    "rod": {
+    "fishing_rod": {
       "displayName": "rod",
       "type": "component",
       "repeatable": true,
@@ -44,6 +44,15 @@
       "type": "component",
       "repeatable": false,
       "component": "utils.mapping"
+    },
+    "scarcity": {
+      "type": "enumeration",
+      "enum": [
+        "scarcity_1",
+        "scarcity_2",
+        "scarcity_3"
+      ],
+      "default": "scarcity_1"
     }
   }
 }

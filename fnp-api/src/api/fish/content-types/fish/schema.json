@@ -12,23 +12,17 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "espece": {
+    "species": {
       "type": "component",
       "repeatable": false,
       "component": "fish.espece",
       "required": true
     },
-    "size": {
-      "type": "enumeration",
-      "enum": [
-        "baby",
-        "little",
-        "normal",
-        "big",
-        "geant"
-      ],
-      "default": "normal",
-      "required": true
+    "fish_sizes": {
+      "displayName": "size",
+      "type": "component",
+      "repeatable": true,
+      "component": "fish.size"
     }
   }
 }

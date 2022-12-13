@@ -1,7 +1,7 @@
 {
   "collectionName": "components_fish_areas",
   "info": {
-    "displayName": "area",
+    "displayName": "availability_area",
     "icon": "map-marked",
     "description": ""
   },
@@ -10,9 +10,10 @@
     "name": {
       "type": "enumeration",
       "enum": [
-        "island_1",
-        "island_2",
-        "island_3"
+        "northEast",
+        "northWest",
+        "southEast",
+        "southWest"
       ],
       "required": true
     }
