@@ -1,6 +1,6 @@
 const CONSTANTS = {
 
-    api_url : "http://192.168.1.12:1337/",
+    api_url : "http://localhost:1337/",
     api_path : "l3v3l/callback",
 
     playtix_base_url : `https://connect.playtix.team/oauth2/aus7e5j3kfGHKetdl5d7`,
@@ -12,6 +12,8 @@ const CONSTANTS = {
     requests_client_secret :'rdmqeOu8PbhDc3DxqXVnB1ghK9Miu8EfW4gJrArK',
 
     playtix_api_base_url : `https://api.playtix.team/`,
+
+    player_id_test : "0d5356d5-1c67-4e6b-bc8f-30571af18382",
 
     grant_url : function (_api_url:string, _callback_path:string, _code:string) 
     { 
