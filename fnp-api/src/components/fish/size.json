@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_fish_sizes",
+  "info": {
+    "displayName": "size",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "enumeration",
+      "enum": [
+        "baby",
+        "little",
+        "normal",
+        "big",
+        "giant"
+      ]
+    },
+    "ratio": {
+      "type": "decimal"
+    }
+  }
+}

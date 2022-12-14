@@ -26,8 +26,21 @@ export default {
     
     {
       method: 'GET',
-      path: '/l3v3l/get-a-fish',
-      handler: 'l3v3l.getAFish',
-    }
+      path: '/l3v3l/getGameResources',
+      handler: 'l3v3l.getGameResources',
+    },
+
+    {
+      method: 'GET',
+      path: '/l3v3l/getFish',
+      handler: 'l3v3l.getFish',
+    },
+
+    {
+      method: 'POST',
+      path: '/l3v3l/updatePlayerResource',
+      handler: 'l3v3l.updatePlayerResource',
+    },
+
   ]
 }
