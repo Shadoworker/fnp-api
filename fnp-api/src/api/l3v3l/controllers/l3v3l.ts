@@ -141,7 +141,7 @@ export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =
 
           var accessTokenString = data.access_token;
  
-          // console.log(accessTokenString)
+          console.log(accessTokenString)
 
           // ctx.body = accessTokenString;
           // Get games ...
@@ -179,7 +179,7 @@ export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =
 
  
 
-      async getGameRessources(ctx) { // l3v3l: get game resources list
+      async getGameResources(ctx) { // l3v3l: get game resources list
 
         var url_string = CONSTANTS.api_url+ ctx.originalUrl;
 
@@ -334,10 +334,10 @@ export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =
         var url = new URL(url_string);
 
         // Params
-        var playerId = JSON.parse(url.searchParams.get("playerId"));
-        var resourceId = JSON.parse(url.searchParams.get("resourceId"));
-        var resourceAmount = JSON.parse(url.searchParams.get("resourceAmount"));
-        // ----------------------
+        var params = ctx.request.body;
+        
+        // For test purpose (waiting for l3v3l to fix the issue with the /authorize endpoint)
+        params.player_id = CONSTANTS.player_id_test;
 
         let client_id = CONSTANTS.requests_client_id;
         let client_secret = CONSTANTS.requests_client_secret;
@@ -375,15 +375,7 @@ export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =
            }
 
           
-          let _body = {
-            player_id: playerId,
-            resources: [
-              {
-                resource_id: resourceId,
-                amount: resourceAmount
-              }
-            ]
-          }
+          let _body = params;
 
           try {
 
