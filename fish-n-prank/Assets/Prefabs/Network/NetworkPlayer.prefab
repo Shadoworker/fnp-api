@@ -349,6 +349,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Character-Salt-Bae
       objectReference: {fileID: 0}
+    - target: {fileID: 958490619140434563, guid: 93eb293973935324a9ced536afb60660, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93eb293973935324a9ced536afb60660, type: 3}
 --- !u!4 &5486057998128354903 stripped
@@ -410,6 +414,10 @@ PrefabInstance:
     - target: {fileID: 8834889635461527529, guid: ad3fb0276fdadfe45a1d7b1d6b5e0969, type: 3}
       propertyPath: m_Name
       value: Character-Khaby-Lame
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834889635461527529, guid: ad3fb0276fdadfe45a1d7b1d6b5e0969, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8834889635461527535, guid: ad3fb0276fdadfe45a1d7b1d6b5e0969, type: 3}
       propertyPath: m_characterData
@@ -480,6 +488,18 @@ PrefabInstance:
     - target: {fileID: 5716214222646506978, guid: ac0a5a333ea271045913b7d503f9766d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5716214222646506979, guid: ac0a5a333ea271045913b7d503f9766d, type: 3}
+      propertyPath: m_Height
+      value: 2.5762
+      objectReference: {fileID: 0}
+    - target: {fileID: 5716214222646506979, guid: ac0a5a333ea271045913b7d503f9766d, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5716214222646506979, guid: ac0a5a333ea271045913b7d503f9766d, type: 3}
+      propertyPath: m_Center.y
+      value: 1.2682383
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ac0a5a333ea271045913b7d503f9766d, type: 3}
@@ -556,6 +576,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Character-Shiba
       objectReference: {fileID: 0}
+    - target: {fileID: 3025230682810942501, guid: 1682ce21c3211d94bab1923ad9f48351, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1682ce21c3211d94bab1923ad9f48351, type: 3}
 --- !u!4 &5385103598006238022 stripped
@@ -581,6 +605,10 @@ PrefabInstance:
     - target: {fileID: 8346861433036559578, guid: 409203985caf28542bebcd00561d1773, type: 3}
       propertyPath: m_Name
       value: Character-Grumpy-Cat
+      objectReference: {fileID: 0}
+    - target: {fileID: 8346861433036559578, guid: 409203985caf28542bebcd00561d1773, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8691334386496114272, guid: 409203985caf28542bebcd00561d1773, type: 3}
       propertyPath: m_RootOrder

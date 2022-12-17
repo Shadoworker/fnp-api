@@ -46,16 +46,16 @@ public class BuoyancyObject : MonoBehaviour
                 {
                     m_rigidBody.AddForceAtPosition(Vector3.up * m_floatingPower * Mathf.Abs(difference), m_floaters[i].position, ForceMode.Force);
                     m_floatersUnderWater += 1;
-                    if (m_characterData != null && !m_characterData.m_characterSO.IsUnderWater())
+                    if (m_characterData != null && (!m_characterData.m_characterSO.IsUnderWater() || !m_characterData.m_animator.GetBool("Swim")))
                     {
                         m_characterData.m_characterSO.SetUnderWaterValue(true);
-                        m_characterData.m_characterSO.SetGroundedValue(true);
                         if (gameObject.tag == "Player")
                         {
                             m_characterData.m_animator.SetBool("Swim", true);
                             if (m_characterData.m_characterSO.m_isBackstrokeSwim)
                                 m_characterData.m_characterSkin.transform.localEulerAngles = new Vector3(transform.GetChild(0).localEulerAngles.x, BACKSTROKE_SWIM_ROT, 0f);
                         }
+                        m_characterData.m_characterSO.SetGroundedValue(true);
                         SwitchState(true);
                     }
                     else if(difference > 0 && m_boatSO != null)
