@@ -14,6 +14,8 @@ public class CharacterSO : ScriptableObject
 {
     [FancyHeader("  Character SO  ", 1.5f, "lime", 5.5f, order = 0)]
     [Label("")] public Empty e;
+    private const int PLAYER_LAYER = 8;
+    private const int BOAT_COLLIDER_LAYER = 6;
     public CHARACTER m_character;
     [BoxGroup("References")] public GameObject m_prefab;
     [BoxGroup("References")] public AnimatorOverrideController m_animator;
@@ -97,6 +99,7 @@ public class CharacterSO : ScriptableObject
     public void SetUnderWaterValue(bool _value)
     {
         m_isUnderwater = _value;
+        Physics.IgnoreLayerCollision(PLAYER_LAYER, BOAT_COLLIDER_LAYER, !_value);
     }
 }
 

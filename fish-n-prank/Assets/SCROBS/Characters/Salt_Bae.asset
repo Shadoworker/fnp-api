@@ -34,7 +34,7 @@ MonoBehaviour:
   m_underWaterAngularDragForce: 1
   m_airDragForce: 0
   m_airAngularDrag: 5
-  m_rayCollisionRef: 2.8
+  m_rayCollisionRef: 2.1
   m_floatingPower: 126
   m_diveForce: 10
   m_isUnderwater: 0

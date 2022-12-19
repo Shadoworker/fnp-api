@@ -34,11 +34,11 @@ MonoBehaviour:
   m_underWaterAngularDragForce: 1
   m_airDragForce: 0
   m_airAngularDrag: 5
-  m_rayCollisionRef: 2.5
+  m_rayCollisionRef: 2.2
   m_floatingPower: 126
   m_diveForce: 10
-  m_isUnderwater: 0
-  m_waterHeight: 3.4
+  m_isUnderwater: 1
+  m_waterHeight: 3.3
   m_isBackstrokeSwim: 0
   m_fishingRodObjName: Armature/FishingRod
   m_headParentPath: Armature/Bone/Bone.001/Bone.002/Bone.019/Bone.020/Bone.021
