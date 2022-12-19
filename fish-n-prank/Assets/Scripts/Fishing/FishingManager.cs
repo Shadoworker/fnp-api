@@ -98,7 +98,7 @@ public class FishingManager : Singleton<FishingManager>
     /// Starts fishing gameplay locally (server validation done)
     /// </summary>
     /// <param name="_fishSO">The fish that just bit</param>
-    public void StartFishingGameplay(FishSO _fishSO)
+    public void StartFishingGameplay(SelectedFish _fishSO)
     {
         Debug.Log($"ShouldStartFishingGameplay: received fish from Server: {_fishSO.name}");
 

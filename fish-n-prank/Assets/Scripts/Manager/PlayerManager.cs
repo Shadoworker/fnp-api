@@ -12,7 +12,10 @@ public class PlayerManager : MonoBehaviour
   
     public void GetFish()
     {
-        APIManager.instance.GetFish("l3v3l/getFish");
+        // APIManager.instance.GetFish("l3v3l/getFish");
+        SelectedFish fishSO = GameStateManager.FishesManager.GetRandomFish();
+
+        Debug.Log($"CmdStartFishing: Server chose fish {fishSO.name}");
     }
 
     public void UpdatePlayerResources()
