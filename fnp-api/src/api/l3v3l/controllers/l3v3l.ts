@@ -331,8 +331,6 @@ export default factories.createCoreController('api::l3v3l.l3v3l', ({ strapi }) =
 
         var url_string = CONSTANTS.api_url+ ctx.originalUrl;
 
-        var url = new URL(url_string);
-
         // Params
         var params = ctx.request.body;
         

@@ -23,6 +23,8 @@ public class APIManager : MonoBehaviour
 
     public TMP_InputField m_tokenField;
 
+    fnpFish choosenFish = null;
+
     private void Awake()
 	{
     	if (instance == null)
@@ -76,18 +78,20 @@ public class APIManager : MonoBehaviour
         // Test Login to local api
         // StartCoroutine(Post("auth/local" , JsonUtility.ToJson(credentials) ));
 
-        #if UNITY_EDITOR //Check if running a build or in editor
-            m_tokenBox.SetActive(true);
-        #else
-            m_tokenBox.SetActive(false);
-        #endif
+        if(m_tokenBox)
+
+            #if UNITY_EDITOR //Check if running a build or in editor
+                m_tokenBox.SetActive(true);
+            #else
+                m_tokenBox.SetActive(false);
+            #endif
 
     }
 
 
     public void OpenLoginWindow()
     {
-        Application.OpenURL("https://connect.playtix.team/oauth2/aus7e5j3kfGHKetdl5d7/v1/authorize?client_id=0oa7e5jz4w9xy416F5d7&response_type=code&scope=openid&redirect_uri=http%3A%2F%2F192.168.1.12:1337%2Fapi%2Fl3v3l%2Fcallback&state=abc123");
+        Application.OpenURL("https://connect.playtix.team/oauth2/aus7e5j3kfGHKetdl5d7/v1/authorize?client_id=0oa7e5jz4w9xy416F5d7&response_type=code&scope=openid&redirect_uri=http%3A%2F%2Flocalhost:1337%2Fapi%2Fl3v3l%2Fcallback&state=abc123");
     }
 
     public void LoadPlayerData()
@@ -145,7 +149,6 @@ public class APIManager : MonoBehaviour
     
     IEnumerator DisplayUserData(string _path)
     {
-        // "https://api.github.com/users?since=0&per_page=2"
 
         var request = new UnityWebRequest(BASE_URL+_path, "GET");
         request.downloadHandler = (DownloadHandler) new DownloadHandlerBuffer();
@@ -168,12 +171,66 @@ public class APIManager : MonoBehaviour
     }
 
 
+    IEnumerator IGetFish(string _path)
+    {
+
+        var request = new UnityWebRequest(BASE_URL+_path, "GET");
+        request.downloadHandler = (DownloadHandler) new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+        yield return request.SendWebRequest();
+        // Debug.Log("Status Code: " + request.responseCode);
+
+        if (request.isNetworkError)
+        {
+            Debug.Log("Error: " + request.error);
+        }
+        else
+        {
+            string _jsonString = request.downloadHandler.text;
+
+            choosenFish = JsonUtility.FromJson<fnpFish>(_jsonString);
+
+            Debug.Log(_jsonString);
+
+        }
+    }
+
+    public void GetFish(string _path)
+    {
+        StartCoroutine(IGetFish(_path));
+    }
+
+    IEnumerator IUpdatePlayerResources(string _path, string _bodyJsonString)
+    {
+        var request = new UnityWebRequest(BASE_URL+_path, "POST");
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(_bodyJsonString);
+        request.uploadHandler = (UploadHandler) new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = (DownloadHandler) new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+        yield return request.SendWebRequest();
+        // Debug.Log("Status Code: " + request.responseCode);
+
+        if (request.isNetworkError)
+        {
+            Debug.Log("Error: " + request.error);
+        }
+        else
+        {
+            Debug.Log("Resources Updated: " + request.downloadHandler.text);
+        }
+    }
+
+    public void UpdatePlayerResources(string _path, string _bodyJsonString)
+    {
+        StartCoroutine(IUpdatePlayerResources(_path, _bodyJsonString));
+    }
+
     void SavePlayerID(string _jsonString)
     {
         
-        l3v3lPlayerInfo _l3v3lPlayerInfo = JsonUtility.FromJson<l3v3lPlayerInfo>(_jsonString);
+        fnpPlayerInfo _fnpPlayerInfo = JsonUtility.FromJson<fnpPlayerInfo>(_jsonString);
         
-        string playerID = _l3v3lPlayerInfo.idp;
+        string playerID = _fnpPlayerInfo.player_id;
 
         StateManager.Instance.m_persistentPlayerID.Set(playerID);
 
@@ -197,7 +254,7 @@ public class Credentials
 }
 
 [System.Serializable]
-public class l3v3lPlayerInfo
+public class fnpPlayerInfo
 {
     public string   sub;
     public int      ver;
@@ -209,7 +266,31 @@ public class l3v3lPlayerInfo
     public string[] amr;
     public string   idp;
     public int      auth_time;
+    public string   player_id;
     public string   at_bash;
 }
  
+
+[System.Serializable]
+public class fnpFish
+{
+    public string  name;
+    public string size;
+    public float weight;
+}
+
+[System.Serializable]
+public class fnpUpdateBody
+{
+    public string  player_id;
+    public string game_id;
+    public List<fnpResourceBody> resources = new List<fnpResourceBody>();
+}
+ 
+[System.Serializable]
+public class fnpResourceBody
+{
+    public string  resource_id;
+    public int amount;
+}
 
