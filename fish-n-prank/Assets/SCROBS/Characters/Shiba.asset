@@ -24,7 +24,7 @@ MonoBehaviour:
   m_playerHeadObjName: Shiba/B_Hips/B_Torso/B_Neck/B_Head
   m_specialIdleRepeatRate: 20
   m_jumpForce: 15
-  m_underwaterJumpForce: 22.5
+  m_underwaterJumpForce: 25
   m_minJumpInterval: 0.5
   m_jumpInput: 0
   m_isGrounded: 1
@@ -37,7 +37,7 @@ MonoBehaviour:
   m_rayCollisionRef: 2
   m_floatingPower: 126
   m_diveForce: 10
-  m_isUnderwater: 1
+  m_isUnderwater: 0
   m_waterHeight: 3.6
   m_isBackstrokeSwim: 0
   m_fishingRodObjName: FishingRod

@@ -7,8 +7,6 @@ using Mirror;
 public class CharacterController : NetworkBehaviour
 {
     private const float MAX_RAY_DISTANCE = 40f;
-    private const float MIN_JOYSTICK_OFFSET = 0.4f;
-    private const float MAX_JOYSTICK_OFFSET = 1f;
     private const float SOLID_SURFACE_COLLISION_REF = 8f;
     private const string NAVIGATE_ANIM_PARAM = "Navigate"; // Centralize characters animations
 
@@ -27,9 +25,10 @@ public class CharacterController : NetworkBehaviour
     public bool m_triggerJump;
     public CapsuleCollider m_capsuleCollider;
     Vector3 m_oldPosition;
-    private float m_joystickOffset;
+    private const float JOYSTICK_OFFSET = 0.3f;
     Transform m_boatSeatTransform = null;
-    bool m_isDolphinJump;
+    [HideInInspector] public bool m_isDolphinJump;
+    private const float DOLPHIN_JUMP_COOLDOWN = 5f;
 
     public CharacterControlState State { get; private set; }  = CharacterControlState.Walking;
 
@@ -48,7 +47,6 @@ public class CharacterController : NetworkBehaviour
         m_rigidBody = rigidbody;
         m_characterData.m_characterSO.SetGroundedValue(true);
         InvokeRepeating("PlaySpecialIdle", 1.0f, m_characterData.m_characterSO.m_specialIdleRepeatRate);
-        m_joystickOffset = MAX_JOYSTICK_OFFSET;
         StartCoroutine(GeneratePlayerHeadObj());
     }
 
@@ -114,7 +112,6 @@ public class CharacterController : NetworkBehaviour
                 m_movement = Vector3.zero;
             }
         }
-        m_isDolphinJump = false;
     }
 
     public float GetYDistanceBetweenColliders(float _y1, float _y2)
@@ -203,6 +200,12 @@ public class CharacterController : NetworkBehaviour
         m_moveVector = Vector3.zero;
         if (m_characterData.m_characterSO != null && m_animator != null)
             m_animator.SetBool("Grounded", m_characterData.m_characterSO.IsGrounded());
+        if(m_isDolphinJump)
+        {
+            Timer.Register(DOLPHIN_JUMP_COOLDOWN, ()=> {
+                m_isDolphinJump = false;
+            });
+        }
         m_wasGrounded = m_characterData.m_characterSO.IsGrounded();
     }
 
@@ -250,7 +253,6 @@ public class CharacterController : NetworkBehaviour
             }
             else
             {
-                m_isDolphinJump = true;
                 m_rigidBody.AddForce(((Vector3.up * m_characterData.m_characterSO.m_underwaterJumpForce) + m_moveVector), ForceMode.Impulse);
             }
             m_characterData.m_characterSO.SetGroundedValue(false);
@@ -259,7 +261,6 @@ public class CharacterController : NetworkBehaviour
 
         if (m_animator && !m_wasGrounded && m_characterData.m_characterSO.IsGrounded())
         {
-            m_joystickOffset = MAX_JOYSTICK_OFFSET;
             m_capsuleCollider.enabled = true;
             m_animator.SetTrigger("Land");
             StartCoroutine(ResetJumpTrigger());
@@ -268,7 +269,6 @@ public class CharacterController : NetworkBehaviour
         if (m_animator && !m_characterData.m_characterSO.IsGrounded() && m_wasGrounded)
         {
             m_animator.SetTrigger("Jump");
-            m_joystickOffset = MIN_JOYSTICK_OFFSET;
         }
     }
 
@@ -306,8 +306,8 @@ public class CharacterController : NetworkBehaviour
             m_moveSpeed = m_characterData.m_characterSO.m_runSpeed;
         if(m_characterData.m_characterSO.m_jumpInput)
         {
-            dir.x = -Mathf.Clamp(m_joystick.m_horizontal, -m_joystickOffset, Mathf.Sign(m_joystick.m_horizontal) * m_joystickOffset);
-            dir.z = -Mathf.Clamp(m_joystick.m_vertical, -m_joystickOffset, Mathf.Sign(m_joystick.m_vertical) * m_joystickOffset);
+            dir.x = -Mathf.Clamp(m_joystick.m_horizontal, -JOYSTICK_OFFSET, Mathf.Sign(m_joystick.m_horizontal) * JOYSTICK_OFFSET);
+            dir.z = -Mathf.Clamp(m_joystick.m_vertical, -JOYSTICK_OFFSET, Mathf.Sign(m_joystick.m_vertical) * JOYSTICK_OFFSET);
         }
         else
         {

@@ -24,7 +24,7 @@ MonoBehaviour:
   m_playerHeadObjName: Armature/Bone.001/Bone.002/Bone.003/Bone.029/Head
   m_specialIdleRepeatRate: 20
   m_jumpForce: 15
-  m_underwaterJumpForce: 23.3
+  m_underwaterJumpForce: 25
   m_minJumpInterval: 1
   m_jumpInput: 0
   m_isGrounded: 1
@@ -47,4 +47,4 @@ MonoBehaviour:
   m_fishingRay: {x: 1, y: 5, z: 1.5}
   m_jumpingRay: {x: 0, y: 1.2, z: 3.99}
   m_boatDetectionRay: {x: 0, y: -2, z: 1}
-  m_maxRayDistance: 2
+  m_maxRayDistance: 1.5

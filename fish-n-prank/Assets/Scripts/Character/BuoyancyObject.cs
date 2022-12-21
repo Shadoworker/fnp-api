@@ -81,7 +81,7 @@ public class BuoyancyObject : MonoBehaviour
 
     public void AutoJump()
     {
-        if (m_characterData != null && m_characterData.m_characterSO.IsUnderWater() && m_characterData.m_characterController.m_playerHeadObj != null)
+        if (m_characterData != null && m_characterData.m_characterSO.IsUnderWater() && m_characterData.m_characterController.m_playerHeadObj != null && !m_characterData.m_characterController.m_isDolphinJump)
         {
             RaycastHit objectHit;
             Vector3 fwd = m_characterData.m_characterController.m_playerHeadObj.transform.TransformDirection(m_characterData.m_characterSO.m_boatDetectionRay);
@@ -90,6 +90,7 @@ public class BuoyancyObject : MonoBehaviour
             {
                 if (objectHit.transform.gameObject.tag == "Boat")
                 {
+                    m_characterData.m_characterController.m_isDolphinJump = true;
                     m_characterData.m_characterController.SetJumpInput();
                     m_characterData.m_characterController.m_moveVector = Vector3.zero;
                 }
