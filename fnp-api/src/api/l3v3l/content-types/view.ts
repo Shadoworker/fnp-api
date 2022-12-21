@@ -43,12 +43,24 @@ const view = function(_token:string, _claims:any){
                 <div style=" width: 80%; max-height: 250px;font-weight:bold; overflow-y:scroll ; margin: 10px 0px;"> 
                     ${_token} 
                 </div>
+                <a id="copy" class="btn" style="margin:10px" href="javascript:navigator.clipboard.writeText('${_token}');alert('Copied !')" >COPY TOKEN</a>
                 <a id="btn" class="btn" href='fnpdl://signinLink?${_claims}'>RETOURNER AU JEU</a>
                 </div>
  
+                <script>
+                
+                  navigator.clipboard.writeText('${_token}').then(function() {
+                     
+                  }, function(err) {
+                    
+                  });
+
+                </script>
+
                 </body>
             </html>
             `;
+ 
 }
 
 export default view;
