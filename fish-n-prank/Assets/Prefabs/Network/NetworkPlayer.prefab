@@ -138,6 +138,10 @@ MonoBehaviour:
   m_cameraRotationScale: 0.6
   m_triggerJump: 0
   m_capsuleCollider: {fileID: 0}
+  m_isDolphinJump: 0
+  m_ignoreLayers:
+    serializedVersion: 2
+    m_Bits: 80
 --- !u!114 &-6996342527920203094
 MonoBehaviour:
   m_ObjectHideFlags: 0

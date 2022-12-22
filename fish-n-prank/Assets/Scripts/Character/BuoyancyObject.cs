@@ -86,7 +86,7 @@ public class BuoyancyObject : MonoBehaviour
             RaycastHit objectHit;
             Vector3 fwd = m_characterData.m_characterController.m_playerHeadObj.transform.TransformDirection(m_characterData.m_characterSO.m_boatDetectionRay);
             //Debug.DrawRay(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd * m_characterData.m_characterSO.m_maxRayDistance, Color.red);
-            if (Physics.Raycast(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, out objectHit, m_characterData.m_characterSO.m_maxRayDistance, ~m_waterLayer) && !m_characterData.m_characterController.m_triggerJump)
+            if (Physics.Raycast(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, out objectHit, m_characterData.m_characterSO.m_maxRayDistance, ~m_waterLayer) && !m_characterData.m_characterController.m_triggerJump && m_characterData.m_characterController.IsJoystickMoved())
             {
                 if (objectHit.transform.gameObject.tag == "Boat")
                 {

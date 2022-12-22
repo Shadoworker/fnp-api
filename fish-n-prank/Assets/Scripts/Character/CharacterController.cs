@@ -25,10 +25,11 @@ public class CharacterController : NetworkBehaviour
     public bool m_triggerJump;
     public CapsuleCollider m_capsuleCollider;
     Vector3 m_oldPosition;
-    private const float JOYSTICK_OFFSET = 0.3f;
+    private const float JOYSTICK_OFFSET = 0.38f;
     Transform m_boatSeatTransform = null;
     [HideInInspector] public bool m_isDolphinJump;
     private const float DOLPHIN_JUMP_COOLDOWN = 5f;
+    public LayerMask m_ignoreLayers;
 
     public CharacterControlState State { get; private set; }  = CharacterControlState.Walking;
 
@@ -75,7 +76,6 @@ public class CharacterController : NetworkBehaviour
     {
         GameStateManager.CameraManager.SetTarget(gameObject);
         m_characterData.m_animator.SetBool(NAVIGATE_ANIM_PARAM, false);
-        //transform.SetParent(null);
         GetComponent<Rigidbody>().isKinematic = false;
         m_boatSeatTransform = null;
 
@@ -85,7 +85,6 @@ public class CharacterController : NetworkBehaviour
     public void SetIsSailing(BoatController _boatController, Transform _boatSeatTransform)
     {
         transform.LookAt(_boatController.m_facingDirection);
-        //transform.SetParent(_boatController.transform);
         transform.localPosition = _boatSeatTransform.localPosition;
         transform.rotation = _boatSeatTransform.rotation;
         m_characterData.m_animator.SetBool(NAVIGATE_ANIM_PARAM, true);
@@ -100,7 +99,7 @@ public class CharacterController : NetworkBehaviour
     {
         m_triggerJump = false;
         m_characterData.m_characterSO.SetJumpInput(false);
-        m_characterData.m_characterSO.SetGroundedValue(true);
+        //m_characterData.m_characterSO.SetGroundedValue(true);
         if (collision.gameObject.tag != "Ground" && Mathf.Abs(m_movement.z) >= GameStateManager.CharactersManager.m_zJoystickOffset && !m_animator.GetBool("Land") && !m_characterData.m_characterSO.IsUnderWater() && !m_isDolphinJump)
         {
             Vector3 fwd = m_playerHeadObj.transform.TransformDirection(m_characterData.m_characterSO.m_jumpingRay);
@@ -138,8 +137,8 @@ public class CharacterController : NetworkBehaviour
             }
         }
 
-        //Debug.DrawRay(m_playerHeadObj.transform.position, Vector3.down * m_characterData.m_characterSO.m_rayCollisionRef, Color.red);
-        if ((validSurfaceNormal || (m_playerHeadObj != null && Physics.Raycast(m_playerHeadObj.transform.position, Vector3.down, out objectHit, m_characterData.m_characterSO.m_rayCollisionRef)) && !m_characterData.m_characterSO.GetJumpInput()))
+        Debug.DrawRay(m_playerHeadObj.transform.position, Vector3.down * m_characterData.m_characterSO.m_rayCollisionRef, Color.red);
+        if ((validSurfaceNormal || (m_playerHeadObj != null && Physics.Raycast(m_playerHeadObj.transform.position, Vector3.down, out objectHit, m_characterData.m_characterSO.m_rayCollisionRef, ~m_ignoreLayers)) && !m_characterData.m_characterSO.GetJumpInput()))
         {
             m_characterData.m_characterSO.SetGroundedValue(true);
             if (!m_collisions.Contains(collision.collider))
@@ -153,7 +152,7 @@ public class CharacterController : NetworkBehaviour
             {
                 m_collisions.Remove(collision.collider);
             }
-            if ((m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && m_playerHeadObj != null && !Physics.Raycast(m_playerHeadObj.transform.position, Vector3.down, out objectHit, m_characterData.m_characterSO.m_rayCollisionRef)) || (m_characterData.m_characterSO.GetJumpInput() && !m_characterData.m_characterSO.IsUnderWater()))
+            if ((m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && m_playerHeadObj != null && !Physics.Raycast(m_playerHeadObj.transform.position, Vector3.down, out objectHit, m_characterData.m_characterSO.m_rayCollisionRef, ~m_ignoreLayers)) || (m_characterData.m_characterSO.GetJumpInput() && !m_characterData.m_characterSO.IsUnderWater()))
             {
                 m_characterData.m_characterSO.SetGroundedValue(false);
             }
@@ -169,7 +168,7 @@ public class CharacterController : NetworkBehaviour
         }
         Debug.DrawRay(m_playerHeadObj.transform.position, Vector3.down * m_characterData.m_characterSO.m_rayCollisionRef, Color.red);
         RaycastHit objectHit;
-        if ((m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && m_playerHeadObj != null && !Physics.Raycast(m_playerHeadObj.transform.position, Vector3.down, out objectHit, m_characterData.m_characterSO.m_rayCollisionRef)) || (m_characterData.m_characterSO.GetJumpInput() && !m_characterData.m_characterSO.IsUnderWater()))
+        if ((m_collisions.Count == 0 && !m_characterData.m_characterSO.IsUnderWater() && m_playerHeadObj != null && !Physics.Raycast(m_playerHeadObj.transform.position, Vector3.down, out objectHit, m_characterData.m_characterSO.m_rayCollisionRef, ~m_ignoreLayers)) || (m_characterData.m_characterSO.GetJumpInput() && !m_characterData.m_characterSO.IsUnderWater()))
         {
             m_characterData.m_characterSO.SetGroundedValue(false);
         }
@@ -209,10 +208,22 @@ public class CharacterController : NetworkBehaviour
         m_wasGrounded = m_characterData.m_characterSO.IsGrounded();
     }
 
+    public bool IsJoystickMoved()
+    {
+        if (m_joystick.m_vertical != 0 || m_joystick.m_horizontal != 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     [ClientCallback]
     private void DirectUpdate()
     {
-        if (m_joystick.m_vertical != 0 || m_joystick.m_horizontal != 0)
+        if (IsJoystickMoved())
         {
             m_movement = new Vector3(-m_joystick.m_horizontal, 0, -m_joystick.m_vertical);
             GameStateManager.CameraManager.m_cameraFollow.SetCurrentXValue(m_joystick.m_horizontal * GameStateManager.CameraManager.m_cameraRotationSensitivity);
@@ -253,15 +264,15 @@ public class CharacterController : NetworkBehaviour
             }
             else
             {
-                m_rigidBody.AddForce(((Vector3.up * m_characterData.m_characterSO.m_underwaterJumpForce) + m_moveVector), ForceMode.Impulse);
+                m_rigidBody.AddForce(((Vector3.up * m_characterData.m_characterSO.m_underwaterJumpForce)), ForceMode.Impulse);
             }
             m_characterData.m_characterSO.SetGroundedValue(false);
-            m_characterData.m_characterSO.SetJumpInput(false);
         }
 
-        if (m_animator && !m_wasGrounded && m_characterData.m_characterSO.IsGrounded())
+        if (m_animator && !m_wasGrounded && m_characterData.m_characterSO.IsGrounded() && m_characterData.m_characterSO.GetJumpInput())
         {
             m_capsuleCollider.enabled = true;
+            m_characterData.m_characterSO.SetJumpInput(false);
             m_animator.SetTrigger("Land");
             StartCoroutine(ResetJumpTrigger());
         }
