@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Net;
 using UnityEngine.Networking;
 using System;
@@ -22,6 +23,12 @@ public class APIManager : MonoBehaviour
     public GameObject m_tokenBox;
 
     public TMP_InputField m_tokenField;
+
+    public List<ServerSO> m_serversSO;
+
+    int m_currentServerIndex = 0;
+
+    public Slider m_serverSlider;
 
     fnpFish choosenFish = null;
 
@@ -66,15 +73,16 @@ public class APIManager : MonoBehaviour
 
 	}
 
+    
+    public void SelectSlider()
+    {
+        m_currentServerIndex = (int)m_serverSlider.value;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-
-        Credentials credentials = new Credentials();
-        credentials.identifier = "shadow"; // Identifier will be set to PLAYER_ID from NFT-API
-        credentials.password = "passer123";
-        
+ 
         // Test Login to local api
         // StartCoroutine(Post("auth/local" , JsonUtility.ToJson(credentials) ));
 
@@ -91,7 +99,9 @@ public class APIManager : MonoBehaviour
 
     public void OpenLoginWindow()
     {
-        Application.OpenURL("https://connect.playtix.team/oauth2/aus7e5j3kfGHKetdl5d7/v1/authorize?client_id=0oa7e5jz4w9xy416F5d7&response_type=code&scope=openid&redirect_uri=http%3A%2F%2Flocalhost:1337%2Fapi%2Fl3v3l%2Fcallback&state=abc123");
+        ServerSO s = m_serversSO[m_currentServerIndex];
+
+        Application.OpenURL(s.m_connectUrl+"/v1/authorize?client_id=0oa7e5jz4w9xy416F5d7&response_type=code&scope=openid&redirect_uri="+s.m_fnpApiUrl+"l3v3l/callback&state=abc123");
     }
 
     public void LoadPlayerData()
@@ -104,8 +114,7 @@ public class APIManager : MonoBehaviour
 
         StartCoroutine(DisplayUserData(_path));
     }
- 
- 
+  
     IEnumerator Post(string _path, string _bodyJsonString)
     {
         var request = new UnityWebRequest(BASE_URL+_path, "POST");
