@@ -9,6 +9,8 @@ public class FishingHook : MonoBehaviour
     public Vector3 m_initialPos;
     private float m_lerpTime = 1f;
     private const float HOOK_POS_RESET_DELAY = 4f;
+    private const float SPRING_PULLED = 20F;
+    private const float SPRING_DEFAULT = 10f;
     private void Start()
     {
         m_initialPos = transform.localPosition;
@@ -22,6 +24,7 @@ public class FishingHook : MonoBehaviour
             transform.position = halfwayPoint;
             m_hasPulledFishingRod = false;
             GetComponent<Rigidbody>().isKinematic = false;
+            GetComponent<SpringJoint>().spring = SPRING_PULLED;
             StartCoroutine(ResetHookPos());
         }
     }
@@ -30,7 +33,19 @@ public class FishingHook : MonoBehaviour
     {
         yield return new WaitForSeconds(HOOK_POS_RESET_DELAY);
         transform.localPosition = m_initialPos;
+        GetComponent<SpringJoint>().spring = SPRING_DEFAULT;
         if (transform.childCount > 1)
-            Destroy(transform.GetChild(1).gameObject);
+            RemoveFishes();
+    }
+
+    public void RemoveFishes()
+    {
+        int index = 0;
+        foreach(Transform t in transform)
+        {
+            if (index != 0)
+                Destroy(t.gameObject);
+            index++;
+        }
     }
 }

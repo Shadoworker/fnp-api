@@ -6530,12 +6530,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3520699189762356158, guid: 9417a0d688ebf8d47b8da94e1cb18bfd, type: 3}
+      propertyPath: m_Spring
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3520699189762356158, guid: 9417a0d688ebf8d47b8da94e1cb18bfd, type: 3}
       propertyPath: m_ConnectedAnchor.x
-      value: 32.59987
+      value: 32.599964
       objectReference: {fileID: 0}
     - target: {fileID: 3520699189762356158, guid: 9417a0d688ebf8d47b8da94e1cb18bfd, type: 3}
       propertyPath: m_ConnectedAnchor.y
-      value: -24.45903
+      value: -24.459015
       objectReference: {fileID: 0}
     - target: {fileID: 3520699189762356158, guid: 9417a0d688ebf8d47b8da94e1cb18bfd, type: 3}
       propertyPath: m_ConnectedAnchor.z

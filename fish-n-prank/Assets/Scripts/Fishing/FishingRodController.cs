@@ -13,6 +13,8 @@ public class FishingRodController : MonoBehaviour
     private Animator m_animator;
     private bool m_isOnFishingSpot;
     RaycastHit objectHit;
+    public LayerMask m_ignoreLayers;
+    private const float SPRING_UNCOMPRESSED = 2;
 
     private bool m_initialized = false;
 
@@ -37,8 +39,8 @@ public class FishingRodController : MonoBehaviour
             && !m_characterData.m_buoyancyController.IsUnderwater() && m_characterData.m_characterController.m_playerHeadObj != null) // TODO: do you mean IsSwimming?
         {
             Vector3 fwd = m_characterData.m_characterController.m_playerHeadObj.transform.TransformDirection(m_characterData.m_characterSO.m_fishingRay);
-            Debug.DrawRay(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, Color.red);
-            if (Physics.Raycast(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, out objectHit, MAX_RAY_DISTANCE))
+            Debug.DrawRay(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd * MAX_RAY_DISTANCE, Color.red);
+            if (Physics.Raycast(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, out objectHit, MAX_RAY_DISTANCE, ~m_ignoreLayers))
             {
                 if (objectHit.transform.gameObject.name == "Water") // TODO: use const
                 {
@@ -65,12 +67,14 @@ public class FishingRodController : MonoBehaviour
     public void ThrowFishingHook()
     {
         m_fishingHook.GetComponent<Rigidbody>().AddForce(transform.forward * THROW_FORCE, ForceMode.Impulse);
+        m_fishingHook.GetComponent<SpringJoint>().spring = SPRING_UNCOMPRESSED;
         StartCoroutine(SetHookPos());
     }
 
     IEnumerator SetHookPos()
     {
-        yield return new WaitForSeconds(0.2f);
+        float delay = 0.8f;
+        yield return new WaitForSeconds(delay);
         m_fishingHook.GetComponent<Rigidbody>().isKinematic = true;
     }
 
