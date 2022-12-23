@@ -19,6 +19,7 @@ public class FishesManager : ScriptableObject
         _fishes.Sort((a, b)=> 1 - 2 * Random.Range(0, 1));
 
         FishSO _fish = _fishes.FirstOrDefault(f => f != null); // Add more logic here...
+        FishingManager.Instance.m_currentFish = _fish;
         // Get a random size 
         List<FishSize> _fishSizesList = new List<FishSize>()
         {

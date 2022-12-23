@@ -2533,6 +2533,7 @@ MonoBehaviour:
   m_isNearFishingSpot: {fileID: 11400000, guid: b019311c77cf6f44c9f54d692fccff6a, type: 2}
   m_characterController: {fileID: 0}
   m_fishingUILocalPos: {x: 0.4, y: 34, z: 26}
+  m_currentFish: {fileID: 0}
 --- !u!1 &1025606841 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4610223028812233878, guid: d31743fcc4f7c42da8309cc719e1d46e, type: 3}

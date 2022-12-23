@@ -10,7 +10,6 @@ public class FnPFishingNetworkInterface : NetworkBehaviour
     {
         // server choses a random fish
         SelectedFish fishSO = GameStateManager.FishesManager.GetRandomFish();
-
         Debug.Log($"CmdStartFishing: Server chose fish {fishSO.name}");
         NetworkIdentity clientIdentity = GetComponent<NetworkIdentity>();
         TargetSetBitingFish(clientIdentity.connectionToClient, fishSO);

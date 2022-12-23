@@ -5,6 +5,7 @@ using UnityEngine;
 public class CharacterHandTracker : MonoBehaviour
 {
     public Transform m_track;
+    public GameObject m_fishingRodHook;
     private Vector3 m_cachedPosition;
     void Start()
     {

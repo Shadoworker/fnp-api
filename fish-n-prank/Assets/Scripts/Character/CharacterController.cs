@@ -137,7 +137,6 @@ public class CharacterController : NetworkBehaviour
             }
         }
 
-        Debug.DrawRay(m_playerHeadObj.transform.position, Vector3.down * m_characterData.m_characterSO.m_rayCollisionRef, Color.red);
         if ((validSurfaceNormal || (m_playerHeadObj != null && Physics.Raycast(m_playerHeadObj.transform.position, Vector3.down, out objectHit, m_characterData.m_characterSO.m_rayCollisionRef, ~m_ignoreLayers)) && !m_characterData.m_characterSO.GetJumpInput()))
         {
             m_characterData.m_characterSO.SetGroundedValue(true);

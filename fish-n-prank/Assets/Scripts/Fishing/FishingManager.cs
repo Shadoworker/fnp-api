@@ -21,7 +21,7 @@ public class FishingManager : Singleton<FishingManager>
     public StringEvent m_isNearFishingSpot;
     public CharacterController m_characterController;
     public Vector3 m_fishingUILocalPos;
-
+    [HideInInspector]public FishSO m_currentFish;
     private PersistentInt m_caughtFishes = new PersistentInt("CAUGHT_FISH", 0);
 
     private void Start()
@@ -47,6 +47,9 @@ public class FishingManager : Singleton<FishingManager>
             if (m_battleDuration <= 0)
             {
                 m_caughtFishes.Set(m_caughtFishes.Get() + 1);
+                GameObject fish = Instantiate(m_currentFish.m_prefab);
+                fish.transform.SetParent(GameStateManager.CharactersManager.LocalPlayer.GetComponent<CharacterController>().m_characterData.m_fishingRodController.m_fishingHook.transform, true);
+                fish.transform.localPosition = Vector3.zero;
                 RefeshCaughtFishesUI();
                 EndFishing();
             }
@@ -78,6 +81,7 @@ public class FishingManager : Singleton<FishingManager>
         if (GameStateManager.CharactersManager.LocalPlayer != null) // TODO: test still necessary?
         {
             CharacterController characterController = GameStateManager.CharactersManager.LocalPlayer.GetComponent<CharacterController>();
+            characterController.m_characterData.m_fishingRodController.m_fishingHook.GetComponent<FishingHook>().m_hasPulledFishingRod = true;
             characterController.enabled = true;
             characterController.m_rigidBody.isKinematic = false;
             characterController.m_animator.SetBool("Fish", false);
@@ -108,12 +112,12 @@ public class FishingManager : Singleton<FishingManager>
         m_speed = _fishSO.m_speed;
         m_battleDuration = _fishSO.m_battleDuration;
         m_isNearFishingSpot.Raise("false");
-
         // setup character
         CharacterController characterController = GameStateManager.CharactersManager.LocalPlayer.GetComponent<CharacterController>();
         characterController.enabled = false;
         characterController.m_rigidBody.isKinematic = true;
         characterController.m_animator.SetBool("Fish", true);
+        characterController.m_characterData.m_fishingRodController.ThrowFishingHook();
         characterController.m_characterData.m_fishingRodController.ToggleFishingRod();
 
         // refresh UI

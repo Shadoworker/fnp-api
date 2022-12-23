@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_fishSpecies: Fish_2
   m_battleDuration: 10
-  m_speed: 10000
+  m_speed: 4000
+  m_prefab: {fileID: 617252313809863106, guid: 2dcf029389b678043b0bf46bbb722412, type: 3}
   m_species:
     name: 1
     offshore:
