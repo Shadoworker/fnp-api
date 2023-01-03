@@ -78,6 +78,7 @@ public class FishSpecies
     public List<FishingRod> fishing_rod;
     public Mapping id_mapping;
     public Scarcity scarcity;
+    public bool isCoralFish;
 }
 
 [System.Serializable]
