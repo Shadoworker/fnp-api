@@ -104,7 +104,6 @@ public class CharacterController : NetworkBehaviour
         {
             Vector3 fwd = m_playerHeadObj.transform.TransformDirection(m_characterData.m_characterSO.m_jumpingRay);
             RaycastHit objectHit;
-            //Debug.DrawRay(m_playerHeadObj.transform.position, fwd, Color.red);
             if (!Physics.Raycast(m_playerHeadObj.transform.position, fwd, out objectHit, MAX_RAY_DISTANCE) && IsSpeedReduced())
             {
                 SetJumpInput();
@@ -307,7 +306,7 @@ public class CharacterController : NetworkBehaviour
     
     IEnumerator SetOldPosition()
     {
-        float delay = 0.15f;
+        float delay = 0.5f;
         yield return new WaitForSeconds(delay);
         m_oldPosition = transform.position;
     }
@@ -353,7 +352,7 @@ public class CharacterController : NetworkBehaviour
     public bool IsSpeedReduced()
     {
         float speedPerSec = Vector3.Distance(m_oldPosition, transform.position) / Time.deltaTime;
-        return speedPerSec <= SOLID_SURFACE_COLLISION_REF && Mathf.Abs(m_movement.z) >= GameStateManager.CharactersManager.m_zJoystickOffset;
+        return speedPerSec <= SOLID_SURFACE_COLLISION_REF && m_movement.magnitude >= 1f;
     }
 
     public IEnumerator ResetJumpTrigger()

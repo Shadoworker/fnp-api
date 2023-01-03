@@ -37,10 +37,11 @@ MonoBehaviour:
   m_rayCollisionRef: 2
   m_floatingPower: 126
   m_diveForce: 10
-  m_isUnderwater: 1
+  m_isUnderwater: 0
   m_waterHeight: 3.6
   m_isBackstrokeSwim: 0
   m_fishingRodObjName: FishingRod
+  m_rodThrowDelay: 0.8
   m_headParentPath: Shiba/B_Hips/B_Torso/B_Neck
   m_headLocalPos: {x: 0, y: 0, z: 0}
   m_headLocalRot: {x: 67.95, y: 3.31, z: 12.95}

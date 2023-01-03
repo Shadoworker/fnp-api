@@ -117,7 +117,7 @@ public class FishingManager : Singleton<FishingManager>
         characterController.enabled = false;
         characterController.m_rigidBody.isKinematic = true;
         characterController.m_animator.SetBool("Fish", true);
-        characterController.m_characterData.m_fishingRodController.ThrowFishingHook();
+        StartCoroutine(characterController.m_characterData.m_fishingRodController.ThrowFishingHook());
         characterController.m_characterData.m_fishingRodController.ToggleFishingRod();
 
         // refresh UI

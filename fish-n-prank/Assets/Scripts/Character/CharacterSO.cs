@@ -51,6 +51,7 @@ public class CharacterSO : ScriptableObject
     [BoxGroup("Buoyancy")] public float m_waterHeight;
     [BoxGroup("Buoyancy")] public bool m_isBackstrokeSwim;
     [BoxGroup("Fishing Controller")] public string m_fishingRodObjName;
+    [BoxGroup("Fishing Controller")] public float m_rodThrowDelay;
 
     [BoxGroup("Head transform")] public string m_headParentPath;
     [BoxGroup("Head transform")] public Vector3 m_headLocalPos;

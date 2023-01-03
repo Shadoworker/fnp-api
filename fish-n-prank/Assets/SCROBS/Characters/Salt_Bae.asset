@@ -41,6 +41,7 @@ MonoBehaviour:
   m_waterHeight: 3.2
   m_isBackstrokeSwim: 0
   m_fishingRodObjName: Armature/FishingRod
+  m_rodThrowDelay: 0.8
   m_headParentPath: Armature/Bone/Bone.001/Bone.002/Bone.015/Bone.016
   m_headLocalPos: {x: 0, y: 0, z: 0}
   m_headLocalRot: {x: 89.91, y: 0, z: 0}

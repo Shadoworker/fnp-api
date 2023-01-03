@@ -64,8 +64,9 @@ public class FishingRodController : MonoBehaviour
         }
     }
 
-    public void ThrowFishingHook()
+    public IEnumerator ThrowFishingHook()
     {
+        yield return new WaitForSeconds(m_characterData.m_characterSO.m_rodThrowDelay);
         m_fishingHook.GetComponent<Rigidbody>().AddForce(transform.forward * THROW_FORCE, ForceMode.Impulse);
         m_fishingHook.GetComponent<SpringJoint>().spring = SPRING_UNCOMPRESSED;
         StartCoroutine(SetHookPos());
