@@ -37,7 +37,7 @@ MonoBehaviour:
   m_rayCollisionRef: 2
   m_floatingPower: 126
   m_diveForce: 10
-  m_isUnderwater: 0
+  m_isUnderwater: 1
   m_waterHeight: 3.6
   m_isBackstrokeSwim: 0
   m_fishingRodObjName: FishingRod

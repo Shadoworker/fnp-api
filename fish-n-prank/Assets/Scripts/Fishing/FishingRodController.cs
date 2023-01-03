@@ -1,15 +1,20 @@
 using UnityEngine;
+using System.Collections;
 
 public class FishingRodController : MonoBehaviour
 {
     private const float MAX_RAY_DISTANCE = 40f;
+    private const float THROW_FORCE = 30f;
     public CharacterData m_characterData;
     private GameObject m_fishingRod;
+    [HideInInspector]public FishingHook m_fishingHook;
     private Transform m_playerHead;
     private CharacterController m_characterController;
     private Animator m_animator;
     private bool m_isOnFishingSpot;
     RaycastHit objectHit;
+    public LayerMask m_ignoreLayers;
+    private const float SPRING_UNCOMPRESSED = 2;
 
     private bool m_initialized = false;
 
@@ -17,6 +22,7 @@ public class FishingRodController : MonoBehaviour
     {
         m_playerHead = transform.Find(m_characterData.m_characterSO.m_playerHeadObjName);
         m_fishingRod = transform.Find(m_characterData.m_characterSO.m_fishingRodObjName).gameObject;
+        m_fishingHook = m_fishingRod.GetComponent<CharacterHandTracker>().m_fishingRodHook.GetComponent<FishingHook>();
         m_characterController = GetComponent<CharacterController>();
         m_animator = GetComponent<Animator>();
         m_initialized = true;
@@ -33,8 +39,8 @@ public class FishingRodController : MonoBehaviour
             && !m_characterData.m_buoyancyController.IsUnderwater() && m_characterData.m_characterController.m_playerHeadObj != null) // TODO: do you mean IsSwimming?
         {
             Vector3 fwd = m_characterData.m_characterController.m_playerHeadObj.transform.TransformDirection(m_characterData.m_characterSO.m_fishingRay);
-            Debug.DrawRay(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, Color.red);
-            if (Physics.Raycast(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, out objectHit, MAX_RAY_DISTANCE))
+            Debug.DrawRay(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd * MAX_RAY_DISTANCE, Color.red);
+            if (Physics.Raycast(m_characterData.m_characterController.m_playerHeadObj.transform.position, fwd, out objectHit, MAX_RAY_DISTANCE, ~m_ignoreLayers))
             {
                 if (objectHit.transform.gameObject.name == "Water") // TODO: use const
                 {
@@ -56,6 +62,20 @@ public class FishingRodController : MonoBehaviour
             if (FishingManager.Instance.m_isNearFishingSpot.m_previousValue.Equals("true"))
                 FishingManager.Instance.m_isNearFishingSpot.Raise("false");
         }
+    }
+
+    public void ThrowFishingHook()
+    {
+        m_fishingHook.GetComponent<Rigidbody>().AddForce(transform.forward * THROW_FORCE, ForceMode.Impulse);
+        m_fishingHook.GetComponent<SpringJoint>().spring = SPRING_UNCOMPRESSED;
+        StartCoroutine(SetHookPos());
+    }
+
+    IEnumerator SetHookPos()
+    {
+        float delay = 0.8f;
+        yield return new WaitForSeconds(delay);
+        m_fishingHook.GetComponent<Rigidbody>().isKinematic = true;
     }
 
     public void ToggleFishingRod()

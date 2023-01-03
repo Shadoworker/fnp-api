@@ -11,8 +11,9 @@ public class FishSO : ScriptableObject
     public string m_fishSpecies;
     [Range(7f, 15f)]
     public float m_battleDuration;
-    [Range(7000, 30000f)]
+    [Range(4000, 30000f)]
     public float m_speed;
+    public GameObject m_prefab;
 
     public FishSpecies m_species;
     public FishSizeStruct m_sizes = new FishSizeStruct(){

@@ -51,7 +51,6 @@ public class Catenary : MonoBehaviour
 			
 			wirePoints[i] = wirePoint;
 		}
-		Debug.Log(wirePoints.Length);
 		GenerateWithLine(wirePoints);
 	}
 

@@ -1,0 +1,13 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Fish-Cherry-Barb
+  m_Controller: {fileID: 9100000, guid: d9e51e0f664af3041b8998103b25cb41, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 4579716051613623758, guid: 5c8553124eb423e4e9d3c0937729ac60, type: 3}
+    m_OverrideClip: {fileID: -7850090322671117990, guid: 77ce1fdc2ad3bcc4bba7c80dc6a717bb, type: 3}
