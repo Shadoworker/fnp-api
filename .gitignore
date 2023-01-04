@@ -9,6 +9,7 @@ Library/
 Assets/AssetStoreTools*
 Assets/Extensions/ThirtySec/Save/Files*
 Logs/
+UserSettings/
 EditorUserSettings.asset
 AndroidLogcatSettings.asset
 
