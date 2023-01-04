@@ -24,6 +24,15 @@ public class PlayerManager : MonoBehaviour
         Debug.Log($"CmdStartFishing: Server chose fish {fishSO.name}");
     }
 
+
+    public void GetPlayerResources()
+    {
+
+        
+        APIManager.instance.GetPlayerResources();
+
+    }
+
     public void UpdatePlayerResources()
     {
 
@@ -38,4 +47,8 @@ public class PlayerManager : MonoBehaviour
         APIManager.instance.UpdatePlayerResources("l3v3l/updatePlayerResource", JsonUtility.ToJson(_body));
 
     }
+
+
+
+
 }

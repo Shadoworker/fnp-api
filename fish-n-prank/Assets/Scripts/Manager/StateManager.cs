@@ -10,6 +10,11 @@ public class StateManager : Singleton<StateManager>
     [HideInInspector]
     public PersistentString m_persistentPlayerID = new PersistentString("persistentPlayerID", "");
 
+    
+    [HideInInspector]
+    public PersistentString m_persistentPlayerResources = new PersistentString("persistentPlayerResources", "");
+
+
     void Start()
     {
 
