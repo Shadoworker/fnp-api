@@ -234,6 +234,35 @@ public class APIManager : MonoBehaviour
         StartCoroutine(IUpdatePlayerResources(_path, _bodyJsonString));
     }
 
+
+   IEnumerator IGetPlayerResources(string _path)
+    {
+        var request = new UnityWebRequest(BASE_URL+_path, "GET");
+        request.downloadHandler = (DownloadHandler) new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+        yield return request.SendWebRequest();
+        // Debug.Log("Status Code: " + request.responseCode);
+
+        if (request.isNetworkError)
+        {
+            Debug.Log("Error: " + request.error);
+        }
+        else
+        {
+            string _jsonString = request.downloadHandler.text;
+
+            StateManager.Instance.m_persistentPlayerResources.Set(_jsonString);
+
+        }
+    }
+
+
+    public void GetPlayerResources()
+    {
+        string _path = "";
+        StartCoroutine(IGetPlayerResources(_path));
+    }
+
     void SavePlayerID(string _jsonString)
     {
         
