@@ -46,13 +46,15 @@ public class FnPNetworkUIManager : MonoBehaviour
             return;
         }
 
-        // disable host option on mobile devices
+        // disable host option on mobile devices (release only)
+#if !UNITY_EDITOR && !DEBUG
         if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
         {
             m_hostGameButton.gameObject.SetActive(false);
             m_hostAndClientButton.gameObject.SetActive(false);
         }
         else
+#endif
         {
             m_hostGameButton.onClick.AddListener(StartServer);
             m_hostAndClientButton.onClick.AddListener(StartHost);
