@@ -1,5 +1,8 @@
 using UnityEngine;
 using Mirror;
+using System;
+using System.Linq;
+using System.Collections.Generic;
 
 public class FnPFishingNetworkInterface : NetworkBehaviour
 {
@@ -9,7 +12,11 @@ public class FnPFishingNetworkInterface : NetworkBehaviour
     public void CmdStartFishing()
     {
         // server choses a random fish
-        SelectedFish fishSO = GameStateManager.FishesManager.GetRandomFish();
+        // TODO: Create variables for areas and rods
+        List<AvailabilityArea> areas = Enum.GetValues(typeof(AvailabilityArea)).Cast<AvailabilityArea>().ToList();
+        List<FishingRod> rods = Enum.GetValues(typeof(AvailabilityArea)).Cast<FishingRod>().ToList();
+        Offshore offshore = new Offshore();
+        SelectedFish fishSO = GameStateManager.FishesManager.GetRandomFish(areas, rods, offshore);
         Debug.Log($"CmdStartFishing: Server chose fish {fishSO.name}");
         NetworkIdentity clientIdentity = GetComponent<NetworkIdentity>();
         TargetSetBitingFish(clientIdentity.connectionToClient, fishSO);

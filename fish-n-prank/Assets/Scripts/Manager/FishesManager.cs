@@ -32,6 +32,8 @@ public class FishesManager : ScriptableObject
             (!_flyingBird)
             
             ); // Add more logic here...
+
+        FishingManager.Instance.m_currentFish = _fish;
         // Get a random size 
         List<FishSize> _fishSizesList = new List<FishSize>()
         {

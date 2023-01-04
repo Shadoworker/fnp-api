@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
@@ -13,7 +15,11 @@ public class PlayerManager : MonoBehaviour
     public void GetFish()
     {
         // APIManager.instance.GetFish("l3v3l/getFish");
-        SelectedFish fishSO = GameStateManager.FishesManager.GetRandomFish();
+        // TODO: Create variables for areas and rods
+        List<AvailabilityArea> areas = Enum.GetValues(typeof(AvailabilityArea)).Cast<AvailabilityArea>().ToList();
+        List<FishingRod> rods = Enum.GetValues(typeof(AvailabilityArea)).Cast<FishingRod>().ToList();
+        Offshore offshore = new Offshore();
+        SelectedFish fishSO = GameStateManager.FishesManager.GetRandomFish(areas, rods, offshore);
 
         Debug.Log($"CmdStartFishing: Server chose fish {fishSO.name}");
     }
